@@ -1,16 +1,17 @@
 //  to run backend- node server.js
 
-const http = require("http");
+const express = require("express");
+const app = express();
+const port = 3001;
 
-const hostname = "127.0.0.1";
-const port = 8081;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello World\n");
+app.get("/", (req, res) => {
+  res.send("Hellllllo World!");
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.get("/completed", (req, res) => {
+  res.send(["Task1", "Task2", "Task3"]);
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });

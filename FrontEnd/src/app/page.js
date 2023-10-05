@@ -1,3 +1,7 @@
+const getCompleted = () => {
+  return ["Task1", "Task2"];
+};
+
 export default function Home() {
   return (
     <main>
@@ -7,6 +11,11 @@ export default function Home() {
         </div>
         <div className="bg-gradient-to-b from-green-500 to-yellow-500 border-green-400 card">
           <h2>Completed</h2>
+          <ol>
+            {getCompleted().map((task, index) => (
+              <li key={index}>{task}</li>
+            ))}
+          </ol>
         </div>
       </div>
     </main>
