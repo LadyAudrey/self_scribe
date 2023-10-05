@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  h2 {
+    @apply text-4xl pb-5
+  }
+  h3 {
+    @apply text-blue-300 mx-5
+  }
+  h4 {
+    @apply text-2xl
+  }
+  .card {
+    @apply m-5 w-2/5 sm:min-h-fit p-10 border-solid border-4 rounded-lg font-bold
+  }
+  .card_data {
+  @apply self-center
+  }
+  button {
+    @apply sm:p-4 sm:m-6 border-solid border-4 rounded-lg font-bold
+  }
+  .editing {
+    @apply w-11/12 h-4/5 m-auto sm:mt-36
+  }
+  .btn-fx {
+    @apply w-6 mx-5
+  };
+}
