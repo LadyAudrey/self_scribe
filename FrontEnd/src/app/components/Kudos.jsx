@@ -1,7 +1,3 @@
-// use the next fetch in a server component
-
-const testing = ["a", "b", "c"];
-
 export function Kudos(props) {
   const { data } = props;
   return (
