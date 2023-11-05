@@ -1,4 +1,22 @@
+"use client";
+
+import { useState } from "react";
+
+
+
+// Storing values to pass to back end
+// client = {
+//  "activites": {
+  //  dates: [values]
+  // }
+  // }
+
+
 export function TDL(props) {
+  const [completed, setCompleted] = useState(false);
+  const handleChange = () => {
+    setCompleted(!completed);
+  };
   const { data } = props;
   return (
     <fieldset>
@@ -7,8 +25,7 @@ export function TDL(props) {
       {data.map((task, index) => (
         <div key={index}>
           <label>
-            {/* For next week- creat oncheck listener */}
-            <input type="checkbox" />
+            <input type="checkbox" onChange={handleChange} />
             {task}
           </label>
         </div>
