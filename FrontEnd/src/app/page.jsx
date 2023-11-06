@@ -1,5 +1,4 @@
-import { Kudos } from "./components/Kudos";
-import { TDL } from "./components/TDL";
+import { DisplayLists } from "./components/DisplayLists";
 
 export default async function Home() {
   const resTDL = await fetch("http://localhost:3001/TDL");
@@ -8,13 +7,13 @@ export default async function Home() {
   const kudosData = await res.json();
   return (
     <main>
-      <div className="flex flex-row justify-between editing text-slate-950">
-        <div className="bg-gradient-to-b from-yellow-500 to-rose-500 border-green-400 card">
-          <TDL data={dataTDL} />
+      <div className="flex flex-row justify-between editing">
+        {/* needs- figure out gradient stops */}
+        <div className="bg-gradient-to-br from-yellow-500 via-slate-950 to-yellow-500 border-green-400 card">
+          <DisplayLists data={dataTDL} />
         </div>
-        <div className="bg-gradient-to-b from-green-500 to-yellow-500 border-green-400 card">
-          <h2>Completed</h2>
-          <Kudos data={kudosData} />
+        <div className="bg-gradient-to-br from-green-500 via-slate-950 to-green-500 border-yellow-400 card">
+          <DisplayLists data={kudosData} />
         </div>
       </div>
     </main>
