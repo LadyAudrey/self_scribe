@@ -1,3 +1,5 @@
+// this file is used for testing data structures and syntax
+
 const map1 = new Map();
 
 map1.set("a", 1);

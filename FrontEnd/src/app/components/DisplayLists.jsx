@@ -9,7 +9,7 @@ import { useState } from "react";
 // }
 // }
 
-// I want to have lists and then activities within them. I'm wondering if I'll have one more component layer here, but I think this is workable for WIP
+// I want to have lists and then activities within them. I'm wondering if I'll have one more component layer here, but I think this is workable for now
 
 export function DisplayLists(props) {
   const [completed, setCompleted] = useState(false);
@@ -17,6 +17,7 @@ export function DisplayLists(props) {
     setCompleted(!completed);
   };
   // need to figure out why the first index is n't showing up from server.js to make legend text responsive
+
   const { data } = props;
   const listName = data[0];
   console.log(data);

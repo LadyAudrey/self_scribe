@@ -1,3 +1,7 @@
+This project is built with React, Netflix and Tailwind
+
+A lot of the UI is created, some of the functionality is hooked up. Mock data is being passed in from the Backend Server.jsx, but not yet sending anything from the Front to the Back, yet
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

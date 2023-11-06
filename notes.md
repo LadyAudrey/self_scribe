@@ -3,11 +3,11 @@ Requirements
 
 TDL Fx's
 ---
-    - Checking > move from TDL to Completed
+    - Checked > move from TDL to Completed
     - Updating text
-    - Creating Item
+    - Creating List and Activity (UI created, need to hook up Fx's)
     - Deleting Item
-    - ** Fetching TDL Items
+    - ** Fetching TDL Items from BE
         - Created; returns dummy data**
 
 
@@ -24,4 +24,4 @@ This weeks TDL
 - Develop UI
     -   Create Dropdown Menu component
         -   Hook up Fx's to the buttons
-        -   Create List and Activity components
+        -   Create List and Activity components (50% DONE)
