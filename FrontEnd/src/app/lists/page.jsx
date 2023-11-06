@@ -1,4 +1,4 @@
-import Card from "../components/EditLists";
+import Card from "../components/EditList";
 import Image from "next/image";
 
 // creating mockData to fill props Fx

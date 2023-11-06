@@ -1,4 +1,4 @@
-import Card from "../components/EditLists";
+import Card from "../components/EditList";
 export default function page() {
   return (
     <>

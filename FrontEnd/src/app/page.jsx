@@ -1,4 +1,7 @@
 import { DisplayLists } from "./components/DisplayLists";
+import { EditActivity } from "./components/EditActivity";
+
+const name = "Meditation";
 
 export default async function Home() {
   const resTDL = await fetch("http://localhost:3001/TDL");

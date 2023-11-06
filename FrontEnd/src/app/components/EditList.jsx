@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export default function EditLists(props) {
+export default function EditList(props) {
   const listName = props.listName;
   const activities = props.activities;
   const [editing, setEditing] = useState(false);
