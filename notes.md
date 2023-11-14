@@ -9,7 +9,7 @@ TDL Fx's
     - Deleting Item
     - ** Fetching TDL Items from BE
         - Created; returns dummy data**
-
+    Tried to do the above, but "Error: async/await is not yet supported in Client Components, only Server Components. This error is often caused by accidentally adding `'use client'` to a module that was originally written for the server."
 
 Completed Fx's
 ---

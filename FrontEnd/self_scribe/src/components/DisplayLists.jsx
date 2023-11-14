@@ -23,16 +23,13 @@ export function DisplayLists(props) {
   console.log(data);
   return (
     <fieldset>
-      <legend className="text-2xl">TDL</legend>
-      <h3>{listName}</h3>
+      <legend className="text-2xl">{listName}</legend>
       {data.map((task, index) => (
-        <div>
-          <div key={index}>
-            <label>
-              <input type="checkbox" onChange={handleChange} className="m-2" />
-              {task}
-            </label>
-          </div>
+        <div key={index}>
+          <label>
+            <input type="checkbox" onChange={handleChange} className="m-2" />
+            {task}
+          </label>
         </div>
       ))}
     </fieldset>
