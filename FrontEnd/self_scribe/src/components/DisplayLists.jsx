@@ -19,13 +19,14 @@ import { useEffect, useState } from "react";
 
 export function DisplayLists() {
   const [list, setList] = useState({});
+  const [completed, setCompleted] = useState({});
   // Kenson approved use of useEffect
   useEffect(() => {
     fetchTDL();
   }, []);
 
   async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/TDL");
+    const response = await fetch("http://localhost:3001/listItems");
     const result = await response.json();
     setList(result);
   }
@@ -49,7 +50,7 @@ export function DisplayLists() {
     setList(newList);
     // sending stuff to backend
     // TODO look up fetch api on mdn- called a "request object"
-    await fetch("http://localhost:3001/TDL", {
+    await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(newList),
@@ -72,10 +73,9 @@ export function DisplayLists() {
               className="m-2"
               checked={task.completed}
             />
+            <button>Edit</button>
           </div>
         ))}
     </fieldset>
   );
 }
-
-// read up on key for understanding TDL

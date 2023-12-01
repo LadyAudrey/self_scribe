@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main>
       <h1>Self Watch</h1>
-      <div className="flex">
+      <div className="flex flex-row bg-slate-800">
         <div>
           <h2>Today's items left to do</h2>
           <DisplayLists />

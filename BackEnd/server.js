@@ -24,16 +24,6 @@ app.get("/", (req, res) => {
   res.json({ serverMessage: "Hellooooooo World!" });
 });
 
-app.get("/completed", (req, res) => {
-  console.log("completed is being hit");
-  res.json(["List", "Task1", "Task2", "Task3"]);
-});
-
-// toDoItem = {
-// name: string,
-// completed: boolean,
-// }
-
 // toDoList = {
 // title: string,
 // toDos: [toDoItem]
@@ -53,11 +43,11 @@ let toDoList = {
   ],
 };
 
-app.get("/TDL", (req, res) => {
+app.get("/listItems", (req, res) => {
   res.json(toDoList);
 });
 
-app.post("/TDL", (req, res) => {
+app.post("/listItems", (req, res) => {
   toDoList = req.body;
   res.json({
     serverMessage: "data received",
