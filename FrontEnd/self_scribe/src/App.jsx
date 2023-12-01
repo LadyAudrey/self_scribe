@@ -6,17 +6,6 @@ export default function Home() {
   const [toDoList, setToDoList] = useState(null);
   const [completed, setCompleted] = useState(null);
 
-  // Kenson approved use of useEffect
-  useEffect(() => {
-    fetchTDL();
-  }, []);
-
-  async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/TDL");
-    const result = await response.json();
-    setToDoList(result);
-  }
-
   // async function fetchCompleted() {
   //   const response = await fetch("http://localhost:3001/completed");
   //   const result = await response.json();
@@ -25,11 +14,17 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Hi, I'm Home</h1>
-      {toDoList && <DisplayLists list={toDoList} />}
-      {/* {completed && <DisplayLists list={completed} />} */}
-      {/* instead of useEffect, could fetch data with an event => */}
-      {/* <button onClick={fetchTDL}>fetch data</button> */}
+      <h1>Self Watch</h1>
+      <div className="flex">
+        <div>
+          <h2>Today's items left to do</h2>
+          <DisplayLists />
+        </div>
+        <div>
+          <h2>What you've done today</h2>
+          <DisplayLists />
+        </div>
+      </div>
     </main>
   );
 }

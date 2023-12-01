@@ -1,9 +1,13 @@
+// installed body-parser
+
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3001;
 
 app.use(cors({ origin: ["http://localhost:5173", "http://127.0.0.1:5173"] }));
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   // res.setHeader("Access-Control-Allow-Origin", "*");
@@ -35,21 +39,31 @@ app.get("/completed", (req, res) => {
 // toDos: [toDoItem]
 // }
 
+let toDoList = {
+  title: "Test List",
+  todos: [
+    {
+      name: "meditate",
+      completed: false,
+    },
+    {
+      name: "exercise",
+      completed: true,
+    },
+  ],
+};
+
 app.get("/TDL", (req, res) => {
-  const toDoList = {
-    title: "Test List",
-    todos: [
-      {
-        name: "meditate",
-        completed: false,
-      },
-      {
-        name: "exercise",
-        completed: true,
-      },
-    ],
-  };
   res.json(toDoList);
+});
+
+app.post("/TDL", (req, res) => {
+  toDoList = req.body;
+  res.json({
+    serverMessage: "data received",
+    updatedList: toDoList,
+  });
+  console.log(toDoList);
 });
 
 app.listen(port, () => {
