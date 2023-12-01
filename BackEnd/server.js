@@ -1,23 +1,69 @@
-//  to run backend- "node server.js" in terminal, to port 3001
+// installed body-parser
 
 const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3001;
 
-app.get("/", (req, res) => {
-  res.send("Hellooooooo World!");
-});
+app.use(cors({ origin: ["http://localhost:5173", "http://127.0.0.1:5173"] }));
+app.use(bodyParser.json());
 
-// need to figure out why the first index is n't showing up on the FE console log via DisplayLists
+app.get("/", (req, res) => {
+  // res.setHeader("Access-Control-Allow-Origin", "*");
+  // res.setHeader(
+  //   "Access-Control-Allow-Methods",
+  //   "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  // ); // If needed
+  // res.setHeader(
+  //   "Access-Control-Allow-Headers",
+  //   "X-Requested-With,content-type"
+  // ); // If needed
+  // res.setHeader("Access-Control-Allow-Credentials", true); // If needed
+
+  res.json({ serverMessage: "Hellooooooo World!" });
+});
 
 app.get("/completed", (req, res) => {
   console.log("completed is being hit");
-  res.send(["Kudos", "Task1", "Task2", "Task3"]);
+  res.json(["List", "Task1", "Task2", "Task3"]);
 });
 
+// toDoItem = {
+// name: string,
+// completed: boolean,
+// }
+
+// toDoList = {
+// title: string,
+// toDos: [toDoItem]
+// }
+
+let toDoList = {
+  title: "Test List",
+  todos: [
+    {
+      name: "meditate",
+      completed: false,
+    },
+    {
+      name: "exercise",
+      completed: true,
+    },
+  ],
+};
+
 app.get("/TDL", (req, res) => {
-  console.log("completed is being hit");
-  res.send(["TDL", "Task1", "Task2", "Task3"]);
+  res.json(toDoList);
+});
+
+app.post("/TDL", (req, res) => {
+  toDoList = req.body;
+  res.json({
+    serverMessage: "data received",
+    updatedList: toDoList,
+  });
+  console.log(toDoList);
 });
 
 app.listen(port, () => {
