@@ -64,3 +64,8 @@ app.post("/listItems", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+// tutorial we are following to add PostGreSQL
+ https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-node-js-on-ubuntu-20-04#prerequisites
+
+//  redo step 2, using evergreene instead of audrey
