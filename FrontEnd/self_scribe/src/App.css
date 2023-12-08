@@ -12,19 +12,16 @@
   h4 {
     @apply text-2xl
   }
+  button {
+    @apply sm:p-2 sm:m-6 border-solid border-4 rounded-lg font-bold
+  }
   .card {
     @apply m-5 w-2/5 sm:min-h-fit p-10 border-solid border-4 rounded-lg font-bold
   }
   .card_data {
   @apply self-center
   }
-  button {
-    @apply sm:p-4 sm:m-6 border-solid border-4 rounded-lg font-bold
+  .legend-title {
+    
   }
-  .editing {
-    @apply w-11/12 h-4/5 m-auto sm:mt-36
-  }
-  .btn-fx {
-    @apply w-8 mx-5
-  };
 }

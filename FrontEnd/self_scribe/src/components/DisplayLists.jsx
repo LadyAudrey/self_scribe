@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 // toDos: [toDoItem]
 // }
 
+const kudos = [];
+
 export function DisplayLists() {
   //
   const [list, setList] = useState({});
@@ -31,9 +33,14 @@ export function DisplayLists() {
     setList(result);
   }
   async function handleChange(event) {
-    // loop through list
     const updatedTasks = list.todos.map((task) => {
       if (task.name === event.target.name) {
+        if (event.target.checked === true) {
+          kudos.push(task);
+        } else {
+          const index = kudos.indexOf(task);
+          kudos.splice(index, 1);
+        }
         return {
           name: task.name,
           completed: event.target.checked,
@@ -41,15 +48,13 @@ export function DisplayLists() {
       }
       return task;
     });
-    // created new list with updated todos
+    console.log(kudos);
 
     const newList = {
       title: list.title,
       todos: updatedTasks,
     };
     setList(newList);
-    // sending stuff to backend
-    // TODO look up fetch api on mdn- called a "request object"
     await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -57,14 +62,16 @@ export function DisplayLists() {
     });
   }
   return (
-    <div>
+    <div className="flex flex-row justify-around">
       <div>
         <fieldset>
-          <legend className="text-2xl">{list.title}</legend>
+          <legend className="legend title">ToDos</legend>
           {list?.todos &&
             list.todos.map((task, index) => (
               <div key={index}>
-                <label htmlFor={task.name}>{task.name}</label>
+                <label htmlFor={task.name} className="legend-title">
+                  {task.name}
+                </label>
                 <input
                   id={task.name}
                   name={task.name}
@@ -80,22 +87,23 @@ export function DisplayLists() {
       </div>
       <div>
         <fieldset>
-          <legend className="text-2xl">{list.title}</legend>
-          {list?.todos &&
-            list.todos.map((task, index) => (
-              <div key={index}>
-                <label htmlFor={task.name}>{task.name}</label>
-                <input
-                  id={task.name}
-                  name={task.name}
-                  type="checkbox"
-                  onChange={handleChange}
-                  className="m-2"
-                  checked={task.completed}
-                />
-                <button>Edit</button>
-              </div>
-            ))}
+          <legend className="legend title">Kudos!</legend>
+          {kudos.map((task, index) => (
+            <div key={index}>
+              <label htmlFor={task.name} className="legend-title">
+                {task.name}
+              </label>
+              <input
+                id={task.name}
+                name={task.name}
+                type="checkbox"
+                onChange={handleChange}
+                className="m-2"
+                checked={task.completed}
+              />
+              <button>Edit</button>
+            </div>
+          ))}
         </fieldset>
       </div>
     </div>
