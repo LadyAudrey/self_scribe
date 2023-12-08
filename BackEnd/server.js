@@ -38,6 +38,10 @@ let toDoList = {
       completed: false,
     },
     {
+      name: "sleep",
+      completed: false,
+    },
+    {
       name: "exercise",
       completed: true,
     },

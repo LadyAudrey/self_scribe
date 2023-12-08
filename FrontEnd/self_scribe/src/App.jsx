@@ -4,7 +4,7 @@ import { DisplayLists } from "./components/DisplayLists";
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen bg-emerald-950 text-white">
+    <main className="h-screen w-screen bg-slate-950 text-white">
       <h1>Self Watch</h1>
       <div>
         <DisplayLists />

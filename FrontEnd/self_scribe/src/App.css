@@ -16,12 +16,12 @@
     @apply sm:p-2 sm:m-6 border-solid border-4 rounded-lg font-bold
   }
   .card {
-    @apply m-5 w-2/5 sm:min-h-fit p-10 border-solid border-4 rounded-lg font-bold
-  }
-  .card_data {
-  @apply self-center
+    @apply m-5 min-w-fit w-2/5 p-10 border-solid border-4 border-green-700 rounded-2xl font-bold
   }
   .legend-title {
-    
+    @apply text-3xl
+  }
+  .legend-item {
+    @apply text-xl
   }
 }
