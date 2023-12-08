@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 // }
 
 export function DisplayLists() {
+  //
   const [list, setList] = useState({});
-  const [completed, setCompleted] = useState({});
   // Kenson approved use of useEffect
   useEffect(() => {
     fetchTDL();
@@ -56,26 +56,48 @@ export function DisplayLists() {
       body: JSON.stringify(newList),
     });
   }
-  // inside handleChange figure out the index of the array that contains the name == to event.target.name and update checkbox[index].completed = event.target.value
-  // call set list with updated value
   return (
-    <fieldset>
-      <legend className="text-2xl">{list.title}</legend>
-      {list?.todos &&
-        list.todos.map((task, index) => (
-          <div key={index}>
-            <label htmlFor={task.name}>{task.name}</label>
-            <input
-              id={task.name}
-              name={task.name}
-              type="checkbox"
-              onChange={handleChange}
-              className="m-2"
-              checked={task.completed}
-            />
-            <button>Edit</button>
-          </div>
-        ))}
-    </fieldset>
+    <div>
+      <div>
+        <fieldset>
+          <legend className="text-2xl">{list.title}</legend>
+          {list?.todos &&
+            list.todos.map((task, index) => (
+              <div key={index}>
+                <label htmlFor={task.name}>{task.name}</label>
+                <input
+                  id={task.name}
+                  name={task.name}
+                  type="checkbox"
+                  onChange={handleChange}
+                  className="m-2"
+                  checked={task.completed}
+                />
+                <button>Edit</button>
+              </div>
+            ))}
+        </fieldset>
+      </div>
+      <div>
+        <fieldset>
+          <legend className="text-2xl">{list.title}</legend>
+          {list?.todos &&
+            list.todos.map((task, index) => (
+              <div key={index}>
+                <label htmlFor={task.name}>{task.name}</label>
+                <input
+                  id={task.name}
+                  name={task.name}
+                  type="checkbox"
+                  onChange={handleChange}
+                  className="m-2"
+                  checked={task.completed}
+                />
+                <button>Edit</button>
+              </div>
+            ))}
+        </fieldset>
+      </div>
+    </div>
   );
 }

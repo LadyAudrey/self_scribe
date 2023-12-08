@@ -6,7 +6,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3001;
 
-app.use(cors({ origin: ["http://localhost:5173", "http://127.0.0.1:5173"] }));
+// in production the wild card is fine for ease
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
