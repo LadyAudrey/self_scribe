@@ -7,21 +7,21 @@
     @apply text-4xl pb-5
   }
   h3 {
-    @apply text-blue-300 mx-5
+    @apply my-8 text-2xl text-blue-300
   }
   h4 {
     @apply text-2xl
   }
   button {
-    @apply sm:p-2 sm:m-6 border-solid border-4 rounded-lg font-bold
+    @apply sm:p-2 sm:m-4 border-solid border-4 rounded-lg font-bold
   }
   .card {
-    @apply m-5 min-w-fit w-2/5 p-10 border-solid border-4 border-green-700 rounded-2xl font-bold
+    @apply w-2/5 m-5 p-10 border-solid border-4 border-green-700 rounded-2xl font-bold
   }
   .legend-title {
     @apply text-3xl
   }
   .legend-item {
-    @apply text-xl
+    @apply text-xl ml-5
   }
 }

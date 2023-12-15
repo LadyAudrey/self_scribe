@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function EditActivity(props) {
+export default function EditActivity(props) {
   const name = props.name;
   const [thisFeature, setThisFeature] = useState(false);
   const handleChange = () => {
@@ -25,7 +25,7 @@ export function EditActivity(props) {
               Symptom
             </div>
             <div flex flex-row>
-            {/* Why isn't the flex-row being respected? */}
+              {/* Why isn't the flex-row being respected? */}
               <div>
                 <input type="checkbox" onChange={handleChange} />
                 Nest Under

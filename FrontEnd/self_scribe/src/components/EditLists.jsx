@@ -1,15 +1,8 @@
 "use client";
-
-import Image from "next/image";
 import { useState } from "react";
 
 export default function EditList(props) {
-  const listName = props.listName;
-  const activities = props.activities;
-  const [editing, setEditing] = useState(false);
-  const handleChange = () => {
-    setEditing(!editing);
-  };
+  const [listName, activities] = props;
 
   return (
     <>
@@ -20,13 +13,7 @@ export default function EditList(props) {
           {activities.map((task, index) => (
             <div key={index} className="flex my-5">
               <p className="mr-3">{task}</p>
-              <Image
-                src="/Buttons/Edit.svg"
-                height={25}
-                width={25}
-                alt="edit"
-                onChange={setEditing}
-              />
+              <button>Edit</button>
             </div>
           ))}
         </fieldset>

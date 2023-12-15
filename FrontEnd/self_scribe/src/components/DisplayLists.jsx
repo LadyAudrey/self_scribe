@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+import EditActivity from "./EditActivity";
+import EditList from "./EditLists";
+
 // Storing values to pass to back end
 // client = {
 //  "activites": {
@@ -24,6 +27,11 @@ export function DisplayLists() {
   useEffect(() => {
     fetchTDL();
   }, []);
+
+  const [editing, setEditing] = useState(false);
+  function toggleEditing() {
+    setEditing(!editing);
+  }
 
   async function fetchTDL() {
     const response = await fetch("http://localhost:3001/listItems");
@@ -56,9 +64,18 @@ export function DisplayLists() {
   }
   return (
     <div className="flex flex-row justify-around">
-      <div>
-        <fieldset className="card">
+      <div className="relative card">
+        <img src="/Buttons/add.svg" className="absolute top-5 right-5" />
+        <fieldset>
           <legend className="legend-title">ToDos</legend>
+          <div className="flex">
+            <h3>{list.title}</h3>
+            <button onClick={toggleEditing}>Edit</button>
+            {editing ? (
+              <EditList listName={list.title} activites={list.todos} />
+            ) : null}
+            {/* TDL- check if this is working when servers are running again */}
+          </div>
           {list?.todos &&
             list.todos.map((task, index) =>
               task.completed === false ? (
@@ -71,18 +88,17 @@ export function DisplayLists() {
                     name={task.name}
                     type="checkbox"
                     onChange={handleChange}
-                    className="m-2"
+                    className="m-5"
                     checked={task.completed}
                   />
-                  <button>Edit</button>
                   <button>X</button>
                 </div>
               ) : null
             )}
         </fieldset>
       </div>
-      <div>
-        <fieldset className="card">
+      <div className="card">
+        <fieldset>
           <legend className="legend-title">Kudos!</legend>
           {list?.todos &&
             list.todos.map((task, index) =>
