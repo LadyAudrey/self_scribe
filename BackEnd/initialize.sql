@@ -21,3 +21,5 @@ CREATE TABLE list_relationship (
     created_at timestamp without time zone DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
     PRIMARY KEY (list_id, list_item_id)
 );
+
+--  to access postgres terminal "sudo -u evergreen  psql -d self_scribe"

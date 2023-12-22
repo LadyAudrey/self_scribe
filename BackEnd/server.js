@@ -1,3 +1,5 @@
+const { pool } = require("./db");
+
 // installed body-parser
 
 const express = require("express");
@@ -48,8 +50,29 @@ let toDoList = {
   ],
 };
 
-app.get("/listItems", (req, res) => {
-  res.json(toDoList);
+app.get("/listItems", async (req, res) => {
+  try {
+    const query = await pool.query("SELECT * FROM list");
+    const listItemsQuery = await pool.query("SELECT * FROM list_item");
+    const toDos = [];
+    // refactor as a filter
+    for (let i = 0; i < listItemsQuery.rows.length; i++) {
+      toDos.push({
+        name: listItemsQuery.rows[i].title,
+        completed: listItemsQuery.rows[i].completed,
+      });
+    }
+    console.log(query);
+    // ToDo upgrade repo to hold and display multiple lists
+    const firstRow = query.rows[0];
+    let workingList = {
+      title: firstRow["title"],
+      todos: toDos,
+    };
+    res.json(workingList);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.post("/listItems", (req, res) => {
@@ -65,7 +88,6 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-// tutorial we are following to add PostGreSQL
-//  https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-node-js-on-ubuntu-20-04#prerequisites
-
-//  redo step 2, using evergreene instead of audrey
+// redo DB schema to be simpler
+// remove list relationships table
+// just use a foreign key
