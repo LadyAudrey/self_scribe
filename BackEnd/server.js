@@ -1,3 +1,5 @@
+const { pool } = require("./db");
+
 // installed body-parser
 
 const express = require("express");
