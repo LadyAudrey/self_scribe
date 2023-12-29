@@ -44,8 +44,29 @@ let toDoList = {
   ],
 };
 
-app.get("/listItems", (req, res) => {
-  res.json(toDoList);
+app.get("/listItems", async (req, res) => {
+  try {
+    const query = await pool.query("SELECT * FROM list");
+    const listItemsQuery = await pool.query("SELECT * FROM list_item");
+    const toDos = [];
+    // refactor as a filter
+    for (let i = 0; i < listItemsQuery.rows.length; i++) {
+      toDos.push({
+        name: listItemsQuery.rows[i].title,
+        completed: listItemsQuery.rows[i].completed,
+      });
+    }
+    console.log(query);
+    // ToDo upgrade repo to hold and display multiple lists; 0 indexing will not be necessary
+    const firstRow = query.rows[0];
+    let workingList = {
+      title: firstRow["title"],
+      todos: toDos,
+    };
+    res.json(workingList);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.post("/listItems", (req, res) => {
