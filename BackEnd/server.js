@@ -9,7 +9,7 @@ const app = express();
 const port = 3001;
 
 // in production the wild card is fine for ease
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -32,19 +32,34 @@ app.get("/", (req, res) => {
 // toDos: [toDoItem]
 // }
 
-let toDoList = {
-  title: "Test List",
-  todos: [
-    {
-      name: "meditate",
-      completed: false,
-    },
-    {
-      name: "exercise",
-      completed: true,
-    },
-  ],
-};
+let toDoList = [
+  {
+    title: "First List",
+    todos: [
+      {
+        name: "meditate",
+        completed: false,
+      },
+      {
+        name: "exercise",
+        completed: false,
+      },
+    ],
+  },
+  {
+    title: "Second List",
+    todos: [
+      {
+        name: "2meditate",
+        completed: false,
+      },
+      {
+        name: "2exercise",
+        completed: false,
+      },
+    ],
+  },
+];
 
 app.get("/listItems", async (req, res) => {
   try {
@@ -58,13 +73,14 @@ app.get("/listItems", async (req, res) => {
         completed: listItemsQuery.rows[i].completed,
       });
     }
-    console.log(query);
     // ToDo upgrade repo to hold and display multiple lists; 0 indexing will not be necessary
     const firstRow = query.rows[0];
-    let workingList = {
-      title: firstRow["title"],
-      todos: toDos,
-    };
+    let workingList = [
+      {
+        title: firstRow["title"],
+        todos: toDos,
+      },
+    ];
     res.json(workingList);
   } catch (error) {
     console.error(error);
@@ -77,7 +93,7 @@ app.post("/listItems", (req, res) => {
     serverMessage: "data received",
     updatedList: toDoList,
   });
-  console.log(toDoList);
+  console.log(toDoList + " line 94 in server");
 });
 
 app.listen(port, () => {
