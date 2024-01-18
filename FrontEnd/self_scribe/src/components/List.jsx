@@ -5,8 +5,8 @@ export function List(props) {
       <fieldset>
         <legend className="legend title">{list.name}</legend>
         {list?.todos &&
-          list.todos.map((task, index) => (
-            <div key={index}>
+          list.todos.map((task) => (
+            <div>
               <label htmlFor={task.name} className="legend-name">
                 {task.name}
               </label>

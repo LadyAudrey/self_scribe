@@ -107,6 +107,16 @@ app.get("/getLists/:user", async (req, res) => {
   });
 });
 
+app.post("/addList/:user/:listName", async (req, res) => {
+  const userName = req.params.user;
+  const listName = req.params.listName;
+  // INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('testing3', 'audrey', NOW(), NOW());
+  const response = await pool.query(
+    `INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('${listName}', '${userName}', NOW(), NOW()) RETURNING *;`
+  );
+  //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

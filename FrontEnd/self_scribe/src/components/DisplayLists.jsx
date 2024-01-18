@@ -37,7 +37,11 @@ export function DisplayLists() {
   function handleAddListSubmit(event) {
     event.preventDefault();
     console.log(listName);
-    // Todo connect new list creation to backend
+    const user = "audrey";
+    fetch(`http://localhost:3001/addList/${user}/${listName}`, {
+      method: "POST",
+    });
+    // TODO have the button refresh the page when updating lists
   }
 
   async function fetchTDL() {
@@ -87,11 +91,11 @@ export function DisplayLists() {
       <div>
         {!lists && <h2>data pending</h2>}
         {lists.length &&
-          lists.map((list) => {
-            return <List list={list} />;
+          lists.map((list, index) => {
+            return <List list={list} key={index} />;
           })}
-        <button type="submit">Add List</button>
-        <form onSubmit={handleAddListChange}>
+        <form onSubmit={handleAddListSubmit}>
+          <button type="submit">Add List</button>
           <label>
             List Name:
             <input
