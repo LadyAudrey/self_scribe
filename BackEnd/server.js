@@ -96,6 +96,17 @@ app.post("/listItems", (req, res) => {
   console.log(toDoList + " line 94 in server");
 });
 
+app.get("/getLists/:user", async (req, res) => {
+  const query = await pool.query(
+    `SELECT * FROM lists WHERE user_name='${req.params.user}'`
+  );
+
+  res.json({
+    user: req.params.user,
+    lists: query.rows,
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

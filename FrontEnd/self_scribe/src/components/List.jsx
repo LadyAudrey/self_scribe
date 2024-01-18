@@ -3,11 +3,11 @@ export function List(props) {
   return (
     <div>
       <fieldset>
-        <legend className="legend title">{list.title}</legend>
+        <legend className="legend title">{list.name}</legend>
         {list?.todos &&
           list.todos.map((task, index) => (
             <div key={index}>
-              <label htmlFor={task.name} className="legend-title">
+              <label htmlFor={task.name} className="legend-name">
                 {task.name}
               </label>
               <input

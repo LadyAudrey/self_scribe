@@ -24,16 +24,27 @@ const kudos = [];
 export function DisplayLists() {
   //
   const [lists, setLists] = useState([]);
+  const [listName, setListName] = useState("");
   // Kenson approved use of useEffect
   useEffect(() => {
     fetchTDL();
   }, []);
 
+  function handleAddListChange(event) {
+    setListName(event.target.value);
+  }
+
+  function handleAddListSubmit(event) {
+    event.preventDefault();
+    console.log(listName);
+    // Todo connect new list creation to backend
+  }
+
   async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/listItems");
+    const response = await fetch("http://localhost:3001/getLists/audrey");
     const result = await response.json();
-    setLists(result);
-    console.log(result);
+    setLists(result.lists);
+    console.log(result.list);
   }
   async function handleChange(event) {
     const updatedTasks = list.todos.map((task) => {
@@ -52,25 +63,46 @@ export function DisplayLists() {
       return task;
     });
 
+    function handleSubmit(event) {
+      event.preventDefault();
+      console.log(listName);
+      // Todo connect new list creation to backend
+    }
+
     const newList = {
       title: list.title,
       todos: updatedTasks,
     };
     setList(newList);
+
     await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(newList),
     });
   }
+
   return (
-    <div className="flex flex-row justify-around">
-      {!lists && <h2>data pending</h2>}
-      {lists.length &&
-        lists.map((list) => {
-          console.log(list);
-          return <List list={list} />;
-        })}
+    <div className="flex justify-around">
+      <div>
+        {!lists && <h2>data pending</h2>}
+        {lists.length &&
+          lists.map((list) => {
+            return <List list={list} />;
+          })}
+        <button type="submit">Add List</button>
+        <form onSubmit={handleAddListChange}>
+          <label>
+            List Name:
+            <input
+              type="text"
+              name="newList"
+              value={listName}
+              onChange={handleAddListChange}
+            ></input>
+          </label>
+        </form>
+      </div>
       <div>
         <fieldset>
           <legend className="legend title">Kudos!</legend>
