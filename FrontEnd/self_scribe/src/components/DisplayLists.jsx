@@ -1,48 +1,17 @@
 import { useEffect, useState } from "react";
 
 import { List } from "./List";
-
-// Storing values to pass to back end
-// client = {
-//  "activites": {
-//  dates: [values]
-// }
-// }
-
-// toDoItem = {
-// name: string,
-// completed: boolean,
-// }
-
-// toDoList = {
-// title: string,
-// toDos: [toDoItem]
-// }
+import AddList from "./AddList";
 
 const kudos = [];
 
 export function DisplayLists() {
   //
   const [lists, setLists] = useState([]);
-  const [listName, setListName] = useState("");
   // Kenson approved use of useEffect
   useEffect(() => {
     fetchTDL();
   }, []);
-
-  function handleAddListChange(event) {
-    setListName(event.target.value);
-  }
-
-  function handleAddListSubmit(event) {
-    event.preventDefault();
-    console.log(listName);
-    const user = "audrey";
-    fetch(`http://localhost:3001/addList/${user}/${listName}`, {
-      method: "POST",
-    });
-    // TODO have the button refresh the page when updating lists
-  }
 
   async function fetchTDL() {
     const response = await fetch("http://localhost:3001/getLists/audrey");
@@ -88,24 +57,18 @@ export function DisplayLists() {
 
   return (
     <div className="flex justify-around">
-      <div>
-        {!lists && <h2>data pending</h2>}
-        {lists.length &&
-          lists.map((list, index) => {
-            return <List list={list} key={index} />;
-          })}
-        <form onSubmit={handleAddListSubmit}>
-          <button type="submit">Add List</button>
-          <label>
-            List Name:
-            <input
-              type="text"
-              name="newList"
-              value={listName}
-              onChange={handleAddListChange}
-            ></input>
-          </label>
-        </form>
+      <div className="flex flex-col">
+        <fieldset>
+          <legend>TDL</legend>
+          <div>
+            {!lists && <h2>data pending</h2>}
+            {lists.length &&
+              lists.map((list, index) => {
+                return <List list={list} key={index} />;
+              })}
+          </div>
+          <AddList />
+        </fieldset>
       </div>
       <div>
         <fieldset>
