@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./App.css";
 
 import { DisplayLists } from "./components/DisplayLists";
-import { DisplaySymptoms } from "./components/DisplaySymptoms";
+// import { DisplaySymptoms } from "./components/DisplaySymptoms";
 
 export default function Home() {
   return (

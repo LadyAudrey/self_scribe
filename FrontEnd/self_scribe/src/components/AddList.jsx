@@ -1,19 +1,28 @@
 import { useState } from "react";
 
-export default function AddList() {
+export default function AddList(props) {
+  const { lists, setLists } = props;
   const [listName, setListName] = useState("");
 
   function handleAddListChange(event) {
     setListName(event.target.value);
   }
 
-  function handleAddListSubmit(event) {
+  async function handleAddListSubmit(event) {
     event.preventDefault();
     console.log(listName);
     const user = "audrey";
-    fetch(`http://localhost:3001/addList/${user}/${listName}`, {
-      method: "POST",
-    });
+    const response = await fetch(
+      `http://localhost:3001/addList/${user}/${listName}`,
+      {
+        method: "POST",
+      }
+    );
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      setLists([...lists, result.rows[0]]);
+    }
     // TODO have the button refresh the page when updating lists
   }
   return (

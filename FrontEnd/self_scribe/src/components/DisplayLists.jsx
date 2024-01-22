@@ -17,7 +17,7 @@ export function DisplayLists() {
     const response = await fetch("http://localhost:3001/getLists/audrey");
     const result = await response.json();
     setLists(result.lists);
-    console.log(result.list);
+    console.log(result);
   }
   async function handleChange(event) {
     const updatedTasks = list.todos.map((task) => {
@@ -42,11 +42,11 @@ export function DisplayLists() {
       // Todo connect new list creation to backend
     }
 
-    const newList = {
-      title: list.title,
-      todos: updatedTasks,
-    };
-    setList(newList);
+    // const newList = {
+    //   title: list.title,
+    //   todos: updatedTasks,
+    // };
+    // setList(newList);
 
     await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
@@ -67,7 +67,7 @@ export function DisplayLists() {
                 return <List list={list} key={index} />;
               })}
           </div>
-          <AddList />
+          <AddList lists={lists} setLists={setLists} />
         </fieldset>
       </div>
       <div>
