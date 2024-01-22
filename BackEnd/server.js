@@ -9,7 +9,7 @@ const app = express();
 const port = 3001;
 
 // in production the wild card is fine for ease
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -32,19 +32,34 @@ app.get("/", (req, res) => {
 // toDos: [toDoItem]
 // }
 
-let toDoList = {
-  title: "Test List",
-  todos: [
-    {
-      name: "meditate",
-      completed: false,
-    },
-    {
-      name: "exercise",
-      completed: true,
-    },
-  ],
-};
+let toDoList = [
+  {
+    title: "First List",
+    todos: [
+      {
+        name: "meditate",
+        completed: false,
+      },
+      {
+        name: "exercise",
+        completed: false,
+      },
+    ],
+  },
+  {
+    title: "Second List",
+    todos: [
+      {
+        name: "2meditate",
+        completed: false,
+      },
+      {
+        name: "2exercise",
+        completed: false,
+      },
+    ],
+  },
+];
 
 app.get("/listItems", async (req, res) => {
   try {
@@ -58,13 +73,14 @@ app.get("/listItems", async (req, res) => {
         completed: listItemsQuery.rows[i].completed,
       });
     }
-    console.log(query);
     // ToDo upgrade repo to hold and display multiple lists; 0 indexing will not be necessary
     const firstRow = query.rows[0];
-    let workingList = {
-      title: firstRow["title"],
-      todos: toDos,
-    };
+    let workingList = [
+      {
+        title: firstRow["title"],
+        todos: toDos,
+      },
+    ];
     res.json(workingList);
   } catch (error) {
     console.error(error);
@@ -77,7 +93,33 @@ app.post("/listItems", (req, res) => {
     serverMessage: "data received",
     updatedList: toDoList,
   });
-  console.log(toDoList);
+  console.log(toDoList + " line 94 in server");
+});
+
+app.get("/getLists/:user", async (req, res) => {
+  const query = await pool.query(
+    `SELECT * FROM lists WHERE user_name='${req.params.user}'`
+  );
+
+  res.json({
+    user: req.params.user,
+    lists: query.rows,
+  });
+});
+
+app.post("/addList/:user/:listName", async (req, res) => {
+  try {
+    const userName = req.params.user;
+    const listName = req.params.listName;
+    // INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('testing3', 'audrey', NOW(), NOW());
+    const response = await pool.query(
+      `INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('${listName}', '${userName}', NOW(), NOW()) RETURNING *;`
+    );
+    //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ serverMessage: error.message });
+  }
 });
 
 app.listen(port, () => {

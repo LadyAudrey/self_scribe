@@ -1,20 +1,48 @@
-CREATE TABLE list (
-    list_id uuid NOT NULL,
-    title text NOT NULL,
-    created_at timestamp without time zone DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-    updated_at timestamp without time zone DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-    PRIMARY KEY (list_id)
+CREATE TABLE lists (
+id serial PRIMARY KEY,
+name VARCHAR ( 20 ) UNIQUE NOT NULL,
+user_name VARCHAR ( 20 ) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL,
+last_updated VARCHAR ( 200 ) NOT NULL
 );
 
-CREATE TABLE list_item (
-    list_item_id uuid NOT NULL,
-    list_id uuid NOT NULL,
-    title text NOT NULL,
-    completed boolean NOT NULL DEFAULT false,
-    created_at timestamp without time zone DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-    updated_at timestamp without time zone DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
-    PRIMARY KEY (list_item_id),
-    FOREIGN KEY (list_id) REFERENCES list (list_id)
+CREATE TABLE tasks (
+id serial PRIMARY KEY,
+name VARCHAR ( 20 ) UNIQUE NOT NULL,
+CONSTRAINT tasks_id
+FOREIGN KEY(id)
+REFERENCES lists(id),
+created_on TIMESTAMP NOT NULL,
+description VARCHAR ( 300 ) NOT NULL
+);
+
+CREATE TABLE tracking (
+id serial PRIMARY KEY,
+CONSTRAINT task_id
+FOREIGN KEY(id)
+REFERENCES tasks(id),
+reported_on TIMESTAMP NOT NULL,
+history VARCHAR [] NOT NULL
+);
+
+
+
+CREATE TABLE symptoms (
+id serial PRIMARY KEY,
+sympt_name VARCHAR ( 20 ) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL,
+description VARCHAR ( 200 ) NOT NULL
+);
+
+
+CREATE TABLE occurances (
+id serial PRIMARY KEY,
+CONSTRAINT symptom_id
+FOREIGN KEY(id)
+REFERENCES symptoms(id),
+reported_on TIMESTAMP NOT NULL,
+report_end TIMESTAMP,
+severity INT NOT NULL
 );
 
 --  to access postgres terminal "sudo -u evergreen  psql -d self_scribe"
