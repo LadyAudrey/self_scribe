@@ -1,9 +1,19 @@
+import { useState } from "react";
+import EditList from "./EditList";
+
 export function List(props) {
-  const { list } = props;
+  const { list, state } = props;
+  const [editing, setEditing] = useState(false);
+  const handleChange = () => {
+    setEditing(!editing);
+    console.log(editing);
+    console.log("editing is being activated");
+  };
+
   return (
     <div>
-      <fieldset>
-        <legend className="legend title">{list.name}</legend>
+      <div className="flex gap-2 relative">
+        <p className="legend title">{list.name}</p>
         {list?.todos &&
           list.todos.map((task) => (
             <div>
@@ -20,10 +30,22 @@ export function List(props) {
                 className="m-2"
                 checked={task.completed}
               />
-              <button>Edit</button>
+              <button>Delete</button>
             </div>
           ))}
-      </fieldset>
+        {editing ? (
+          <EditList
+            state={state}
+            list={list}
+            editing={editing}
+            setEditing={setEditing}
+          />
+        ) : (
+          <button className="editBtn" onClick={handleChange}>
+            Edit
+          </button>
+        )}
+      </div>
     </div>
   );
 }

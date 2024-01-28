@@ -56,18 +56,26 @@ export function DisplayLists() {
   }
 
   return (
-    <div className="flex justify-around">
-      <div className="flex flex-col">
+    <div className="relative flex justify-around">
+      {/* TODO why isn't gap working here??? */}
+      <div className="flex flex-col gap-10">
         <fieldset>
-          <legend>TDL</legend>
+          <legend className="text-2xl">TDL</legend>
           <div>
             {!lists && <h2>data pending</h2>}
             {lists.length &&
               lists.map((list, index) => {
-                return <List list={list} key={index} />;
+                return (
+                  <List list={list} key={index} state={{ lists, setLists }} />
+                );
               })}
           </div>
-          <AddList lists={lists} setLists={setLists} />
+          {/* TODO create update, pop editing into seperate components */}
+          <AddList
+            lists={lists}
+            setLists={setLists}
+            className="absolute bottom-0"
+          />
         </fieldset>
       </div>
       <div>

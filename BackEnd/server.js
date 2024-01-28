@@ -122,6 +122,18 @@ app.post("/addList/:user/:listName", async (req, res) => {
   }
 });
 
+// DELETE FROM lists WHERE id = ${#};
+app.post("/deleteList/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = pool.query(`DELETE FROM lists WHERE id = ${id};`);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+// should stay at the bottom of the file
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

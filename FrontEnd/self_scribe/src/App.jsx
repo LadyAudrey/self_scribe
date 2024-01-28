@@ -10,15 +10,15 @@ export default function Home() {
     <main className="h-screen w-screen bg-emerald-950 text-white">
       <header className="flex justify-between">
         <div>
-          <button>Lists</button>
+          <button className="mainBtns">Lists</button>
           {/* this will load the load the lists page */}
-          <button>Symptoms</button>
+          <button className="mainBtns">Symptoms</button>
           {/* this will load the symptoms page */}
-          <button>Graphs</button>
+          <button className="mainBtns">Graphs</button>
           {/* this will load the graphing page */}
         </div>
         <div>
-          <button>Settings</button>
+          <button className="mainBtns">Settings</button>
           {/* this will load the Settings for the app */}
         </div>
       </header>

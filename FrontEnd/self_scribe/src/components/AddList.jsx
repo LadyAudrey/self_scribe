@@ -35,6 +35,7 @@ export default function AddList(props) {
           name="newList"
           value={listName}
           onChange={handleAddListChange}
+          className="bg-black rounded-md mx-2 border-slate-800 border-2"
         ></input>
       </label>
     </form>
