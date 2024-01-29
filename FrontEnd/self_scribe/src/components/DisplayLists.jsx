@@ -66,7 +66,11 @@ export function DisplayLists() {
             {lists.length &&
               lists.map((list, index) => {
                 return (
-                  <List list={list} key={index} state={{ lists, setLists }} />
+                  <List
+                    list={list}
+                    key={index}
+                    allLists={{ lists, setLists }}
+                  />
                 );
               })}
           </div>

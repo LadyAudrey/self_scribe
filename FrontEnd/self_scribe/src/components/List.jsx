@@ -2,7 +2,7 @@ import { useState } from "react";
 import EditList from "./EditList";
 
 export function List(props) {
-  const { list, state } = props;
+  const { list, allLists } = props;
   const [editing, setEditing] = useState(false);
   const handleChange = () => {
     setEditing(!editing);
@@ -33,14 +33,15 @@ export function List(props) {
               <button>Delete</button>
             </div>
           ))}
-        {editing ? (
+        {editing && (
           <EditList
-            state={state}
+            allLists={allLists}
             list={list}
             editing={editing}
             setEditing={setEditing}
           />
-        ) : (
+        )}
+        {!editing && (
           <button className="editBtn" onClick={handleChange}>
             Edit
           </button>

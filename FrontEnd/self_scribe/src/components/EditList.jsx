@@ -2,26 +2,39 @@ import { useState } from "react";
 import { EditActivity } from "./EditActivity";
 
 export default function EditList(props) {
-  const { list, state, editing, setEditing } = props;
-  const { addActivity, setAddActivity } = useState(false);
+  const { list, allLists, editing, setEditing } = props;
+  const [addActivity, setAddActivity] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [listName, setListName] = useState(list.name);
 
   // to close the editing card
   function handleEditChange() {
     setEditing(!editing);
-    console.log("I'm editing");
+    console.log("I'm editing", editing);
+  }
+
+  function handleOpenNameChange() {
+    setEditingName(!editingName);
+  }
+
+  function handleNameChange() {
+    // TODO: update to change the list name in the DB
+    console.log("handleNameChanging");
   }
 
   // to open the editActivity card
   // currently getting an error of setAddActivity is not a function... why???
   function handleAddActivityChg() {
+    console.log(addActivity);
     setAddActivity(!addActivity);
   }
 
   function removeFromList() {
-    const newList = state.lists.filter((element) => {
+    const newList = allLists.lists.filter((element) => {
       return element.id !== list.id;
     });
-    state.setLists(newList);
+    allLists.setLists(newList);
+    handleEditChange();
   }
 
   async function handleDelete(event) {
@@ -45,10 +58,23 @@ export default function EditList(props) {
             src="/FrontEnd/self_scribe/src/Buttons/Complete.svg"
           />
         </div>
+        {!editingName && (
+          <div onDoubleClick={handleOpenNameChange}>{list.name}</div>
+        )}
+        {editingName && (
+          <input
+            autoFocus
+            value={listName}
+            style={{ color: "black" }}
+            onChange={(event) => {
+              setListName(event.target.value);
+            }}
+            onBlur={handleNameChange}
+          ></input>
+        )}
         <div>
-          {addActivity ? (
-            <EditActivity />
-          ) : (
+          {addActivity && <EditActivity />}
+          {!addActivity && (
             <button className="bg-slate-900 p-2" onClick={handleAddActivityChg}>
               Add Activity
             </button>
