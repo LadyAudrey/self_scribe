@@ -1,6 +1,5 @@
 import { useState } from "react";
 import EditList from "./EditList";
-
 export function List(props) {
   const { list, allLists } = props;
   const [editing, setEditing] = useState(false);

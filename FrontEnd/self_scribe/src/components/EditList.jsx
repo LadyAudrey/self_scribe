@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { EditActivity } from "./EditActivity";
+import EditString from "./EditString";
 
 export default function EditList(props) {
   const { list, allLists, editing, setEditing } = props;
   const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
-  const [listName, setListName] = useState(list.name);
 
   // to close the editing card
   function handleEditChange() {
@@ -13,14 +13,14 @@ export default function EditList(props) {
     console.log("I'm editing", editing);
   }
 
-  function handleOpenNameChange() {
-    setEditingName(!editingName);
-  }
+  // function handleOpenNameChange() {
+  //   setEditingName(!editingName);
+  // }
 
-  function handleNameChange() {
-    // TODO: update to change the list name in the DB
-    console.log("handleNameChanging");
-  }
+  // function handleNameChange() {
+  //   // TODO: update to change the list name in the DB
+  //   console.log("handleNameChanging");
+  // }
 
   // to open the editActivity card
   // currently getting an error of setAddActivity is not a function... why???
@@ -50,18 +50,20 @@ export default function EditList(props) {
 
   return (
     <>
-      {/* needs background to be correct gradient */}
-      <div className="absolute top-0 z-50 flex flex-col card bg-slate-700 border-slate-400">
-        <div>
-          <img
-            onClick={handleEditChange}
-            src="/FrontEnd/self_scribe/src/Buttons/Complete.svg"
-          />
-        </div>
-        {!editingName && (
+      <div>
+        {/* needs background to be correct gradient */}
+        <div className="absolute top-0 z-50 flex flex-col card bg-slate-700 border-slate-400">
+          <div>
+            <img
+              onClick={handleEditChange}
+              src="/FrontEnd/self_scribe/src/Buttons/Complete.svg"
+            />
+          </div>
+          <EditString isEditing={(editing, setEditing)} list={list} />
+          {/* {!editingName && (
           <div onDoubleClick={handleOpenNameChange}>{list.name}</div>
-        )}
-        {editingName && (
+        )} */}
+          {/* {editingName && (
           <input
             autoFocus
             value={listName}
@@ -78,7 +80,7 @@ export default function EditList(props) {
             <button className="bg-slate-900 p-2" onClick={handleAddActivityChg}>
               Add Activity
             </button>
-          )}
+          )} */}
         </div>
         <div className="flex flex-row gap-2 justify-around text-yellow-200">
           <button className="bg-slate-900 p-2">Pause</button>
