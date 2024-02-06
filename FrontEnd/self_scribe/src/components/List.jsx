@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import { ListsData } from "../Contexts/ListsData";
+
 import EditList from "./EditList";
+
 export function List(props) {
-  const { list, allLists } = props;
+  const { list, setList } = props;
   const [editing, setEditing] = useState(false);
+  const { lists, setLists } = useContext(ListsData);
+
   const handleChange = () => {
     setEditing(!editing);
     console.log(editing);
@@ -34,7 +40,8 @@ export function List(props) {
           ))}
         {editing && (
           <EditList
-            allLists={allLists}
+            // lists={lists}
+            // setLists={setLists}
             list={list}
             editing={editing}
             setEditing={setEditing}

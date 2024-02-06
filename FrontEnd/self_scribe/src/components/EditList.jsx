@@ -1,9 +1,13 @@
-import { useState } from "react";
-import { EditActivity } from "./EditActivity";
+import { useState, useContext } from "react";
+// import { EditActivity } from "./EditActivity";
+
+import { ListsData } from "../Contexts/ListsData";
 import EditString from "./EditString";
 
 export default function EditList(props) {
-  const { list, allLists, editing, setEditing } = props;
+  const { list, editing, setEditing } = props;
+  const { lists, setLists } = useContext(ListsData);
+  console.log(lists);
   const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
 
@@ -12,15 +16,6 @@ export default function EditList(props) {
     setEditing(!editing);
     console.log("I'm editing", editing);
   }
-
-  // function handleOpenNameChange() {
-  //   setEditingName(!editingName);
-  // }
-
-  // function handleNameChange() {
-  //   // TODO: update to change the list name in the DB
-  //   console.log("handleNameChanging");
-  // }
 
   // to open the editActivity card
   // currently getting an error of setAddActivity is not a function... why???
@@ -59,10 +54,23 @@ export default function EditList(props) {
               src="/FrontEnd/self_scribe/src/Buttons/Complete.svg"
             />
           </div>
-          <EditString isEditing={(editing, setEditing)} list={list} />
-          {/* {!editingName && (
-          <div onDoubleClick={handleOpenNameChange}>{list.name}</div>
-        )} */}
+          {!editingName && (
+            <div
+              onDoubleClick={() => {
+                setEditingName(true);
+              }}
+            >
+              {list.name}
+            </div>
+          )}
+          {editingName && (
+            <EditString
+              setEditingName={setEditingName}
+              list={list}
+              // lists={lists}
+              // setLists={setLists}
+            />
+          )}
           {/* {editingName && (
           <input
             autoFocus

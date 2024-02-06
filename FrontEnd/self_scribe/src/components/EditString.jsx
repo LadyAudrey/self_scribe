@@ -1,37 +1,38 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ListsData } from "../Contexts/ListsData";
 
 export default function EditString(props) {
-  const { list } = props;
-  const [editingName, setEditingName] = useState(false);
-  const [listName, setListName] = useState(list.name);
+  const { list, setEditingName } = props;
+  const { lists, setLists } = useContext(ListsData);
 
-  function handleOpenNameChange() {
-    setEditingName(!editingName);
-  }
+  // console.log(lists);
+  // const [editingName, setEditingName] = useState(false);
+  const [listName, setListName] = useState(list.name);
 
   function handleNameChange() {
     // TODO: update to change the list name in the DB
-    console.log("handleNameChanging");
+    // first TODO: need to switch to a context hook
+    console.log("handleNameChanging", listName);
+    const newList = { ...list, name: listName };
+    const oldListIndex = lists.indexOf((element) => {
+      return element.name === list.name;
+    });
+    const newLists = [...lists];
+    newLists[oldListIndex] = newList;
+    setLists(newLists);
+    setEditingName(false);
   }
   return (
-    <>
-      {/* <h3>I'm a name that you can update</h3> */}
-      <div>
-        {!editingName && (
-          <div onDoubleClick={handleOpenNameChange}>{list.name}</div>
-        )}
-        {editingName && (
-          <input
-            autoFocus
-            value={listName}
-            className="bg-black"
-            onChange={(event) => {
-              setListName(event.target.value);
-            }}
-            onBlur={handleNameChange}
-          ></input>
-        )}
-      </div>
-    </>
+    <div>
+      <input
+        autoFocus
+        value={listName}
+        className="bg-black"
+        onChange={(event) => {
+          setListName(event.target.value);
+        }}
+        onBlur={handleNameChange}
+      />
+    </div>
   );
 }
