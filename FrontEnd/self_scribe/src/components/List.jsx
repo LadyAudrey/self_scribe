@@ -3,6 +3,8 @@ import { useState, useContext } from "react";
 import { ListsData } from "../Contexts/ListsData";
 
 import EditList from "./EditList";
+import { EditActivity } from "./EditActivity";
+// TODO: Edit Activity should be activated when the button is activated next to an activity, not passively
 
 export function List(props) {
   const { list, setList } = props;
@@ -52,6 +54,7 @@ export function List(props) {
             Edit
           </button>
         )}
+        <EditActivity listName={list.name} />
       </div>
     </div>
   );

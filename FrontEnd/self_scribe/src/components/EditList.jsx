@@ -71,24 +71,6 @@ export default function EditList(props) {
               // setLists={setLists}
             />
           )}
-          {/* {editingName && (
-          <input
-            autoFocus
-            value={listName}
-            style={{ color: "black" }}
-            onChange={(event) => {
-              setListName(event.target.value);
-            }}
-            onBlur={handleNameChange}
-          ></input>
-        )}
-        <div>
-          {addActivity && <EditActivity />}
-          {!addActivity && (
-            <button className="bg-slate-900 p-2" onClick={handleAddActivityChg}>
-              Add Activity
-            </button>
-          )} */}
         </div>
         <div className="flex flex-row gap-2 justify-around text-yellow-200">
           <button className="bg-slate-900 p-2">Pause</button>
