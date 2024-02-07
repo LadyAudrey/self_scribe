@@ -84,6 +84,11 @@ export function DisplayLists() {
                 setLists={setLists}
                 className="absolute bottom-0"
               />
+              <div className="flex">
+                <p>View My Lists</p>
+                {/* TODO update button background to the List svg */}
+                <button>Boolean with list symbol</button>
+              </div>
             </fieldset>
           </div>
           <div>

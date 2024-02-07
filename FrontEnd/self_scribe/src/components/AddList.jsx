@@ -29,7 +29,6 @@ export default function AddList(props) {
     <form onSubmit={handleAddListSubmit} className="self-end">
       <button type="submit">Add List</button>
       <label>
-        List Name:
         <input
           type="text"
           name="newList"

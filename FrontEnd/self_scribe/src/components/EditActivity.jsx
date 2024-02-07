@@ -14,23 +14,16 @@ export function EditActivity(props) {
         <fieldset>
           <legend>
             <h3>{name}</h3>
-            {/* I want the user to say it is either (self care &&||  adulting) needs css for spacing*/}
-            <p> Is this activity a</p>
-            <div className="flex flex-row justify-around">
-              <input type="checkbox" onChange={handleChange} />
-              Selfcare
-              <input type="checkbox" onChange={handleChange} />
-              Adulting
-              <input type="checkbox" onChange={handleChange} />
-              Symptom
+            <div>
+              {/* Desired Frequency (x units in y time) */}
+              {/* How long would each instance be? (drop down) */}
+              {/* Category (fill in the blank or dropdown) */}
+              {/* TODO make category table */}
+              {/* Stay in list before desired rhythm recurs? (boolean) */}
+              {/* Active? (boolean, hover effect) */}
             </div>
-            <div flex flex-row>
-              {/* Why isn't the flex-row being respected? */}
-              <div>
-                <input type="checkbox" onChange={handleChange} />
-                Nest Under
-              </div>
-              <p>dropdown</p>
+            <div>
+              <button>Save Changes</button>
             </div>
           </legend>
         </fieldset>
