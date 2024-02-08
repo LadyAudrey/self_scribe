@@ -7,7 +7,8 @@ import { DisplayLists } from "./components/DisplayLists";
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen bg-emerald-950 text-white">
+    // TODO: background gradient file not working
+    <main className="h-screen w-screen bg-['./src/assets/BGgradient.svg')] bg-cover text-white">
       <header className="flex justify-between">
         <div>
           <button className="mainBtns">Lists</button>

@@ -21,7 +21,7 @@
     @apply border-solid border-2 rounded-md border-white
   }
   .card {
-    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-10 gap-2 border-solid border-4 rounded-lg font-bold
+    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-10 gap-2 border-solid border-4 rounded-lg font-bold bg-blue-950
   }
   .card_data {
   @apply self-center

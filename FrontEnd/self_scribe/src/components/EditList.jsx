@@ -47,7 +47,7 @@ export default function EditList(props) {
     <>
       <div>
         {/* needs background to be correct gradient */}
-        <div className="absolute top-0 z-50 flex flex-col card bg-slate-700 border-slate-400">
+        <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
           <div>
             <img
               onClick={handleEditChange}
@@ -71,12 +71,15 @@ export default function EditList(props) {
               // setLists={setLists}
             />
           )}
-        </div>
-        <div className="flex flex-row gap-2 justify-around text-yellow-200">
-          <button className="bg-slate-900 p-2">Pause</button>
-          <button className="bg-slate-900 p-2" onClick={handleDelete}>
-            Delete
-          </button>
+          <div className="flex flex-row gap-2 justify-around text-yellow-200">
+            <button className="mainBtns border-emerald-800">Pause</button>
+            <button
+              className="mainBtns border-emerald-800"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </>
