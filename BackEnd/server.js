@@ -9,7 +9,7 @@ const app = express();
 const port = 3001;
 
 // in production the wild card is fine for ease
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -97,14 +97,18 @@ app.post("/listItems", (req, res) => {
 });
 
 app.get("/getLists/:user", async (req, res) => {
-  const query = await pool.query(
-    `SELECT * FROM lists WHERE user_name='${req.params.user}'`
-  );
+  try {
+    const query = await pool.query(
+      `SELECT * FROM lists WHERE user_name='${req.params.user}'`
+    );
 
-  res.json({
-    user: req.params.user,
-    lists: query.rows,
-  });
+    res.json({
+      user: req.params.user,
+      lists: query.rows,
+    });
+  } catch (error) {
+    console.log({ error }, "app.get, line 110");
+  }
 });
 
 app.post("/addList/:user/:listName", async (req, res) => {
@@ -129,6 +133,21 @@ app.post("/deleteList/:id", async (req, res) => {
     const response = pool.query(`DELETE FROM lists WHERE id = ${id};`);
     res.json(response);
   } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+app.post("/editList/:id/:name", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const newName = req.params.name;
+    console.log(newName);
+    const response = pool.query(
+      `UPDATE lists SET name = ${newName} WHERE id = ${id};`
+    );
+    res.json(response);
+  } catch (error) {
+    console.log("inside catch block");
     res.status(500).json(error.message);
   }
 });

@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { useState } from "react";
+import { ListsContext } from "../Contexts/ListsContext";
 
 export default function AddList(props) {
-  const { lists, setLists } = props;
+  const { lists, setLists } = useContext(ListsContext);
   const [listName, setListName] = useState("");
 
   function handleAddListChange(event) {

@@ -1,25 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+import { ListsContext } from "../Contexts/ListsContext";
 
 import { List } from "./List";
-import { ListsData } from "../Contexts/ListsData";
 import AddList from "./AddList";
 
 const kudos = [];
 
 export function DisplayLists() {
-  //
-  const [lists, setLists] = useState([]);
-  // Kenson approved use of useEffect
-  useEffect(() => {
-    fetchTDL();
-  }, []);
-
-  async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/getLists/audrey");
-    const result = await response.json();
-    setLists(result.lists);
-    console.log(result);
-  }
+  const { lists, setLists } = useContext(ListsContext);
   async function handleChange(event) {
     const updatedTasks = list.todos.map((task) => {
       if (task.name === event.target.name) {
@@ -57,63 +46,52 @@ export function DisplayLists() {
   }
 
   return (
-    <>
-      <ListsData.Provider value={{ lists, setLists }}>
-        <div className="relative flex justify-around">
-          {/* TODO why isn't gap working here??? */}
-          <div className="flex flex-col gap-10">
-            <fieldset>
-              <legend className="text-2xl">TDL</legend>
-              <div>
-                {!lists && <h2>data pending</h2>}
-                {lists.length &&
-                  lists.map((list, index) => {
-                    return (
-                      <List
-                        list={list}
-                        key={index}
-                        // lists={lists}
-                        setLists={setLists}
-                      />
-                    );
-                  })}
-              </div>
-              {/* TODO create update, pop editing into seperate components */}
-              <AddList
-                lists={lists}
-                setLists={setLists}
-                className="absolute bottom-0"
-              />
-              <div className="flex">
-                <p>View My Lists</p>
-                {/* TODO update button background to the List svg */}
-                <button>Boolean with list symbol</button>
-              </div>
-            </fieldset>
-          </div>
+    <div className="relative flex justify-around">
+      {/* TODO why isn't gap working here??? */}
+      <div className="flex flex-col gap-10">
+        <fieldset>
+          <legend className="text-2xl">TDL</legend>
           <div>
-            <fieldset>
-              <legend className="legend title">Kudos!</legend>
-              {kudos.map((task, index) => (
-                <div key={index}>
-                  <label htmlFor={task.name} className="legend-title">
-                    {task.name}
-                  </label>
-                  <input
-                    id={task.name}
-                    name={task.name}
-                    type="checkbox"
-                    onChange={handleChange}
-                    className="m-2"
-                    checked={task.completed}
-                  />
-                  <button>Edit</button>
-                </div>
-              ))}
-            </fieldset>
+            {!lists && <h2>data pending</h2>}
+            {lists.length &&
+              lists.map((list) => {
+                return <List id={list.id} key={list.id} />;
+              })}
           </div>
-        </div>
-      </ListsData.Provider>
-    </>
+          {/* TODO create update, pop editing into seperate components */}
+          <AddList
+            lists={lists}
+            setLists={setLists}
+            className="absolute bottom-0"
+          />
+          <div className="flex">
+            <p>View My Lists</p>
+            {/* TODO update button background to the List svg */}
+            <button>Boolean with list symbol</button>
+          </div>
+        </fieldset>
+      </div>
+      <div>
+        <fieldset>
+          <legend className="legend title">Kudos!</legend>
+          {kudos.map((task, index) => (
+            <div key={index}>
+              <label htmlFor={task.name} className="legend-title">
+                {task.name}
+              </label>
+              <input
+                id={task.name}
+                name={task.name}
+                type="checkbox"
+                onChange={handleChange}
+                className="m-2"
+                checked={task.completed}
+              />
+              <button>Edit</button>
+            </div>
+          ))}
+        </fieldset>
+      </div>
+    </div>
   );
 }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.mainBg {
+  background: url("/assets/BGgradient.svg");
+}
+
 @layer components {
   h2 {
     @apply text-4xl pb-5

@@ -1,26 +1,42 @@
 import { useState, useContext } from "react";
-import { ListsData } from "../Contexts/ListsData";
+import { ListsContext } from "../Contexts/ListsContext";
 
 export default function EditString(props) {
-  const { list, setEditingName } = props;
-  const { lists, setLists } = useContext(ListsData);
+  const { id, setEditingName } = props;
+  const { lists, setLists } = useContext(ListsContext);
 
-  // console.log(lists);
-  // const [editingName, setEditingName] = useState(false);
+  let list = lists.filter((list) => {
+    return list.id === id;
+  })[0];
+
   const [listName, setListName] = useState(list.name);
 
-  function handleNameChange() {
+  async function handleNameChange() {
     // TODO: update to change the list name in the DB
-    // first TODO: need to switch to a context hook
-    console.log("handleNameChanging", listName);
+    // line 16 is making a copy of OG list, replace the name with the new name
     const newList = { ...list, name: listName };
+    // finding the index of the list we need to update
     const oldListIndex = lists.indexOf((element) => {
-      return element.name === list.name;
+      return element.id === id;
     });
+    // making a copy of the current list
     const newLists = [...lists];
+    // replace the list at the index we found with the updated list
     newLists[oldListIndex] = newList;
-    setLists(newLists);
-    setEditingName(false);
+    // update local state
+    list = newLists;
+    // updating global state with the edited string
+    const response = await fetch(
+      `http://localhost:3001/editList/${id}/${listName}`,
+      {
+        method: "POST",
+      }
+    );
+
+    if (response.ok) {
+      setLists(newLists);
+      setEditingName(false);
+    }
   }
   return (
     <div>

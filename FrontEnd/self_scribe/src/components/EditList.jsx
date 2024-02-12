@@ -1,15 +1,20 @@
 import { useState, useContext } from "react";
 // import { EditActivity } from "./EditActivity";
 
-import { ListsData } from "../Contexts/ListsData";
+import { ListsContext } from "../Contexts/ListsContext";
 import EditString from "./EditString";
 
+// TODO remove the prop drilling and update with useContext();
+
 export default function EditList(props) {
-  const { list, editing, setEditing } = props;
-  const { lists, setLists } = useContext(ListsData);
-  console.log(lists);
+  const { id, editing, setEditing } = props;
+  const { lists, setLists } = useContext(ListsContext);
   const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
+
+  const list = lists.filter((list) => {
+    return list.id === id;
+  })[0];
 
   // to close the editing card
   function handleEditChange() {
@@ -25,10 +30,10 @@ export default function EditList(props) {
   }
 
   function removeFromList() {
-    const newList = allLists.lists.filter((element) => {
+    const newList = lists.filter((element) => {
       return element.id !== list.id;
     });
-    allLists.setLists(newList);
+    setLists(newList);
     handleEditChange();
   }
 
@@ -49,10 +54,8 @@ export default function EditList(props) {
         {/* needs background to be correct gradient */}
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
           <div>
-            <img
-              onClick={handleEditChange}
-              src="/FrontEnd/self_scribe/src/Buttons/Complete.svg"
-            />
+            {/* swap for an X svg */}
+            <img onClick={handleEditChange} src="/Buttons/Complete.svg" />
           </div>
           {!editingName && (
             <div
@@ -64,12 +67,7 @@ export default function EditList(props) {
             </div>
           )}
           {editingName && (
-            <EditString
-              setEditingName={setEditingName}
-              list={list}
-              // lists={lists}
-              // setLists={setLists}
-            />
+            <EditString setEditingName={setEditingName} id={id} />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">
             <button className="mainBtns border-emerald-800">Pause</button>
