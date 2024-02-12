@@ -53,10 +53,6 @@ export default function EditList(props) {
       <div>
         {/* needs background to be correct gradient */}
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
-          <div>
-            {/* swap for an X svg */}
-            <img onClick={handleEditChange} src="/Buttons/Complete.svg" />
-          </div>
           {!editingName && (
             <div
               onDoubleClick={() => {
@@ -77,6 +73,13 @@ export default function EditList(props) {
             >
               Delete
             </button>
+          </div>
+          <div className="flex justify-center">
+            <div className="mainBtns bg-emerald-900 bg-cover border-4">
+              <button onClick={handleEditChange} />
+              Save Changes
+              <button />
+            </div>
           </div>
         </div>
       </div>
