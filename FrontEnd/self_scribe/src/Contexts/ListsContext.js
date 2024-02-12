@@ -9,6 +9,7 @@ const defaultLists = {
       last_updated: "2024-01-29 08:32:56.916733-08",
       name: "gfgsfaa",
       user_name: "audrey",
+      active: true,
     },
   ],
   setLists: (new_value) => {},

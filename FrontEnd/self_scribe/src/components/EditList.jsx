@@ -11,10 +11,14 @@ export default function EditList(props) {
   const { lists, setLists } = useContext(ListsContext);
   const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
+  const [active, setActive] = useState();
 
   const list = lists.filter((list) => {
     return list.id === id;
   })[0];
+
+  // this feels like the wrong place, but wasn't sure where to put it; should it be a useEffect?
+  setActive(list.active);
 
   // to close the editing card
   function handleEditChange() {
@@ -27,6 +31,16 @@ export default function EditList(props) {
   function handleAddActivityChg() {
     console.log(addActivity);
     setAddActivity(!addActivity);
+  }
+
+  async function handlePause(event) {
+    event.preventDefault();
+    const response = await fetch(`http://localhost:3001/pauseList/${list.id}`, {
+      method: "POST",
+    });
+    if(response.ok){
+      setActive(!active)
+    }
   }
 
   function removeFromList() {
@@ -66,7 +80,12 @@ export default function EditList(props) {
             <EditString setEditingName={setEditingName} id={id} />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">
-            <button className="mainBtns border-emerald-800">Pause</button>
+            <button
+              className="mainBtns border-emerald-800"
+              onClick={handlePause}
+            >
+              Pause
+            </button>
             <button
               className="mainBtns border-emerald-800"
               onClick={handleDelete}
