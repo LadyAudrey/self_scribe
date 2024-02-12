@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .mainBg {
-  background: url("/assets/BGgradient.svg");
+  background: url("/assets/BGgradient.png");
 }
 
 @layer components {
