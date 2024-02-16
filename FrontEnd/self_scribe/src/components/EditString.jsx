@@ -2,14 +2,12 @@ import { useState, useContext } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 
 export default function EditString(props) {
-  const { id, setEditingName } = props;
+  const { id, setEditingName, listName, setListName } = props;
   const { lists, setLists } = useContext(ListsContext);
 
   let list = lists.filter((list) => {
     return list.id === id;
   })[0];
-
-  const [listName, setListName] = useState(list.name);
 
   async function handleNameChange() {
     // TODO: update to change the list name in the DB

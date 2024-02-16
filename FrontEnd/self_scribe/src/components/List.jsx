@@ -18,8 +18,6 @@ export function List(props) {
   }
   const handleChange = () => {
     setEditing(!editing);
-    console.log(editing);
-    console.log("editing is being activated");
   };
 
   return (
@@ -46,10 +44,15 @@ export function List(props) {
             </div>
           ))}
         {editing && (
-          <EditList id={list.id} editing={editing} setEditing={setEditing} />
+          <EditList
+            id={list.id}
+            editing={editing}
+            setEditing={setEditing}
+            key={list.id}
+          />
         )}
         {!editing && (
-          <button className="editBtn" onClick={handleChange}>
+          <button className="editBtn" onClick={handleChange} key={list.id}>
             Edit
           </button>
         )}

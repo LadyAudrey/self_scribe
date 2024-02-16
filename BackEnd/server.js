@@ -126,11 +126,31 @@ app.post("/addList/:user/:listName", async (req, res) => {
   }
 });
 
-// DELETE FROM lists WHERE id = ${#};
+app.post("/pauseList/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await pool.query(
+      `UPDATE lists
+      SET active = CASE
+        WHEN active = TRUE THEN FALSE
+        ELSE TRUE
+        END
+    WHERE id=${id};`
+    );
+    console.log(response);
+    // is not updating the DB, don't know why
+    // also wtaf is this response???
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error.mess);
+    console.log(error);
+  }
+});
+
 app.post("/deleteList/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = pool.query(`DELETE FROM lists WHERE id = ${id};`);
+    const response = await pool.query(`DELETE FROM lists WHERE id = ${id};`);
     res.json(response);
   } catch (error) {
     res.status(500).json(error.message);
@@ -142,12 +162,12 @@ app.post("/editList/:id/:name", async (req, res) => {
     const id = req.params.id;
     const newName = req.params.name;
     console.log(newName);
-    const response = pool.query(
-      `UPDATE lists SET name = ${newName} WHERE id = ${id};`
+    const response = await pool.query(
+      `UPDATE lists SET name = '${newName}' WHERE id = ${id};`
     );
     res.json(response);
   } catch (error) {
-    console.log("inside catch block");
+    console.log("inside catch block", error);
     res.status(500).json(error.message);
   }
 });

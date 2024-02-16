@@ -1,3 +1,5 @@
+// EditString not updating UI- de-nesting some of the logic and
+
 import { useState, useContext } from "react";
 // import { EditActivity } from "./EditActivity";
 
@@ -11,35 +13,31 @@ export default function EditList(props) {
   const { lists, setLists } = useContext(ListsContext);
   const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
-  const [active, setActive] = useState();
 
   const list = lists.filter((list) => {
     return list.id === id;
   })[0];
 
-  // this feels like the wrong place, but wasn't sure where to put it; should it be a useEffect?
-  setActive(list.active);
+  const [active, setActive] = useState(list.active);
+  const [listName, setListName] = useState(list.name);
 
   // to close the editing card
-  function handleEditChange() {
+  function handleEditChange(event) {
     setEditing(!editing);
-    console.log("I'm editing", editing);
   }
 
-  // to open the editActivity card
-  // currently getting an error of setAddActivity is not a function... why???
   function handleAddActivityChg() {
-    console.log(addActivity);
     setAddActivity(!addActivity);
   }
 
   async function handlePause(event) {
     event.preventDefault();
-    const response = await fetch(`http://localhost:3001/pauseList/${list.id}`, {
+    const response = await fetch(
+      `http://localhost:3001/pauseList/${list.id}`, {
       method: "POST",
     });
-    if(response.ok){
-      setActive(!active)
+    if (response.ok) {
+      setActive(!active);
     }
   }
 
@@ -67,17 +65,28 @@ export default function EditList(props) {
       <div>
         {/* needs background to be correct gradient */}
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
+          <img
+            onClick={handleEditChange}
+            src="Buttons/exits.svg"
+            className="w-1/12"
+          />
           {!editingName && (
             <div
               onDoubleClick={() => {
                 setEditingName(true);
               }}
             >
-              {list.name}
+              aNEwList2
+              {listName}
             </div>
           )}
           {editingName && (
-            <EditString setEditingName={setEditingName} id={id} />
+            <EditString
+              setEditingName={setEditingName}
+              id={id}
+              listName={listName}
+              setListName={setListName}
+            />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">
             <button
@@ -92,13 +101,6 @@ export default function EditList(props) {
             >
               Delete
             </button>
-          </div>
-          <div className="flex justify-center">
-            <div className="mainBtns bg-emerald-900 bg-cover border-4">
-              <button onClick={handleEditChange} />
-              Save Changes
-              <button />
-            </div>
           </div>
         </div>
       </div>
