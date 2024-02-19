@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.mainBg {
+  background: url("/assets/BGgradient.png");
+}
+
 @layer components {
   h2 {
     @apply text-4xl pb-5
@@ -12,16 +16,18 @@
   h4 {
     @apply text-2xl
   }
-  button {
-    @apply sm:p-2 sm:m-6 border-solid border-4 rounded-lg font-bold
+
+  .mainBtns {
+    @apply bg-black p-2 m-2 border-2 rounded-xl border-slate-600
+  }
+
+  .editBtn {
+    @apply border-solid border-2 rounded-md border-white
   }
   .card {
-    @apply m-5 w-2/5 sm:min-h-fit p-10 border-solid border-4 rounded-lg font-bold
+    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-10 gap-2 border-solid border-4 rounded-lg font-bold bg-blue-950
   }
   .card_data {
   @apply self-center
-  }
-  .legend-title {
-    
   }
 }

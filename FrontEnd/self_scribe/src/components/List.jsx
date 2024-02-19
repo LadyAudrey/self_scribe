@@ -1,9 +1,24 @@
+import { useState, useContext, useEffect } from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
+import EditList from "./EditList";
+import { EditActivity } from "./EditActivity";
+import { ListsContext } from "../Contexts/ListsContext";
+// TODO: Edit Activity should be activated when the button is activated next to an activity, not passively
+
 export function List(props) {
   const { list } = props;
+  const [editing, setEditing] = useState(false);
+
+  const handleChange = () => {
+    setEditing(!editing);
+  };
+
   return (
     <div>
-      <fieldset>
-        <legend className="legend title">{list.name}</legend>
+      <div className="flex gap-2 relative">
+        <p className="legend title">{list.name}</p>
         {list?.todos &&
           list.todos.map((task) => (
             <div>
@@ -20,10 +35,24 @@ export function List(props) {
                 className="m-2"
                 checked={task.completed}
               />
-              <button>Edit</button>
+              <button>Delete</button>
             </div>
           ))}
-      </fieldset>
+        {editing && (
+          <EditList
+            id={list.id}
+            editing={editing}
+            setEditing={setEditing}
+            key={uuidv4()}
+          />
+        )}
+        {!editing && (
+          <button className="editBtn" onClick={handleChange} key={uuidv4()}>
+            Edit
+          </button>
+        )}
+        {/* <EditActivity listName={list.name} /> */}
+      </div>
     </div>
   );
 }

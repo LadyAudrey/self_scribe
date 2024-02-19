@@ -1,3 +1,4 @@
+-- add an active/ on hold status
 CREATE TABLE lists (
 id serial PRIMARY KEY,
 name VARCHAR ( 20 ) UNIQUE NOT NULL,

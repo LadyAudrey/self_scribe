@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { useState } from "react";
+import { ListsContext } from "../Contexts/ListsContext";
 
 export default function AddList(props) {
-  const { lists, setLists } = props;
+  const { lists, setLists } = useContext(ListsContext);
   const [listName, setListName] = useState("");
 
   function handleAddListChange(event) {
@@ -29,12 +31,12 @@ export default function AddList(props) {
     <form onSubmit={handleAddListSubmit} className="self-end">
       <button type="submit">Add List</button>
       <label>
-        List Name:
         <input
           type="text"
           name="newList"
           value={listName}
           onChange={handleAddListChange}
+          className="bg-black rounded-md mx-2 border-slate-800 border-2"
         ></input>
       </label>
     </form>

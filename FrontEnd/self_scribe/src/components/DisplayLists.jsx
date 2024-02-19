@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
+import { ListsContext } from "../Contexts/ListsContext";
 
 import { List } from "./List";
 import AddList from "./AddList";
@@ -6,19 +10,7 @@ import AddList from "./AddList";
 const kudos = [];
 
 export function DisplayLists() {
-  //
-  const [lists, setLists] = useState([]);
-  // Kenson approved use of useEffect
-  useEffect(() => {
-    fetchTDL();
-  }, []);
-
-  async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/getLists/audrey");
-    const result = await response.json();
-    setLists(result.lists);
-    console.log(result);
-  }
+  const { lists, setLists } = useContext(ListsContext);
   async function handleChange(event) {
     const updatedTasks = list.todos.map((task) => {
       if (task.name === event.target.name) {
@@ -42,12 +34,6 @@ export function DisplayLists() {
       // Todo connect new list creation to backend
     }
 
-    // const newList = {
-    //   title: list.title,
-    //   todos: updatedTasks,
-    // };
-    // setList(newList);
-
     await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -56,18 +42,32 @@ export function DisplayLists() {
   }
 
   return (
-    <div className="flex justify-around">
-      <div className="flex flex-col">
+    <div className="relative flex justify-around">
+      {/* TODO why isn't gap working here??? */}
+      <div className="flex flex-col gap-10">
         <fieldset>
-          <legend>TDL</legend>
+          <legend className="text-2xl">TDL</legend>
           <div>
             {!lists && <h2>data pending</h2>}
             {lists.length &&
-              lists.map((list, index) => {
-                return <List list={list} key={index} />;
+              lists.map((list) => {
+                {
+                  /* uuidv4 creates a random, unique identifier string */
+                }
+                return <List key={uuidv4()} list={list} />;
               })}
           </div>
-          <AddList lists={lists} setLists={setLists} />
+          {/* TODO create update, pop editing into seperate components */}
+          <AddList
+            lists={lists}
+            setLists={setLists}
+            className="absolute bottom-0"
+          />
+          <div className="flex">
+            <p>View My Lists</p>
+            {/* TODO update button background to the List svg */}
+            <button>Boolean with list symbol</button>
+          </div>
         </fieldset>
       </div>
       <div>

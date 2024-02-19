@@ -1,11 +1,10 @@
-const { Pool } = require("pg");
+import pkg from "pg";
+const { Pool } = pkg;
 
-const pool = new Pool({
+export const pool = new Pool({
   user: "evergreen",
   database: "self_scribe",
   password: "DBpw",
   port: 5432,
   host: "localhost",
 });
-
-module.exports = { pool };

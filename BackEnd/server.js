@@ -1,65 +1,18 @@
-const { pool } = require("./db");
+import { pool } from "./db.js";
 
-// installed body-parser
-
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 const app = express();
 const port = 3001;
 
 // in production the wild card is fine for ease
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  // res.setHeader("Access-Control-Allow-Origin", "*");
-  // res.setHeader(
-  //   "Access-Control-Allow-Methods",
-  //   "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  // ); // If needed
-  // res.setHeader(
-  //   "Access-Control-Allow-Headers",
-  //   "X-Requested-With,content-type"
-  // ); // If needed
-  // res.setHeader("Access-Control-Allow-Credentials", true); // If needed
-
   res.json({ serverMessage: "Hellooooooo World!" });
 });
-
-// toDoList = {
-// title: string,
-// toDos: [toDoItem]
-// }
-
-let toDoList = [
-  {
-    title: "First List",
-    todos: [
-      {
-        name: "meditate",
-        completed: false,
-      },
-      {
-        name: "exercise",
-        completed: false,
-      },
-    ],
-  },
-  {
-    title: "Second List",
-    todos: [
-      {
-        name: "2meditate",
-        completed: false,
-      },
-      {
-        name: "2exercise",
-        completed: false,
-      },
-    ],
-  },
-];
 
 app.get("/listItems", async (req, res) => {
   try {
@@ -88,7 +41,7 @@ app.get("/listItems", async (req, res) => {
 });
 
 app.post("/listItems", (req, res) => {
-  toDoList = req.body;
+  const toDoList = req.body;
   res.json({
     serverMessage: "data received",
     updatedList: toDoList,
@@ -97,14 +50,18 @@ app.post("/listItems", (req, res) => {
 });
 
 app.get("/getLists/:user", async (req, res) => {
-  const query = await pool.query(
-    `SELECT * FROM lists WHERE user_name='${req.params.user}'`
-  );
+  try {
+    const query = await pool.query(
+      `SELECT * FROM lists WHERE user_name='${req.params.user}'`
+    );
 
-  res.json({
-    user: req.params.user,
-    lists: query.rows,
-  });
+    res.json({
+      user: req.params.user,
+      lists: query.rows,
+    });
+  } catch (error) {
+    console.log({ error }, "app.get, line 110");
+  }
 });
 
 app.post("/addList/:user/:listName", async (req, res) => {
@@ -122,6 +79,50 @@ app.post("/addList/:user/:listName", async (req, res) => {
   }
 });
 
+app.post("/pauseList/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await pool.query(
+      `UPDATE lists
+      SET active = CASE
+        WHEN active = TRUE THEN FALSE
+        ELSE TRUE
+        END
+    WHERE id=${id};`
+    );
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error.mess);
+    console.log(error);
+  }
+});
+
+app.post("/deleteList/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await pool.query(`DELETE FROM lists WHERE id = ${id};`);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
+app.post("/editList/:id/:name", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const newName = req.params.name;
+    console.log(newName);
+    const response = await pool.query(
+      `UPDATE lists SET name = '${newName}' WHERE id = ${id};`
+    );
+    res.json(response);
+  } catch (error) {
+    console.log("inside catch block", error);
+    res.status(500).json(error.message);
+  }
+});
+
+// should stay at the bottom of the file
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
