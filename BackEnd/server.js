@@ -1,10 +1,8 @@
-const { pool } = require("./db");
+import { pool } from "./db.js";
 
-// installed body-parser
-
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 const app = express();
 const port = 3001;
 
@@ -13,53 +11,8 @@ app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  // res.setHeader("Access-Control-Allow-Origin", "*");
-  // res.setHeader(
-  //   "Access-Control-Allow-Methods",
-  //   "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  // ); // If needed
-  // res.setHeader(
-  //   "Access-Control-Allow-Headers",
-  //   "X-Requested-With,content-type"
-  // ); // If needed
-  // res.setHeader("Access-Control-Allow-Credentials", true); // If needed
-
   res.json({ serverMessage: "Hellooooooo World!" });
 });
-
-// toDoList = {
-// title: string,
-// toDos: [toDoItem]
-// }
-
-let toDoList = [
-  {
-    title: "First List",
-    todos: [
-      {
-        name: "meditate",
-        completed: false,
-      },
-      {
-        name: "exercise",
-        completed: false,
-      },
-    ],
-  },
-  {
-    title: "Second List",
-    todos: [
-      {
-        name: "2meditate",
-        completed: false,
-      },
-      {
-        name: "2exercise",
-        completed: false,
-      },
-    ],
-  },
-];
 
 app.get("/listItems", async (req, res) => {
   try {
@@ -88,7 +41,7 @@ app.get("/listItems", async (req, res) => {
 });
 
 app.post("/listItems", (req, res) => {
-  toDoList = req.body;
+  const toDoList = req.body;
   res.json({
     serverMessage: "data received",
     updatedList: toDoList,
@@ -137,9 +90,6 @@ app.post("/pauseList/:id", async (req, res) => {
         END
     WHERE id=${id};`
     );
-    console.log(response);
-    // is not updating the DB, don't know why
-    // also wtaf is this response???
     res.json(response);
   } catch (error) {
     res.status(500).json(error.mess);

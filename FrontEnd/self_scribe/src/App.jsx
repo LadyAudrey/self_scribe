@@ -18,7 +18,6 @@ export default function Home() {
     const response = await fetch("http://localhost:3001/getLists/audrey");
     const result = await response.json();
     setLists(result.lists);
-    console.log(result);
   }
 
   return (
@@ -50,6 +49,3 @@ export default function Home() {
     </ListsContext.Provider>
   );
 }
-
-// hw- replace useContext for prop drilling for lists
-// commenting out components that are not working

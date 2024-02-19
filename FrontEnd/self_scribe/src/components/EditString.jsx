@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 
 export default function EditString(props) {
@@ -14,7 +14,7 @@ export default function EditString(props) {
     // line 16 is making a copy of OG list, replace the name with the new name
     const newList = { ...list, name: listName };
     // finding the index of the list we need to update
-    const oldListIndex = lists.indexOf((element) => {
+    const oldListIndex = lists.findIndex((element) => {
       return element.id === id;
     });
     // making a copy of the current list
@@ -30,7 +30,7 @@ export default function EditString(props) {
         method: "POST",
       }
     );
-
+    console.log(newLists);
     if (response.ok) {
       setLists(newLists);
       setEditingName(false);

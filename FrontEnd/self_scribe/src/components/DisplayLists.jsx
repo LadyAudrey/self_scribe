@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { ListsContext } from "../Contexts/ListsContext";
 
 import { List } from "./List";
@@ -32,12 +34,6 @@ export function DisplayLists() {
       // Todo connect new list creation to backend
     }
 
-    // const newList = {
-    //   title: list.title,
-    //   todos: updatedTasks,
-    // };
-    // setList(newList);
-
     await fetch("http://localhost:3001/listItems", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -55,7 +51,10 @@ export function DisplayLists() {
             {!lists && <h2>data pending</h2>}
             {lists.length &&
               lists.map((list) => {
-                return <List id={list.id} key={list.id} />;
+                {
+                  /* uuidv4 creates a random, unique identifier string */
+                }
+                return <List key={uuidv4()} list={list} />;
               })}
           </div>
           {/* TODO create update, pop editing into seperate components */}

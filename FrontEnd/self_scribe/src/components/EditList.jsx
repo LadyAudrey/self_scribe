@@ -76,7 +76,6 @@ export default function EditList(props) {
                 setEditingName(true);
               }}
             >
-              aNEwList2
               {listName}
             </div>
           )}

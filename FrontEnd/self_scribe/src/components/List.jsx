@@ -1,4 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+
+import { v4 as uuidv4 } from "uuid";
 
 import EditList from "./EditList";
 import { EditActivity } from "./EditActivity";
@@ -6,16 +8,9 @@ import { ListsContext } from "../Contexts/ListsContext";
 // TODO: Edit Activity should be activated when the button is activated next to an activity, not passively
 
 export function List(props) {
-  const { id } = props;
+  const { list } = props;
   const [editing, setEditing] = useState(false);
-  const { lists, setLists } = useContext(ListsContext);
-  const list = lists.filter((list) => {
-    return list.id === id;
-  })[0];
 
-  if (list.length === 0) {
-    return console.warn("List with id does not exist");
-  }
   const handleChange = () => {
     setEditing(!editing);
   };
@@ -48,11 +43,11 @@ export function List(props) {
             id={list.id}
             editing={editing}
             setEditing={setEditing}
-            key={list.id}
+            key={uuidv4()}
           />
         )}
         {!editing && (
-          <button className="editBtn" onClick={handleChange} key={list.id}>
+          <button className="editBtn" onClick={handleChange} key={uuidv4()}>
             Edit
           </button>
         )}
