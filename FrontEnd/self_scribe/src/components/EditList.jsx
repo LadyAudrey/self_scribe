@@ -32,13 +32,13 @@ export default function EditList(props) {
 
   async function handlePause(event) {
     event.preventDefault();
-    const response = await fetch(
-      `http://localhost:3001/pauseList/${list.id}`, {
+    const response = await fetch(`http://localhost:3001/pauseList/${list.id}`, {
       method: "POST",
     });
     if (response.ok) {
       setActive(!active);
     }
+    console.log(active);
   }
 
   function removeFromList() {
@@ -67,7 +67,7 @@ export default function EditList(props) {
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
           <img
             onClick={handleEditChange}
-            src="Buttons/exits.svg"
+            src="/Buttons/exit.svg"
             className="w-1/12"
           />
           {!editingName && (
@@ -88,12 +88,14 @@ export default function EditList(props) {
             />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">
-            <button
-              className="mainBtns border-emerald-800"
-              onClick={handlePause}
-            >
-              Pause
-            </button>
+            <input
+              type="checkbox"
+              id="active"
+              value={active}
+              className=""
+              onChange={handlePause}
+            />
+            <label htmlFor="active">Pause</label>
             <button
               className="mainBtns border-emerald-800"
               onClick={handleDelete}
