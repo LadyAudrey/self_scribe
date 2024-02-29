@@ -32,9 +32,12 @@ export default function EditList(props) {
 
   async function handlePause(event) {
     event.preventDefault();
-    const response = await fetch(`http://localhost:3001/pauseList/${list.id}`, {
-      method: "POST",
-    });
+    const response = await fetch(
+      `http://localhost:3001/lists/pause/${list.id}`,
+      {
+        method: "POST",
+      }
+    );
     if (response.ok) {
       setActive(!active);
     }
@@ -52,7 +55,7 @@ export default function EditList(props) {
   async function handleDelete(event) {
     event.preventDefault();
     const response = await fetch(
-      `http://localhost:3001/deleteList/${list.id}`,
+      `http://localhost:3001/lists/delete/${list.id}`,
       { method: "POST" }
     );
     if (response.ok) {

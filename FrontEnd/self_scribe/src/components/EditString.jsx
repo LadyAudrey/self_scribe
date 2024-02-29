@@ -25,7 +25,7 @@ export default function EditString(props) {
     list = newLists;
     // updating global state with the edited string
     const response = await fetch(
-      `http://localhost:3001/editList/${id}/${listName}`,
+      `http://localhost:3001/lists/edit/${id}/${listName}`,
       {
         method: "POST",
       }

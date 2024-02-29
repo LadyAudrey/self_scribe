@@ -15,7 +15,7 @@ export default function AddList(props) {
     console.log(listName);
     const user = "audrey";
     const response = await fetch(
-      `http://localhost:3001/addList/${user}/${listName}`,
+      `http://localhost:3001/lists/add/${user}/${listName}`,
       {
         method: "POST",
       }
