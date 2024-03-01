@@ -88,6 +88,7 @@ export default function EditList(props) {
               id={id}
               listName={listName}
               setListName={setListName}
+              structure={"list"}
             />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">

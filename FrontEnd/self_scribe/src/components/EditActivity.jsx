@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import EditString from "./EditString";
 
 export function EditActivity(props) {
   const listName = props.listName;
+  const [activityName, setActivityName] = useState(null);
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
   const [numOfNum, setNumOFNum] = useState("#");
   // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
@@ -24,7 +27,7 @@ export function EditActivity(props) {
       <div className="flex flex-col w-fit p-6 border-2 rounded-2 bg-blue-900 text-white border-yellow-400">
         <fieldset>
           <legend>
-            <h3>I need the list.activity.name TODO</h3>
+            <h3>{listName}</h3>
             <div>
               {/* Desired Frequency (x units in y time) */}
               <div className="flex">

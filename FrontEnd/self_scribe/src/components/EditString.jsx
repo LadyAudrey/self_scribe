@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 
 export default function EditString(props) {
-  const { id, setEditingName, listName, setListName } = props;
+  const { id, setEditingName, listName, setListName, structure } = props;
   const { lists, setLists } = useContext(ListsContext);
 
   let list = lists.filter((list) => {
@@ -10,7 +10,6 @@ export default function EditString(props) {
   })[0];
 
   async function handleNameChange() {
-    // TODO: update to change the list name in the DB
     // line 16 is making a copy of OG list, replace the name with the new name
     const newList = { ...list, name: listName };
     // finding the index of the list we need to update
@@ -25,7 +24,7 @@ export default function EditString(props) {
     list = newLists;
     // updating global state with the edited string
     const response = await fetch(
-      `http://localhost:3001/lists/edit/${id}/${listName}`,
+      `http://localhost:3001/${structure}/edit/${id}/${listName}`,
       {
         method: "POST",
       }

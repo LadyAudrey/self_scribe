@@ -51,7 +51,7 @@ export function List(props) {
             Edit
           </button>
         )}
-        {/* <EditActivity listName={list.name} /> */}
+        <EditActivity listName={list.name} />
       </div>
     </div>
   );
