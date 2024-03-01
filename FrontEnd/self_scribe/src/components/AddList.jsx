@@ -25,7 +25,7 @@ export default function AddList(props) {
       console.log(result);
       setLists([...lists, result.rows[0]]);
     }
-    // TODO have the button refresh the page when updating lists
+
   }
   return (
     <form onSubmit={handleAddListSubmit} className="self-end">

@@ -6,8 +6,6 @@ import { useState, useContext } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 import EditString from "./EditString";
 
-// TODO remove the prop drilling and update with useContext();
-
 export default function EditList(props) {
   const { id, editing, setEditing } = props;
   const { lists, setLists } = useContext(ListsContext);

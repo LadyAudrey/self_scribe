@@ -6,6 +6,7 @@ import EditString from "./EditString";
 
 export function EditActivity(props) {
   const listName = props.listName;
+  const [editingActName, setEditingActName] = useState(null);
   const [activityName, setActivityName] = useState(null);
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
   const [numOfNum, setNumOFNum] = useState("#");
@@ -27,10 +28,28 @@ export function EditActivity(props) {
       <div className="flex flex-col w-fit p-6 border-2 rounded-2 bg-blue-900 text-white border-yellow-400">
         <fieldset>
           <legend>
-            <h3>{listName}</h3>
+            <h3>{activityName}</h3>
             <div>
-              {/* Desired Frequency (x units in y time) */}
+              {!editingActName && (
+                <div
+                  onDoubleClick={() => {
+                    setEditingActName(true);
+                  }}
+                >
+                  {activityName}
+                </div>
+              )}
+              {editingActName && (
+                <EditString
+                  setEditingActName={setEditingActName}
+                  // id=?
+                  activityName={activityName}
+                  setActivityName={setActivityName}
+                  structure={"activity"}
+                />
+              )}
               <div className="flex">
+                {/* Desired Frequency (x units in y time) */}
                 <input
                   type="number"
                   name="numOfNum"
@@ -70,7 +89,7 @@ export function EditActivity(props) {
               {/* Active? (boolean, hover effect) */}
             </div>
             <div>
-              <button>Save Changes</button>
+              <button className="">Save Changes</button>
             </div>
           </legend>
         </fieldset>
