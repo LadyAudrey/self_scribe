@@ -14,7 +14,8 @@ CONSTRAINT tasks_id
 FOREIGN KEY(id)
 REFERENCES lists(id),
 created_on TIMESTAMP NOT NULL,
-description VARCHAR ( 300 ) NOT NULL
+description VARCHAR ( 300 ) NOT NULL,
+category VARCHAR (300) NOT NULL
 );
 
 CREATE TABLE tracking (
