@@ -15,7 +15,7 @@ export default function Home() {
   }, []);
 
   async function fetchTDL() {
-    const response = await fetch("http://localhost:3001/getLists/audrey");
+    const response = await fetch("http://localhost:3001/lists/read/audrey");
     const result = await response.json();
     setLists(result.lists);
   }

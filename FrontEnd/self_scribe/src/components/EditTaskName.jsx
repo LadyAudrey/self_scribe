@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 
-export default function EditString(props) {
-  const { id, setEditingName, listName, setListName, structure } = props;
+export default function EditTaskName(props) {
+  const { id, setEditingActName, activityName, setActivityName, structure } =
+    props;
   const { lists, setLists } = useContext(ListsContext);
 
   let list = lists.filter((list) => {
@@ -24,7 +25,7 @@ export default function EditString(props) {
     list = newLists;
     // updating global state with the edited string
     const response = await fetch(
-      `http://localhost:3001/${structure}/edit/${id}/${listName}`,
+      `http://localhost:3001/$activities/edit/${id}/${activityName}`,
       {
         method: "POST",
       }
@@ -39,10 +40,10 @@ export default function EditString(props) {
     <div>
       <input
         autoFocus
-        value={listName}
+        value={activityName}
         className="bg-black"
         onChange={(event) => {
-          setListName(event.target.value);
+          setActivityName(event.target.value);
         }}
         onBlur={handleNameChange}
       />
