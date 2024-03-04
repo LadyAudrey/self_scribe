@@ -3,8 +3,7 @@ import { useState } from "react";
 import { ListsContext } from "../Contexts/ListsContext";
 
 export function AddTask(props) {
-  const { listID, tasks, setTasks } = props;
-
+  const { listId, tasks, setTasks } = props;
   const { lists, setLists } = useContext(ListsContext);
   const [taskName, setTaskName] = useState("");
 
@@ -14,10 +13,9 @@ export function AddTask(props) {
 
   async function handleAddTaskSubmit(event) {
     event.preventDefault();
-    console.log(taskName);
     const user = "audrey";
     const response = await fetch(
-      `http://localhost:3001/tasks/add/${user}/${taskName}`,
+      `http://localhost:3001/tasks/add/${user}/${listId}/${taskName}`,
       {
         method: "POST",
       }
@@ -27,6 +25,8 @@ export function AddTask(props) {
       console.log(result);
       // TODO: create state consuming the Context
       setTasks([...tasks, result.rows[0]]);
+    } else {
+      console.log(await response.json());
     }
   }
   return (

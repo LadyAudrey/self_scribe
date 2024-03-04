@@ -9,13 +9,16 @@ last_updated VARCHAR ( 200 ) NOT NULL
 
 CREATE TABLE tasks (
 id serial PRIMARY KEY,
+list_id INTEGER,
 name VARCHAR ( 20 ) UNIQUE NOT NULL,
-CONSTRAINT tasks_id
-FOREIGN KEY(id)
-REFERENCES lists(id),
 created_on TIMESTAMP NOT NULL,
 description VARCHAR ( 300 ) NOT NULL,
-category VARCHAR (300) NOT NULL
+category VARCHAR (300) NOT NULL,
+active BOOLEAN,
+CONSTRAINT fk_lists_id
+FOREIGN KEY(list_id)
+REFERENCES lists(id)
+ON DELETE NO ACTION
 );
 
 CREATE TABLE tracking (

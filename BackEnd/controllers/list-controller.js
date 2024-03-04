@@ -66,6 +66,8 @@ router.post("/pause/:id", async (req, res) => {
   }
 });
 
+// TODO: currently not working
+
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;

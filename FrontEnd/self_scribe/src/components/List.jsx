@@ -11,6 +11,7 @@ import { TasksContext } from "../Contexts/ActivitiesContext";
 
 export function List(props) {
   const { list } = props;
+  console.log(list.id);
   const { tasks, setTasks } = useContext(TasksContext);
   const [editing, setEditing] = useState(false);
 
