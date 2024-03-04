@@ -51,9 +51,6 @@ export function DisplayLists() {
             {!lists && <h2>data pending</h2>}
             {lists.length &&
               lists.map((list) => {
-                {
-                  /* uuidv4 creates a random, unique identifier string */
-                }
                 return <List key={uuidv4()} list={list} />;
               })}
           </div>

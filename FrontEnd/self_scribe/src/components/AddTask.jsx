@@ -22,11 +22,9 @@ export function AddTask(props) {
     );
     if (response.ok) {
       const result = await response.json();
-      console.log(result);
       // TODO: create state consuming the Context
       setTasks([...tasks, result.rows[0]]);
     } else {
-      console.log(await response.json());
     }
   }
   return (

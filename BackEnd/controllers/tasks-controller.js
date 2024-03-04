@@ -19,4 +19,19 @@ router.post("/add/:user/:listID/:taskName", async (req, res) => {
   }
 });
 
+router.get("/listId/read/:user", async (req, res) => {
+  console.log("tasks-controller read is running");
+  try {
+    const query = await pool.query(
+      `SELECT * FROM tasks WHERE list_id='${req.params.list_id}'`
+    );
+    res.json({
+      user: req.params.user,
+      lists: query.rows,
+    });
+  } catch (error) {
+    console.log({ error }, " line 28 in tasks-controller");
+  }
+});
+
 export default router;

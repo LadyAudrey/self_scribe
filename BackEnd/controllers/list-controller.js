@@ -67,6 +67,7 @@ router.post("/pause/:id", async (req, res) => {
 });
 
 // TODO: currently not working
+// foreign keys relying on it, need CASCADE (Fx) instead of NO ACTION?
 
 router.post("/delete/:id", async (req, res) => {
   try {
