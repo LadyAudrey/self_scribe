@@ -1,3 +1,5 @@
+-- TODO: add a "user" column to all tables
+
 -- add an active/ on hold status
 CREATE TABLE lists (
 id serial PRIMARY KEY,

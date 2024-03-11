@@ -1,37 +1,33 @@
-import { useContext } from "react";
-import { ListsContext } from "../Contexts/ListsContext";
-
 export default function EditString(props) {
-  const { id, setEditingName, listName, setListName, structure } = props;
-  const { lists, setLists } = useContext(ListsContext);
-
-  let list = lists.filter((list) => {
-    return list.id === id;
-  })[0];
+  const {
+    id,
+    setEditingName,
+    state,
+    setState,
+    inputName,
+    setInputName,
+    structure,
+  } = props;
 
   async function handleNameChange() {
-    // line 16 is making a copy of OG list, replace the name with the new name
-    const newList = { ...list, name: listName };
-    // finding the index of the list we need to update
-    const oldListIndex = lists.findIndex((element) => {
-      return element.id === id;
+    const newState = state.map((element) => {
+      if (element.id === id) {
+        return {
+          ...element,
+          name: inputName,
+        };
+      }
+      return element;
     });
-    // making a copy of the current list
-    const newLists = [...lists];
-    // replace the list at the index we found with the updated list
-    newLists[oldListIndex] = newList;
-    // update local state
-    list = newLists;
     // updating global state with the edited string
     const response = await fetch(
-      `http://localhost:3001/${structure}/edit/${id}/${listName}`,
+      `http://localhost:3001/${structure}/edit/${id}/${inputName}`,
       {
         method: "POST",
       }
     );
-    console.log(newLists);
     if (response.ok) {
-      setLists(newLists);
+      setState(newState);
       setEditingName(false);
     }
   }
@@ -39,10 +35,10 @@ export default function EditString(props) {
     <div>
       <input
         autoFocus
-        value={listName}
+        value={inputName}
         className="bg-black"
         onChange={(event) => {
-          setListName(event.target.value);
+          setInputName(event.target.value);
         }}
         onBlur={handleNameChange}
       />

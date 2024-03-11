@@ -1,18 +1,15 @@
-import { Router } from "express";
+import { Router, response } from "express";
 import { pool } from "../models/db.js";
 
 const router = Router();
 
 router.get("/read/:user", async (req, res) => {
   try {
-    const query = await pool.query(
+    const response = await pool.query(
       `SELECT * FROM lists WHERE user_name='${req.params.user}'`
     );
 
-    res.json({
-      user: req.params.user,
-      lists: query.rows,
-    });
+    res.json(response.rows);
   } catch (error) {
     console.log({ error }, "app.get, line 110");
   }

@@ -1,10 +1,10 @@
-"use client";
-
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import EditString from "./EditString";
 
-export function EditActivity(props) {
+// need how to activate the editing UI
+
+export function EditTask(props) {
   const listName = props.listName;
   const [editingActName, setEditingActName] = useState(null);
   const [activityName, setActivityName] = useState(null);

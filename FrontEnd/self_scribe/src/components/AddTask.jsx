@@ -1,10 +1,7 @@
-import { useContext } from "react";
 import { useState } from "react";
-import { ListsContext } from "../Contexts/ListsContext";
 
 export function AddTask(props) {
   const { listId, tasks, setTasks } = props;
-  const { lists, setLists } = useContext(ListsContext);
   const [taskName, setTaskName] = useState("");
 
   function handleAddTaskChange(event) {
@@ -24,7 +21,6 @@ export function AddTask(props) {
       const result = await response.json();
       // TODO: create state consuming the Context
       setTasks([...tasks, result.rows[0]]);
-    } else {
     }
   }
   return (

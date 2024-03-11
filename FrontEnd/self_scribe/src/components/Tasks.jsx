@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
+import { AddTask } from "./AddTask";
 
-export function Tasks(listId) {
+export function Tasks({ listId }) {
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
     fetchTasks();
   }, []);
-  const user = "audrey";
   async function fetchTasks() {
-    const response = await fetch(
-      `http://localhost:3001/tasks/read/${user}/${listId}/`
-    );
-    const result = await response.json();
-    setTasks(result.tasks);
-    console.log(tasks);
+    const response = await fetch(`http://localhost:3001/tasks/read/${listId}/`);
+    if (response.ok) {
+      const result = await response.json();
+      setTasks(result);
+      console.log(result);
+    } else {
+      console.log("I'm broke, kthxy bai");
+    }
   }
   return (
     <>
-      <h2>I'm a task!</h2>
+      <AddTask listId={listId} tasks={tasks} setTasks={setTasks} />
+      {tasks &&
+        tasks.map((task) => {
+          return <h4>{task.name}</h4>;
+        })}
     </>
   );
 }
