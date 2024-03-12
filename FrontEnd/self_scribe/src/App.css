@@ -18,7 +18,7 @@
   }
 
   .mainBtns {
-    @apply bg-black p-2 m-2 border-2 rounded-xl border-slate-600
+    @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600
   }
 
   .editBtn {

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { AddTask } from "./AddTask";
+
+import { EditTask } from "./EditTask";
 
 export function Tasks(props) {
   const { listID, tasks, setTasks } = props;
 
   const [taskCompleted, setTaskCompleted] = useState(false);
+  const [editingTask, setEditingTask] = useState(false);
   return (
     <>
       <div className="">
@@ -21,8 +23,13 @@ export function Tasks(props) {
                   className="m-2"
                   checked={taskCompleted}
                 />
-                <button className="h-6 w-6 bg-cover bg-[url('/Buttons/Edit.svg')]"></button>
-                <h3 className="legend title"></h3>
+                {editingTask && <EditTask />}
+                {!editingTask && (
+                  <button
+                    className="h-6 w-6  bg-cover editBtn bg-[url('/Buttons/Edit.svg')]"
+                    onClick={setEditingTask(!editingTask)}
+                  ></button>
+                )}
               </div>
             );
           })}
