@@ -1,28 +1,32 @@
 import { useEffect, useState } from "react";
 import { AddTask } from "./AddTask";
 
-export function Tasks({ listId }) {
-  const [tasks, setTasks] = useState([]);
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-  async function fetchTasks() {
-    const response = await fetch(`http://localhost:3001/tasks/read/${listId}/`);
-    if (response.ok) {
-      const result = await response.json();
-      setTasks(result);
-      console.log(result);
-    } else {
-      console.log("I'm broke, kthxy bai");
-    }
-  }
+export function Tasks(props) {
+  const { listID, tasks, setTasks } = props;
+
+  const [taskCompleted, setTaskCompleted] = useState(false);
   return (
     <>
-      <AddTask listId={listId} tasks={tasks} setTasks={setTasks} />
-      {tasks &&
-        tasks.map((task) => {
-          return <h4>{task.name}</h4>;
-        })}
+      <div className="">
+        {tasks &&
+          tasks.map((task) => {
+            return (
+              <div className="flex px-8 gap-3">
+                <h4>{task.name}</h4>
+                <input
+                  type="checkbox"
+                  onChange={() => {
+                    setTaskCompleted(!taskCompleted);
+                  }}
+                  className="m-2"
+                  checked={taskCompleted}
+                />
+                <button className="h-6 w-6 bg-cover bg-[url('/Buttons/Edit.svg')]"></button>
+                <h3 className="legend title"></h3>
+              </div>
+            );
+          })}
+      </div>
     </>
   );
 }

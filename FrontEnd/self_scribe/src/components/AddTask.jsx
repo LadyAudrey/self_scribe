@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export function AddTask(props) {
   const { listId, tasks, setTasks } = props;
-  const [taskName, setTaskName] = useState("");
+  const [taskName, setTaskName] = useState("Add Task");
 
   function handleAddTaskChange(event) {
     setTaskName(event.target.value);
@@ -24,15 +24,17 @@ export function AddTask(props) {
     }
   }
   return (
-    <form onSubmit={handleAddTaskSubmit} className="self-end">
-      <button type="submit">Add Task</button>
+    <form onSubmit={handleAddTaskSubmit} className="self-end text-white">
+      {/* <button type="submit">Add Task</button> */}
       <label>
         <input
           type="text"
           name="newTask"
           value={taskName}
+          // defaultValue={"Add Task"}
           onChange={handleAddTaskChange}
-          className="bg-black rounded-md mx-2 border-slate-800 border-2"
+          // tried to use max-w-fit, unsuccessful, want it to fit close to the words
+          className=" bg-black rounded-md border-emerald-500 p-2 border-2"
         ></input>
       </label>
     </form>

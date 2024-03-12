@@ -20,7 +20,6 @@ export default function Home() {
     const response = await fetch("http://localhost:3001/lists/read/audrey");
     const result = await response.json();
     setLists(result);
-    console.log(result);
   }
 
   return (
