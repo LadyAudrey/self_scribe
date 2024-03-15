@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TasksContext } from "../Contexts/TasksContext";
 
 export function AddTask(props) {
-  const { listId, tasks, setTasks } = props;
+  const { listId } = props;
   const [taskName, setTaskName] = useState("Add Task");
+  const { tasks, setTasks } = useContext(TasksContext);
 
   function handleAddTaskChange(event) {
     setTaskName(event.target.value);

@@ -25,6 +25,7 @@ export function EditTask(props) {
 
   return (
     <>
+      {/* add exit button */}
       <div className="flex flex-col w-fit p-6 border-2 rounded-2 bg-blue-900 text-white border-yellow-400">
         <fieldset>
           <legend>

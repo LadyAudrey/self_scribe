@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,12 +10,7 @@ import { Tasks } from "./Tasks";
 
 export function List(props) {
   const { list } = props;
-  const [tasks, setTasks] = useState([]);
   const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   // Want this to be true when all of the tasks are completed, or the user clicks this and that turns all of the tasks to completed, update DB as needed
   const [listCompleted, setListCompleted] = useState(false);
@@ -23,18 +18,6 @@ export function List(props) {
   const handleChange = () => {
     setEditing(!editing);
   };
-
-  async function fetchTasks() {
-    const response = await fetch(
-      `http://localhost:3001/tasks/read/${list.id}/`
-    );
-    if (response.ok) {
-      const result = await response.json();
-      setTasks(result);
-    } else {
-      console.log("I'm broke, line 35 in List.jsx");
-    }
-  }
 
   return (
     <div>
@@ -67,7 +50,7 @@ export function List(props) {
               key={uuidv4()}
             ></button>
           )}
-          <AddTask listId={list.id} tasks={tasks} setTasks={setTasks} />
+          <AddTask listId={list.id} />
         </div>
         {list?.todos &&
           list.todos.map((task) => (
@@ -88,7 +71,7 @@ export function List(props) {
               <button>Delete</button>
             </div>
           ))}
-        <Tasks listId={list.id} tasks={tasks} setTasks={setTasks} />
+        <Tasks listId={list.id} />
       </div>
     </div>
   );
