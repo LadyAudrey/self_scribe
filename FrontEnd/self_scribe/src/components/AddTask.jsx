@@ -3,7 +3,7 @@ import { TasksContext } from "../Contexts/TasksContext";
 
 export function AddTask(props) {
   const { listId } = props;
-  const [taskName, setTaskName] = useState("Add Task");
+  const [taskName, setTaskName] = useState("");
   const { tasks, setTasks } = useContext(TasksContext);
 
   function handleAddTaskChange(event) {
@@ -32,6 +32,7 @@ export function AddTask(props) {
         <input
           type="text"
           name="newTask"
+          placeholder="Add Task"
           value={taskName}
           // defaultValue={"Add Task"}
           onChange={handleAddTaskChange}

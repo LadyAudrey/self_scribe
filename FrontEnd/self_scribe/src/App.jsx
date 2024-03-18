@@ -22,12 +22,15 @@ export default function Home() {
     const response = await fetch("http://localhost:3001/lists/read/audrey");
     const result = await response.json();
     setLists(result);
-    await fetchTasks(result);
+    const tasks = await fetchTasks(result);
+    setTasks(tasks);
   }
 
   async function fetchTasks(lists) {
     const tasks = [];
-    lists.forEach(async (list) => {
+
+    for (let i = 0; i < lists.length; i++) {
+      const list = lists[i];
       const response = await fetch(
         `http://localhost:3001/tasks/read/${list.id}/`
       );
@@ -37,8 +40,8 @@ export default function Home() {
       } else {
         console.log("I'm broke, line 35 in App.jsx");
       }
-    });
-    setTasks(tasks);
+    }
+    return tasks;
   }
 
   return (

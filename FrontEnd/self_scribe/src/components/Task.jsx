@@ -10,7 +10,6 @@ export function Task({ taskId }) {
   const task = tasks.find((task) => {
     return task.id === taskId;
   });
-  console.log(task);
   return (
     <div className="flex px-8 gap-3">
       <h4>{task.name}</h4>
@@ -22,7 +21,13 @@ export function Task({ taskId }) {
         className="m-2"
         checked={taskCompleted}
       />
-      {editingTask && <EditTask />}
+      {editingTask && (
+        <EditTask
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
+          taskId={taskId}
+        />
+      )}
       {!editingTask && (
         <button
           className="h-6 w-6  bg-cover editBtn bg-[url('/Buttons/Edit.svg')]"
@@ -34,3 +39,8 @@ export function Task({ taskId }) {
     </div>
   );
 }
+
+// UI TDL
+// collapse lists (DONE!)
+// delete tasks
+// collapse editingTasks (DONE!)

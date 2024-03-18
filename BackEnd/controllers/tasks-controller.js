@@ -31,4 +31,14 @@ router.get("/read/:listId", async (req, res) => {
   }
 });
 
+// not currently working
+router.post("/delete/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await pool.query(`DELETE from tasks WHERE id = ${id}`);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+});
+
 export default router;

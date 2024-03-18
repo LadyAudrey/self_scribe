@@ -8,19 +8,18 @@ import { TasksContext } from "../Contexts/TasksContext";
 export function Tasks(props) {
   const { listId } = props;
   const { tasks } = useContext(TasksContext);
-  console.log(listId, tasks);
+
+  const filteredTasks = tasks.filter((task) => {
+    return task.list_id === listId;
+  });
+
   return (
     <>
       <div className="">
-        {tasks &&
-          tasks
-            .filter((task) => {
-              console.log(task);
-              return task.list_id === listId;
-            })
-            .map((task) => {
-              return <Task key={uuidv4()} taskId={task.id} />;
-            })}
+        {filteredTasks.length > 0 &&
+          filteredTasks.map((task) => {
+            return <Task key={uuidv4()} taskId={task.id} />;
+          })}
       </div>
     </>
   );
