@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import EditString from "./EditString";
+import { TasksContext } from "../Contexts/TasksContext";
 
 // need how to activate the editing UI
 
 export function EditTask(props) {
-  const taskId = props.taskId;
-  const editingTask = props.editingTask;
-  const setEditingTask = props.setEditingTask;
+  const { taskId, editingTask, setEditingTask } = props;
+
+  const { tasks, setTasks } = useContext(TasksContext);
 
   const [editingActName, setEditingActName] = useState(null);
   const [activityName, setActivityName] = useState(null);
@@ -30,18 +31,27 @@ export function EditTask(props) {
     setEditingTask(!editingTask);
   }
 
-  // TODO: not currently working or updating DB
+  // TODO: update all fetches with try catch blocks
   async function handleDelete(event) {
     event.preventDefault();
     // TODO need identifier from parent
-    const response = await fetch(
-      `http://localhost:3001/tasks/delete${taskId}`,
-      {
-        method: "POST",
+    try {
+      const response = await fetch(
+        `http://localhost:3001/tasks/delete/${taskId}`,
+        {
+          method: "POST",
+        }
+      );
+      console.log(response, " tasks in Delete edittask.jsx");
+      if (response.ok) {
+        // delete from local storage
+        const newTasks = tasks.filter((task) => {
+          return task.id !== taskId;
+        });
+        setTasks(newTasks);
       }
-    );
-    if (response.ok) {
-      // delete from local storage
+    } catch (error) {
+      console.log(error);
     }
   }
 

@@ -3,6 +3,8 @@ import { pool } from "../models/db.js";
 
 const router = Router();
 
+//  accept description in UI
+
 router.post("/add/:user/:listID/:taskName", async (req, res) => {
   try {
     const userName = req.params.user;
@@ -10,8 +12,8 @@ router.post("/add/:user/:listID/:taskName", async (req, res) => {
     console.log(listID);
     const taskName = req.params.taskName;
     const response = await pool.query(
-      `INSERT INTO tasks (list_id, name, created_on, description, category, user_name) VALUES
-            ('${listID}', '${taskName}', NOW(), 'Description of Task 1', 'Category 1', '${userName}') RETURNING *;`
+      `INSERT INTO tasks (list_id, name, description, category, user_name) VALUES
+            ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1', '${userName}') RETURNING *;`
     );
     res.json(response);
   } catch (error) {
@@ -35,7 +37,8 @@ router.get("/read/:listId", async (req, res) => {
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = await pool.query(`DELETE from tasks WHERE id = ${id}`);
+    const query = await pool.query(`DELETE from tasks WHERE id = ${id}`);
+    res.json(query.rows);
   } catch (error) {
     res.status(500).json(error.message);
   }

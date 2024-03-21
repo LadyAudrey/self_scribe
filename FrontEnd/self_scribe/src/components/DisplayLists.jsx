@@ -11,6 +11,7 @@ const kudos = [];
 
 export function DisplayLists() {
   const { lists, setLists } = useContext(ListsContext);
+  const [addingList, setAddingList] = useState(false);
   async function handleChange(event) {
     const updatedTasks = list.todos.map((task) => {
       if (task.name === event.target.name) {
@@ -54,12 +55,22 @@ export function DisplayLists() {
                 return <List key={uuidv4()} list={list} />;
               })}
           </div>
-          {/* TODO create update, pop editing into seperate components */}
-          <AddList
-            lists={lists}
-            setLists={setLists}
-            className="absolute bottom-0"
-          />
+          {addingList ? (
+            <AddList
+              lists={lists}
+              setLists={setLists}
+              addingList={addingList}
+              setAddingList={setAddingList}
+            />
+          ) : (
+            <button
+              onClick={() => {
+                setAddingList(!addingList);
+              }}
+            >
+              Add List
+            </button>
+          )}
           <div className="flex">
             <p>View My Lists</p>
             {/* TODO update button background to the List svg */}

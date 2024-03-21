@@ -2,13 +2,13 @@ import { pool } from "./models/db.js";
 
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 const app = express();
 const port = 3001;
 
 // in production the wild card is fine for ease
 app.use(cors({ origin: "*" }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // handle routes here
 import rootController from "./controllers/root-controller.js";

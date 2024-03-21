@@ -19,9 +19,10 @@ router.post("/add/:user/:listName", async (req, res) => {
   try {
     const userName = req.params.user;
     const listName = req.params.listName;
-    // INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('testing3', 'audrey', NOW(), NOW());
+    const description = req.body.description || "";
+    console.log(req.body);
     const response = await pool.query(
-      `INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('${listName}', '${userName}', NOW(), NOW()) RETURNING *;`
+      `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
     );
     //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
     res.json(response);
