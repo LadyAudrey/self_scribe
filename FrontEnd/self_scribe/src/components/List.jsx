@@ -1,30 +1,65 @@
-import { useState, useContext, useEffect } from "react";
+import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import EditList from "./EditList";
-import { EditActivity } from "./EditActivity";
 import { AddTask } from "./AddTask";
+import EditList from "./EditList";
 import { Tasks } from "./Tasks";
 
-import { ListsContext } from "../Contexts/ListsContext";
-import { TasksContext } from "../Contexts/ActivitiesContext";
 // TODO: Edit Activity should be activated when the button is activated next to an activity, not passively
 
 export function List(props) {
   const { list } = props;
-  const { tasks, setTasks } = useContext(TasksContext);
+  const [seeTasks, setSeeTasks] = useState(true);
   const [editing, setEditing] = useState(false);
+  // Want this to be true when all of the tasks are completed, or the user clicks this and that turns all of the tasks to completed, update DB as needed
+  const [listCompleted, setListCompleted] = useState(false);
 
   const handleChange = () => {
     setEditing(!editing);
   };
 
+  const handleVisibility = () => {
+    setSeeTasks(!seeTasks);
+  };
+
   return (
     <div>
-      <div className="flex gap-2 relative">
-        <p className="legend title">{list.name}</p>
-        {list?.todos &&
+      <div className="flex flex-col gap-2 my-2 relative">
+        {/* contains collapse button, name (done), boolean for completion, Edit List(done), Add Task(done) buttons */}
+        <div className="flex gap-5">
+          <button
+            className="h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]"
+            onClick={handleVisibility}
+          ></button>
+          <h3 className="legend title">{list.name}</h3>
+          <input
+            name={list.checked}
+            type="checkbox"
+            onChange={() => {
+              setListCompleted(!listCompleted);
+            }}
+            className="m-2"
+            checked={list.checked}
+          />
+          {editing && (
+            <EditList
+              id={list.id}
+              editing={editing}
+              setEditing={setEditing}
+              key={uuidv4()}
+            />
+          )}
+          {!editing && (
+            <button
+              className="h-6 w-6  bg-cover editBtn bg-[url('/Buttons/Edit.svg')]"
+              onClick={handleChange}
+              key={uuidv4()}
+            ></button>
+          )}
+          <AddTask listId={list.id} />
+        </div>
+        {/* {list?.todos &&
           list.todos.map((task) => (
             <div>
               <label htmlFor={task.name} className="legend-name">
@@ -42,23 +77,8 @@ export function List(props) {
               />
               <button>Delete</button>
             </div>
-          ))}
-        {editing && (
-          <EditList
-            id={list.id}
-            editing={editing}
-            setEditing={setEditing}
-            key={uuidv4()}
-          />
-        )}
-        {!editing && (
-          <button className="editBtn" onClick={handleChange} key={uuidv4()}>
-            Edit
-          </button>
-        )}
-        {/* <EditActivity listName={list.name} /> */}
-        <AddTask listId={list.id} tasks={tasks} setTasks={setTasks} />
-        <Tasks listId={list.id} />
+          ))} */}
+        {seeTasks && <Tasks listId={list.id} />}
       </div>
     </div>
   );

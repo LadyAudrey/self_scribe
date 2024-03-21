@@ -1,11 +1,10 @@
-import { useContext } from "react";
-import { useState } from "react";
-import { ListsContext } from "../Contexts/ListsContext";
+import { useContext, useState } from "react";
+import { TasksContext } from "../Contexts/TasksContext";
 
 export function AddTask(props) {
-  const { listId, tasks, setTasks } = props;
-  const { lists, setLists } = useContext(ListsContext);
+  const { listId } = props;
   const [taskName, setTaskName] = useState("");
+  const { tasks, setTasks } = useContext(TasksContext);
 
   function handleAddTaskChange(event) {
     setTaskName(event.target.value);
@@ -24,19 +23,21 @@ export function AddTask(props) {
       const result = await response.json();
       // TODO: create state consuming the Context
       setTasks([...tasks, result.rows[0]]);
-    } else {
     }
   }
   return (
-    <form onSubmit={handleAddTaskSubmit} className="self-end">
-      <button type="submit">Add Task</button>
+    <form onSubmit={handleAddTaskSubmit} className="self-end text-white">
+      {/* <button type="submit">Add Task</button> */}
       <label>
         <input
           type="text"
           name="newTask"
+          placeholder="Add Task"
           value={taskName}
+          // defaultValue={"Add Task"}
           onChange={handleAddTaskChange}
-          className="bg-black rounded-md mx-2 border-slate-800 border-2"
+          // tried to use max-w-fit, unsuccessful, want it to fit close to the words
+          className=" bg-black rounded-md border-emerald-500 p-2 border-2"
         ></input>
       </label>
     </form>

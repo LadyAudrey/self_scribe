@@ -1,18 +1,15 @@
-import { Router } from "express";
+import { Router, response } from "express";
 import { pool } from "../models/db.js";
 
 const router = Router();
 
 router.get("/read/:user", async (req, res) => {
   try {
-    const query = await pool.query(
+    const response = await pool.query(
       `SELECT * FROM lists WHERE user_name='${req.params.user}'`
     );
 
-    res.json({
-      user: req.params.user,
-      lists: query.rows,
-    });
+    res.json(response.rows);
   } catch (error) {
     console.log({ error }, "app.get, line 110");
   }
@@ -22,9 +19,10 @@ router.post("/add/:user/:listName", async (req, res) => {
   try {
     const userName = req.params.user;
     const listName = req.params.listName;
-    // INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('testing3', 'audrey', NOW(), NOW());
+    const description = req.body.description || "";
+    console.log(req.body);
     const response = await pool.query(
-      `INSERT INTO lists(name, user_name, created_on, last_updated) VALUES('${listName}', '${userName}', NOW(), NOW()) RETURNING *;`
+      `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
     );
     //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
     res.json(response);

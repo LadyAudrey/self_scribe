@@ -11,18 +11,18 @@
     @apply text-4xl pb-5
   }
   h3 {
-    @apply text-blue-300 mx-5
+    @apply text-3xl text-blue-300 mx-5
   }
   h4 {
     @apply text-2xl
   }
 
   .mainBtns {
-    @apply bg-black p-2 m-2 border-2 rounded-xl border-slate-600
+    @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600
   }
 
   .editBtn {
-    @apply border-solid border-2 rounded-md border-white
+    @apply border-solid rounded-md border-white 
   }
   .card {
     @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-10 gap-2 border-solid border-4 rounded-lg font-bold bg-blue-950

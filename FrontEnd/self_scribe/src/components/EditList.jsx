@@ -84,9 +84,11 @@ export default function EditList(props) {
             <EditString
               setEditingName={setEditingName}
               id={id}
-              listName={listName}
-              setListName={setListName}
-              structure={"list"}
+              inputName={listName}
+              setInputName={setListName}
+              state={lists}
+              setState={setLists}
+              structure={"lists"}
             />
           )}
           <div className="flex flex-row gap-2 justify-around text-yellow-200">

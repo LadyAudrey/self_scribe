@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
-export function Tasks(listId) {
-  const [tasks, setTasks] = useState([]);
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-  const user = "audrey";
-  async function fetchTasks() {
-    const response = await fetch(
-      `http://localhost:3001/tasks/read/${user}/${listId}/`
-    );
-    const result = await response.json();
-    setTasks(result.tasks);
-    console.log(tasks);
-  }
+import { Task } from "./Task";
+
+import { v4 as uuidv4 } from "uuid";
+import { TasksContext } from "../Contexts/TasksContext";
+
+export function Tasks(props) {
+  const { listId } = props;
+  const { tasks } = useContext(TasksContext);
+
+  const filteredTasks = tasks.filter((task) => {
+    return task.list_id === listId;
+  });
+
   return (
     <>
-      <h2>I'm a task!</h2>
+      <div className="">
+        {filteredTasks.length > 0 &&
+          filteredTasks.map((task) => {
+            return <Task key={uuidv4()} taskId={task.id} />;
+          })}
+      </div>
     </>
   );
 }
