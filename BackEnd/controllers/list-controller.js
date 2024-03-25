@@ -5,15 +5,16 @@ const router = Router();
 
 router.get("/read/:user", async (req, res) => {
   try {
-    const response = await pool.query(
-      `SELECT * FROM lists WHERE user_name='${req.params.user}'`
-    );
-
+    const response = await getLists(req.params.user);
     res.json(response.rows);
   } catch (error) {
     console.log({ error }, "app.get, line 110");
   }
 });
+
+export async function getLists(user) {
+  return await pool.query(`SELECT * FROM lists WHERE user_name='${user}'`);
+}
 
 router.post("/add/:user/:listName", async (req, res) => {
   try {
@@ -21,9 +22,7 @@ router.post("/add/:user/:listName", async (req, res) => {
     const listName = req.params.listName;
     const description = req.body.description || "";
     console.log(req.body);
-    const response = await pool.query(
-      `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
-    );
+    const response = await createList(userName, listName, description);
     //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
     res.json(response);
   } catch (error) {
@@ -31,21 +30,25 @@ router.post("/add/:user/:listName", async (req, res) => {
   }
 });
 
+export async function createList(userName, listName, description) {
+  return await pool.query(
+    `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
+  );
+}
+
 router.post("/edit/:id/:name", async (req, res) => {
   try {
     const id = req.params.id;
     const newName = req.params.name;
-    console.log(newName);
-    const response = await pool.query(
-      `UPDATE lists SET name = '${newName}' WHERE id = ${id};`
-    );
-    res.json(response);
+    const response = await editList(newName, id);
   } catch (error) {
     console.log("inside catch block", error);
     res.status(500).json(error.message);
   }
 });
-
+export async function editList(newName, id) {
+  await pool.query(`UPDATE lists SET name = '${newName}' WHERE id = ${id};`);
+}
 router.post("/pause/:id", async (req, res) => {
   try {
     const id = req.params.id;
