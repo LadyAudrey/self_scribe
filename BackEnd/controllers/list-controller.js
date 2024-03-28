@@ -47,7 +47,9 @@ router.post("/edit/:id/:name", async (req, res) => {
   }
 });
 export async function editList(newName, id) {
-  await pool.query(`UPDATE lists SET name = '${newName}' WHERE id = ${id};`);
+  return await pool.query(
+    `UPDATE lists SET name = '${newName}' WHERE id = ${id};`
+  );
 }
 router.post("/pause/:id", async (req, res) => {
   try {
@@ -73,11 +75,15 @@ router.post("/pause/:id", async (req, res) => {
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const response = await pool.query(`DELETE FROM lists WHERE id = ${id};`);
+    const response = deleteList(id);
     res.json(response);
   } catch (error) {
     res.status(500).json(error.message);
   }
 });
+
+export async function deleteList(id) {
+  return await pool.query(`DELETE FROM lists WHERE id = ${id};`);
+}
 
 export default router;
