@@ -24,7 +24,7 @@ completed BOOLEAN DEFAULT FALSE,
 repeats BOOLEAN DEFAULT FALSE
 );
 
--- _________ refactored to here
+_________ refactored to here
 
 CREATE TABLE tracking (
 id SERIAL PRIMARY KEY,

@@ -12,9 +12,8 @@ export function AddTask(props) {
 
   async function handleAddTaskSubmit(event) {
     event.preventDefault();
-    const user = "audrey";
     const response = await fetch(
-      `http://localhost:3001/tasks/add/${user}/${listId}/${taskName}`,
+      `http://localhost:3001/tasks/add/${listId}/${taskName}`,
       {
         method: "POST",
       }
@@ -38,7 +37,7 @@ export function AddTask(props) {
           onChange={handleAddTaskChange}
           // tried to use max-w-fit, unsuccessful, want it to fit close to the words
           className=" bg-black rounded-md border-emerald-500 p-2 border-2"
-        ></input>
+        />
       </label>
     </form>
   );

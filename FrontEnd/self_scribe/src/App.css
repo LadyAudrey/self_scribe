@@ -21,11 +21,19 @@
     @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600
   }
 
-  .editBtn {
+  .userInput{
+    @apply bg-black w-fit rounded-md border-slate-800 border-2
+  }
+
+  .editBtns {
+    @apply bg-green-900 p-5 m-5 rounded-lg border-solid border-yellow-400 border-2
+  }
+
+  .pencil {
     @apply border-solid rounded-md border-white 
   }
   .card {
-    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-10 gap-2 border-solid border-4 rounded-lg font-bold bg-blue-950
+    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-blue-950
   }
   .card_data {
   @apply self-center
