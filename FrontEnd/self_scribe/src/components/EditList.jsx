@@ -1,4 +1,4 @@
-// EditString not updating UI- de-nesting some of the logic and
+// EditString not updating UI- updates on reload but not automatically
 
 import { useState, useContext } from "react";
 // import { EditActivity } from "./EditActivity";
@@ -66,44 +66,39 @@ export default function EditList(props) {
       <div>
         {/* needs background to be correct gradient */}
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
-          <img
-            onClick={handleEditChange}
-            src="/Buttons/exit.svg"
-            className="w-1/12"
-          />
-          {!editingName && (
-            <div
-              onDoubleClick={() => {
-                setEditingName(true);
-              }}
-            >
-              {listName}
-            </div>
-          )}
-          {editingName && (
-            <EditString
-              setEditingName={setEditingName}
-              id={id}
-              inputName={listName}
-              setInputName={setListName}
-              state={lists}
-              setState={setLists}
-              structure={"lists"}
+          <div className="flex gap-4">
+            <img
+              onClick={handleEditChange}
+              src="/Buttons/exit.svg"
+              className="w-1/12"
             />
-          )}
+            {!editingName && (
+              <div
+                onDoubleClick={() => {
+                  setEditingName(true);
+                }}
+                className="text-xl"
+              >
+                {listName}
+              </div>
+            )}
+            {editingName && (
+              <EditString
+                setEditingName={setEditingName}
+                id={id}
+                inputName={listName}
+                setInputName={setListName}
+                state={lists}
+                setState={setLists}
+                structure={"lists"}
+              />
+            )}
+          </div>
           <div className="flex flex-row gap-2 justify-around text-yellow-200">
-            <input
-              type="checkbox"
-              id="active"
-              value={active}
-              className=""
-              onChange={handlePause}
-            />
-            <label htmlFor="active">Pause</label>
-            <button
-              className="mainBtns border-emerald-800"
-              onClick={handleDelete}
-            >
+            <button className="editBtns" onClick={handlePause}>
+              Pause
+            </button>
+            <button className="editBtns" onClick={handleDelete}>
               Delete
             </button>
           </div>

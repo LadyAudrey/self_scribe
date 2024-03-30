@@ -72,7 +72,7 @@ export function EditTask(props) {
 
   return (
     <>
-      <div className="flex flex-col w-fit p-4 border-2 rounded-2 bg-blue-900 text-white border-yellow-400">
+      <div className="flex flex-col w-fit text-white border-yellow-400 card">
         <div className="flex">
           <img
             onClick={handleEditChange}
