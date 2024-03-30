@@ -67,14 +67,15 @@ export function DisplayLists() {
               onClick={() => {
                 setAddingList(!addingList);
               }}
+              className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
             >
               Add List
             </button>
           )}
-          <div className="flex">
+          {/* <div className="flex">
             <p>View My Lists</p>
             <button>Boolean with list symbol</button>
-          </div>
+          </div> */}
         </fieldset>
       </div>
       <div>
