@@ -73,7 +73,6 @@ export function DisplayLists() {
           )}
           <div className="flex">
             <p>View My Lists</p>
-            {/* TODO update button background to the List svg */}
             <button>Boolean with list symbol</button>
           </div>
         </fieldset>

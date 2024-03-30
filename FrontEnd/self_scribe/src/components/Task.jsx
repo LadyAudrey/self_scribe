@@ -26,11 +26,12 @@ export function Task({ taskId }) {
           editingTask={editingTask}
           setEditingTask={setEditingTask}
           taskId={taskId}
+          taskName={task.name}
         />
       )}
       {!editingTask && (
         <button
-          className="h-6 w-6  bg-cover editBtn bg-[url('/Buttons/Edit.svg')]"
+          className="h-6 w-6  bg-cover pencil bg-[url('/Buttons/Edit.svg')]"
           onClick={() => {
             setEditingTask(!editingTask);
           }}
@@ -39,8 +40,3 @@ export function Task({ taskId }) {
     </div>
   );
 }
-
-// UI TDL
-// collapse lists (DONE!)
-// delete tasks
-// collapse editingTasks (DONE!)

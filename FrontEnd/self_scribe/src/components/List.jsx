@@ -52,7 +52,7 @@ export function List(props) {
           )}
           {!editing && (
             <button
-              className="h-6 w-6  bg-cover editBtn bg-[url('/Buttons/Edit.svg')]"
+              className="h-6 w-6  bg-cover pencil bg-[url('/Buttons/Edit.svg')]"
               onClick={handleChange}
               key={uuidv4()}
             ></button>
