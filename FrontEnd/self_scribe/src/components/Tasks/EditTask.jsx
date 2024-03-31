@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 
-import EditString from "./EditString";
-import { TasksContext } from "../Contexts/TasksContext";
+import EditString from "../EditString";
+import { TasksContext } from "../../Contexts/TasksContext";
 
 // need how to activate the editing UI
 

@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { ListsContext } from "../Contexts/ListsContext";
+import { ListsContext } from "../../Contexts/ListsContext";
 
 import { List } from "./List";
 import AddList from "./AddList";
@@ -43,8 +43,7 @@ export function DisplayLists() {
   }
 
   return (
-    <div className="relative flex justify-around">
-      {/* TODO why isn't gap working here??? */}
+    <div>
       <div className="flex flex-col gap-10">
         <fieldset>
           <legend className="text-2xl">TDL</legend>

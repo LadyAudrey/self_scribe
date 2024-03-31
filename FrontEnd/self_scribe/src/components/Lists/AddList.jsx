@@ -1,10 +1,6 @@
 import { useContext } from "react";
 import { useState } from "react";
-import { ListsContext } from "../Contexts/ListsContext";
-
-//  accept description in UI
-//  switch AddList to a button that toggles a card
-//  create user input for description
+import { ListsContext } from "../../Contexts/ListsContext";
 
 export default function AddList(props) {
   const { addingList, setAddingList } = props;

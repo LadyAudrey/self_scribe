@@ -3,8 +3,8 @@
 import { useState, useContext } from "react";
 // import { EditActivity } from "./EditActivity";
 
-import { ListsContext } from "../Contexts/ListsContext";
-import EditString from "./EditString";
+import { ListsContext } from "../../Contexts/ListsContext";
+import EditString from "../EditString";
 
 export default function EditList(props) {
   const { id, editing, setEditing } = props;

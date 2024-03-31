@@ -5,8 +5,9 @@ import "./App.css";
 import { ListsContext } from "./Contexts/ListsContext";
 import { TasksContext } from "./Contexts/TasksContext";
 
-import { DisplayLists } from "./components/DisplayLists";
-import { Graphs } from "./components/Graphs";
+import { DisplayLists } from "./components/Lists/DisplayLists";
+import { Symptoms } from "./components/Symptoms/Symptoms";
+import { Graphs } from "./components/Graphs/Graphs";
 
 export default function Home() {
   const [lists, setLists] = useState([]);
@@ -75,7 +76,7 @@ export default function Home() {
               {/* this will load the Settings for the app */}
             </div>
           </header>
-          <div>
+          <div className="relative flex justify-around">
             <DisplayLists />
           </div>
           <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
