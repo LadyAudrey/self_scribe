@@ -9,10 +9,7 @@ router.post("/add/:listID/:taskName", async (req, res) => {
   try {
     const listID = req.params.listID;
     const taskName = req.params.taskName;
-    const response = await pool.query(
-      `INSERT INTO tasks (list_id, name, description, category) VALUES
-            ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
-    );
+    const response = await createTask(listID, taskName);
     console.log(response);
     res.json(response);
   } catch (error) {
@@ -21,19 +18,44 @@ router.post("/add/:listID/:taskName", async (req, res) => {
   }
 });
 
+export async function createTask(listID, taskName) {
+  return await pool.query(
+    `INSERT INTO tasks (list_id, name, description, category) VALUES
+          ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
+  );
+}
+
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   try {
-    const query = await pool.query(
-      `SELECT * FROM tasks WHERE list_id='${listId}';`
-    );
+    const query =
     res.json(query.rows);
   } catch (error) {
     console.log({ error }, " line 28 in tasks-controller");
   }
 });
 
-// not currently working
+const getTasks = pool.query(
+  `SELECT * FROM tasks WHERE list_id='${listId}';`
+);
+
+router.post("/edit/:taskId/:taskName", async (req, res) => {
+  const taskId = req.params.taskId;
+  const taskName = req.params.taskName;
+  try {
+    const query = await editTask(taskId, taskName);
+    res.json(query.rows);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export async function editTask(id, newName) {
+  return await pool.query(
+    `UPDATE tasks SET name = '${newName}' WHERE id = ${id};`
+  );
+}
+
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;

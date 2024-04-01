@@ -25,8 +25,7 @@ export function Task({ taskId }) {
         <EditTask
           editingTask={editingTask}
           setEditingTask={setEditingTask}
-          taskId={taskId}
-          taskName={task.name}
+          task={task}
         />
       )}
       {!editingTask && (

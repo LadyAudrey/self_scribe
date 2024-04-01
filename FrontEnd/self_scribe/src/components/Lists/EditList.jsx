@@ -68,6 +68,7 @@ export default function EditList(props) {
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
           <div className="flex gap-4">
             <img
+            // I disapear when editingName is active... why?? TODO
               onClick={handleEditChange}
               src="/Buttons/exit.svg"
               className="w-1/12"
@@ -77,7 +78,7 @@ export default function EditList(props) {
                 onDoubleClick={() => {
                   setEditingName(true);
                 }}
-                className="text-xl"
+                className="text-3xl"
               >
                 {listName}
               </div>

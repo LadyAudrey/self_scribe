@@ -4,12 +4,6 @@ describe("list-controller", () => {
   const user = "audrey";
   let id;
 
-  describe("getLists", () => {
-    it("should get all lists for a given user", async () => {
-      expect(await getLists(user)).toBeDefined();
-    });
-  });
-
   describe("createList", () => {
     const listName = "Testing";
     const description = "sanity";
@@ -18,6 +12,12 @@ describe("list-controller", () => {
       expect(response).toBeDefined();
       id = response.rows[0].id;
       expect(id).toBeGreaterThan(0);
+    });
+  });
+  
+  describe("getLists", () => {
+    it("should get all lists for a given user", async () => {
+      expect(await getLists(user)).toBeDefined();
     });
   });
 

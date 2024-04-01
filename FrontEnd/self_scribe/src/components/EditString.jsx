@@ -36,7 +36,7 @@ export default function EditString(props) {
       <input
         autoFocus
         value={inputName}
-        className="bg-black"
+        className="bg-black text-3xl"
         onChange={(event) => {
           setInputName(event.target.value);
         }}

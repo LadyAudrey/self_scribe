@@ -6,12 +6,12 @@ import { TasksContext } from "../../Contexts/TasksContext";
 // need how to activate the editing UI
 
 export function EditTask(props) {
-  const { taskId, editingTask, setEditingTask, taskName } = props;
+  const { task, editingTask, setEditingTask } = props;
 
   const { tasks, setTasks } = useContext(TasksContext);
+  const [taskName, setTaskName] = useState(task.name);
+  const [editingName, setEditingName] = useState(false);
 
-  const [editingActName, setEditingActName] = useState(null);
-  const [activityName, setActivityName] = useState(null);
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
   const [numOfNum, setNumOFNum] = useState("#");
   // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
@@ -60,8 +60,8 @@ export function EditTask(props) {
       console.log(response, " tasks in Delete editTask.jsx");
       if (response.ok) {
         // delete from local storage
-        const newTasks = tasks.filter((task) => {
-          return task.id !== taskId;
+        const newTasks = tasks.filter((element) => {
+          return task.id !== element.id;
         });
         setTasks(newTasks);
       }
@@ -73,35 +73,36 @@ export function EditTask(props) {
   return (
     <>
       <div className="flex flex-col w-fit text-white border-yellow-400 card">
-        <div className="flex">
-          <img
-            onClick={handleEditChange}
-            src="/Buttons/exit.svg"
-            className="w-1/12"
-          />
-          <h3 className="text-yellow-100 font-bold self-center">{taskName}</h3>
-        </div>
         <fieldset>
           <legend className="flex flex-col my-4 gap-4">
-            {!editingActName && (
-              <div
-                onDoubleClick={() => {
-                  setEditingActName(true);
-                }}
-              >
-                {activityName}
-              </div>
-            )}
-            {editingActName && (
-              <Save
-                ChangesEditString
-                setEditingActName={setEditingActName}
-                // id=?
-                activityName={activityName}
-                setActivityName={setActivityName}
-                structure={"activity"}
+            <div className="flex">
+              <img
+                onClick={handleEditChange}
+                src="/Buttons/exit.svg"
+                className="w-1/12"
               />
-            )}
+              {!editingName && (
+                <h3
+                  className="text-yellow-100 font-bold self-center"
+                  onDoubleClick={() => {
+                    setEditingName(true);
+                  }}
+                >
+                  {taskName}
+                </h3>
+              )}
+              {editingName && (
+                <EditString
+                  setEditingName={setEditingName}
+                  id={task.id}
+                  inputName={taskName}
+                  setInputName={setTaskName}
+                  state={tasks}
+                  setState={setTasks}
+                  structure={"tasks"}
+                />
+              )}
+            </div>
             <div className="flex">
               {/* Desired Frequency (x units in y time) */}
               <input
@@ -143,6 +144,7 @@ export function EditTask(props) {
               <input
                 type="number"
                 name="duration"
+                step={1}
                 placeholder="ex: 1"
                 value={duration}
                 onChange={handleUpdateDuration}
