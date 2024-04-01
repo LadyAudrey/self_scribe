@@ -28,16 +28,15 @@ export async function createTask(listID, taskName) {
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   try {
-    const query =
-    res.json(query.rows);
+    const query = await getTasks(listId);
   } catch (error) {
     console.log({ error }, " line 28 in tasks-controller");
   }
 });
 
-const getTasks = pool.query(
-  `SELECT * FROM tasks WHERE list_id='${listId}';`
-);
+export async function getTasks(listId) {
+  return await pool.query(`SELECT * FROM tasks WHERE list_id='${listId}';`);
+}
 
 router.post("/edit/:taskId/:taskName", async (req, res) => {
   const taskId = req.params.taskId;
