@@ -40,10 +40,11 @@ export function EditTask(props) {
   // TODO: update all fetches with try catch blocks
   async function handleDelete(event) {
     event.preventDefault();
+    console.log("handleDelete");
     // TODO need identifier from parent
     try {
       const response = await fetch(
-        `http://localhost:3001/tasks/delete/${taskId}`,
+        `http://localhost:3001/tasks/delete/${task.id}`,
         {
           method: "POST",
         }
