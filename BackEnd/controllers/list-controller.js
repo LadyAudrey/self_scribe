@@ -3,6 +3,24 @@ import { pool } from "../models/db.js";
 
 const router = Router();
 
+router.post("/add/:user/:listName", async (req, res) => {
+  try {
+    const userName = req.params.user;
+    const listName = req.params.listName;
+    const description = req.body.description || "";
+    console.log(req.body);
+    const response = await createList(userName, listName, description);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ serverMessage: error.message });
+  }
+});
+
+export async function createList(userName, listName, description) {
+  return await pool.query(
+    `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
+  );
+}
 router.get("/read/:user", async (req, res) => {
   try {
     const response = await getLists(req.params.user);
@@ -16,26 +34,6 @@ export async function getLists(user) {
   return await pool.query(`SELECT * FROM lists WHERE user_name='${user}'`);
 }
 
-router.post("/add/:user/:listName", async (req, res) => {
-  try {
-    const userName = req.params.user;
-    const listName = req.params.listName;
-    const description = req.body.description || "";
-    console.log(req.body);
-    const response = await createList(userName, listName, description);
-    //  RETURNING * is not the longterm plan; we should return to the FE if it succeeded or not (error checking etc)
-    res.json(response);
-  } catch (error) {
-    res.status(500).json({ serverMessage: error.message });
-  }
-});
-
-export async function createList(userName, listName, description) {
-  return await pool.query(
-    `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
-  );
-}
-
 router.post("/edit/:id/:name", async (req, res) => {
   try {
     const id = req.params.id;
@@ -46,11 +44,13 @@ router.post("/edit/:id/:name", async (req, res) => {
     res.status(500).json(error.message);
   }
 });
+
 export async function editList(newName, id) {
   return await pool.query(
     `UPDATE lists SET name = '${newName}' WHERE id = ${id};`
   );
 }
+
 router.post("/pause/:id", async (req, res) => {
   try {
     const id = req.params.id;

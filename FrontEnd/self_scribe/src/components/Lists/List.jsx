@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { AddTask } from "./AddTask";
+import { AddTask } from "../Tasks/AddTask";
 import EditList from "./EditList";
-import { Tasks } from "./Tasks";
+import { Tasks } from "../Tasks/Tasks";
 
 // TODO: Edit Activity should be activated when the button is activated next to an activity, not passively
 

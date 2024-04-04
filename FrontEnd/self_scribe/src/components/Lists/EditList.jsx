@@ -3,8 +3,8 @@
 import { useState, useContext } from "react";
 // import { EditActivity } from "./EditActivity";
 
-import { ListsContext } from "../Contexts/ListsContext";
-import EditString from "./EditString";
+import { ListsContext } from "../../Contexts/ListsContext";
+import EditString from "../EditString";
 
 export default function EditList(props) {
   const { id, editing, setEditing } = props;
@@ -68,6 +68,7 @@ export default function EditList(props) {
         <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
           <div className="flex gap-4">
             <img
+            // I disapear when editingName is active... why?? TODO
               onClick={handleEditChange}
               src="/Buttons/exit.svg"
               className="w-1/12"
@@ -77,7 +78,7 @@ export default function EditList(props) {
                 onDoubleClick={() => {
                   setEditingName(true);
                 }}
-                className="text-xl"
+                className="text-3xl"
               >
                 {listName}
               </div>

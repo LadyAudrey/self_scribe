@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
-import { EditTask } from "./EditTask";
+import { EditTask } from "./EditTask.jsx";
 
-import { TasksContext } from "../Contexts/TasksContext.js";
+import { TasksContext } from "../../Contexts/TasksContext.js";
 
 export function Task({ taskId }) {
   const [editingTask, setEditingTask] = useState(false);
@@ -25,8 +25,7 @@ export function Task({ taskId }) {
         <EditTask
           editingTask={editingTask}
           setEditingTask={setEditingTask}
-          taskId={taskId}
-          taskName={task.name}
+          task={task}
         />
       )}
       {!editingTask && (
