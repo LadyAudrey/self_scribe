@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
 
 import EditString from "../EditString";
+import EditFrequency from "./editFrequency";
+
 import { TasksContext } from "../../Contexts/TasksContext";
 
 // need how to activate the editing UI
@@ -12,38 +14,27 @@ export function EditTask(props) {
   const [taskName, setTaskName] = useState(task.name);
   const [editingName, setEditingName] = useState(false);
 
-  // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
-  const [numOfNum, setNumOFNum] = useState("#");
-  // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
-  const [numOfDen, setNumOfDen] = useState("#");
-  const [duration, setDuration] = useState(1);
   const [category, setCategory] = useState("");
-  const [Repeating, setRepeating] = useState(false);
-
-  const handleUpdateNumFreq = (event) => {
-    setNumOFNum(event.target.value);
-    console.log(numOfNum);
-  };
-
-  const handleUpdateDen = (event) => {
-    setNumOfDen(event.target.value);
-    console.log(numOfDen);
-  };
-
-  function handleUpdateDuration(event) {
-    setDuration(even.target.value);
-  }
+  const [repeating, setRepeating] = useState(false);
 
   function handleUpdateCategory(event) {
     setCategory(event.target.value);
+    // TODO push category onto an array in the DB task
   }
 
   function handleUpdateRepeating(event) {
-    setRepeating(!Repeating);
+    console.log(repeating);
+    setRepeating(!repeating);
+    console.log(repeating);
   }
 
   function handleEditChange() {
     setEditingTask(!editingTask);
+  }
+
+  async function handleSaveChanges(event) {
+    // TODO setters for every UI input in here
+    // hook up to appropriate BE Fx's
   }
 
   // TODO: update all fetches with try catch blocks
@@ -103,83 +94,41 @@ export function EditTask(props) {
                 />
               )}
             </div>
-            <div className="flex">
-              {/* Desired Frequency (x units in y time) */}
-              <input
-                type="number"
-                name="numOfNum"
-                value={numOfNum}
-                onChange={handleUpdateNumFreq}
-                className="bg-black w-fit rounded-md border-slate-800 border-2"
-              ></input>
-              {/* needs a drop down of units */}
-              {/* <input
-                  type="text"
-                  name="newList"
-                  value={listName}
-                  onChange={handleAddListChange}
-                  className="bg-black rounded-md mx-2 border-slate-800 border-2"
-                ></input> */}
-              <p className="flex">days every</p>
-              <input
-                type="number"
-                name="numOfDen"
-                value={numOfDen}
-                onChange={handleUpdateDen}
-                className="bg-black rounded-md mx-2 border-slate-800 border-2"
-              ></input>
-              {/* needs a drop down of units */}
-              {/* <input
-                  type="text"
-                  name="newList"
-                  value={listName}
-                  onChange={handleAddListChange}
-                  className="bg-black rounded-md mx-2 border-slate-800 border-2"
-                ></input> */}
-            </div>
             {/* How long would each instance be? (drop down) */}
-            <div className="flex gap-2">
-              <h3>Duration</h3>
-              {/* drop down of #s */}
-              <input
-                type="number"
-                name="duration"
-                step={1}
-                placeholder="ex: 1"
-                value={duration}
-                onChange={handleUpdateDuration}
-                className="bg-black w-fit rounded-md border-slate-800 border-2"
-              ></input>
-              <p>days</p>
-            </div>
             {/* Category (fill in the blank or dropdown) */}
             <div className="flex">
               <h3>Category</h3>
-              {/* a drop down of user categories and an option to create a */}
-              {/* <input
+              {/* a drop down of user categories and an option to create a new one */}
+              <input
                 type="text"
                 name="category"
                 placeholder="Ex: Self Care"
                 value={category}
                 onChange={handleUpdateCategory}
                 className="userInput"
-              ></input> */}
+              ></input>
             </div>
             {/* Stay in list before desired rhythm recurs? (boolean) */}
             {/* Repeating? (boolean, hover effect) */}
-            <div className="flex gap-2">
-              <h3>Repeating</h3>
-              <input
-                type="checkbox"
-                name="Repeating"
-                value={Repeating}
-                placeholder="false"
-                onChange={handleUpdateRepeating}
-                className="bg-black w-fit rounded-md border-slate-800 border-2"
-              ></input>
+            <div className="gap-2">
+              <div className="flex">
+                <h3>Repeating</h3>
+                <input
+                  type="checkbox"
+                  name="Repeating"
+                  value={repeating}
+                  placeholder="false"
+                  onChange={handleUpdateRepeating}
+                  className="bg-black w-fit rounded-md border-slate-800 border-2"
+                ></input>
+              </div>
+              {repeating ? <EditFrequency /> : null}
             </div>
             <div className="flex justify-around">
-              <button className="place-self-center editBtns">
+              <button
+                className="place-self-center editBtns"
+                onClick={handleSaveChanges}
+              >
                 Save Changes
               </button>
               <button className="place-self-center editBtns">Pause</button>
