@@ -21,7 +21,9 @@ last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 description TEXT,
 category VARCHAR (50),
 completed BOOLEAN DEFAULT FALSE,
-repeats BOOLEAN DEFAULT FALSE
+repeats BOOLEAN DEFAULT FALSE,
+frequency VARCHAR (25),
+last_occurrence TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 _________ refactored to here

@@ -25,6 +25,7 @@ export default function Home() {
     setLists(result);
     const tasks = await fetchTasks(result);
     setTasks(tasks);
+    console.log(result, tasks);
   }
 
   async function fetchTasks(lists) {
@@ -44,6 +45,9 @@ export default function Home() {
     }
     return tasks;
   }
+
+  // create frequency function
+  // access frequency,
 
   return (
     // TODO: background gradient file not working

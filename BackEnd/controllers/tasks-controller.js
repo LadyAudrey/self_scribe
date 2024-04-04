@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, response } from "express";
 import { pool } from "../models/db.js";
 
 const router = Router();
@@ -29,6 +29,7 @@ router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   try {
     const query = await getTasks(listId);
+    res.json(query.rows);
   } catch (error) {
     console.log({ error }, " line 28 in tasks-controller");
   }
