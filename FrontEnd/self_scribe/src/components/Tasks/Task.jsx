@@ -12,15 +12,17 @@ export function Task({ taskId }) {
   });
   return (
     <div className="flex px-8 gap-3">
-      <h4>{task.name}</h4>
-      <input
-        type="checkbox"
-        onChange={() => {
-          setTaskCompleted(!taskCompleted);
-        }}
-        className="m-2"
-        checked={taskCompleted}
-      />
+      <div className="flex h-fit">
+        <h4>{task.name}</h4>
+        <input
+          type="checkbox"
+          onChange={() => {
+            setTaskCompleted(!taskCompleted);
+          }}
+          className="m-2"
+          checked={taskCompleted}
+        />
+      </div>
       {editingTask && (
         <EditTask
           editingTask={editingTask}
