@@ -99,16 +99,20 @@ export function EditTask(props) {
             {/* How long would each instance be? (drop down) */}
             {/* Category (fill in the blank or dropdown) */}
             <div className="flex">
-              <h3>Category</h3>
               {/* a drop down of user categories and an option to create a new one */}
-              <input
-                type="text"
-                name="category"
-                placeholder="Ex: Self Care"
-                value={category}
-                onChange={handleUpdateCategory}
-                className="userInput"
-              ></input>
+              <h3>Category</h3>
+              <label for="category">
+                <select
+                  className="bg-black"
+                  name="category"
+                  id="category-select"
+                >
+                  <option value="">Select a category</option>
+                  <option value="self-care">Self Care</option>
+                  <option value="groceries">Groceries</option>
+                  <option value="Adulting">Adulting</option>
+                </select>
+              </label>
             </div>
             {/* Stay in list before desired rhythm recurs? (boolean) */}
             {/* Repeating? (boolean, hover effect) */}

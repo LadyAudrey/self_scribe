@@ -23,41 +23,24 @@ export default function EditFrequency() {
 
   return (
     <>
-      <div className="flex gap-2">
-        <div className="flex gap-2">
-          {/* Desired Frequency (x units in y time) */}
-          <input
-            type="number"
-            name="numOfNum"
-            value={numOfNum}
-            onChange={handleUpdateNumFreq}
-            className="bg-black w-fit rounded-md border-slate-800 border-2"
-          ></input>
-          {/* needs a drop down of units */}
-          {/* <input
-                  type="text"
-                  name="newList"
-                  value={listName}
-                  onChange={handleAddListChange}
-                  className="bg-black rounded-md mx-2 border-slate-800 border-2"
-                ></input> */}
-          <p className="flex">days every</p>
-          <input
-            type="number"
-            name="numOfDen"
-            value={numOfDen}
-            onChange={handleUpdateDen}
-            className="bg-black rounded-md mx-2 border-slate-800 border-2"
-          ></input>
-          {/* needs a drop down of units */}
-          {/* <input
-                  type="text"
-                  name="newList"
-                  value={listName}
-                  onChange={handleAddListChange}
-                  className="bg-black rounded-md mx-2 border-slate-800 border-2"
-                ></input> */}
-        </div>
+      <div className="wi-fit flex m-5">
+        {/* Desired Frequency (x units in y time) */}
+        <input
+          type="number"
+          name="numOfNum"
+          value={numOfNum}
+          onChange={handleUpdateNumFreq}
+          className="bg-black w-1/4 rounded-md border-slate-800 border-2"
+        ></input>
+        <p className="flex">days every</p>
+        <input
+          type="number"
+          name="numOfDen"
+          value={numOfDen}
+          onChange={handleUpdateDen}
+          className="bg-black w-1/4 rounded-md mx-2 border-slate-800 border-2"
+        ></input>
+
         <p>days</p>
       </div>
     </>

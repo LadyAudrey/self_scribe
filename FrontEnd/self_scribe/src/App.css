@@ -11,7 +11,7 @@
     @apply text-4xl pb-5
   }
   h3 {
-    @apply text-3xl text-blue-300 mx-5
+    @apply text-3xl text-yellow-100 mx-5
   }
   h4 {
     @apply text-2xl
