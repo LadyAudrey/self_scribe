@@ -6,6 +6,7 @@ import EditFrequency from "./editFrequency";
 import { TasksContext } from "../../Contexts/TasksContext";
 
 // need how to activate the editing UI
+// plan to go forward: We have outgrown EditString.jsx and need to do it locally
 
 export function EditTask(props) {
   const { task, editingTask, setEditingTask } = props;
@@ -67,12 +68,7 @@ export function EditTask(props) {
       <div className="flex flex-col w-fit text-white border-yellow-400 card">
         <fieldset>
           <legend className="flex flex-col my-4 gap-4">
-            <div className="flex">
-              <img
-                onClick={handleEditChange}
-                src="/Buttons/exit.svg"
-                className="w-1/12"
-              />
+            <div className="flex justify-between">
               {!editingName && (
                 <h3
                   className="text-yellow-100 font-bold self-center"
@@ -94,6 +90,11 @@ export function EditTask(props) {
                   structure={"tasks"}
                 />
               )}
+              <img
+                onClick={handleEditChange}
+                src="/Buttons/exit.svg"
+                className="w-1/12"
+              />
             </div>
             {/* How long would each instance be? (drop down) */}
             {/* Category (fill in the blank or dropdown) */}
