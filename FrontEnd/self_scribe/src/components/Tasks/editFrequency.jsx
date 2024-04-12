@@ -1,20 +1,15 @@
 import { useState } from "react";
 
-export default function EditFrequency() {
-  // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
-  const [numOfNum, setNumOFNum] = useState("#");
-  // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
-  const [numOfDen, setNumOfDen] = useState("#");
-  const [duration, setDuration] = useState(1);
+export default function EditFrequency(props) {
+  const { numOfNum, setNumOFNum, numOfDen, setNumOfDen } = props;
 
   const handleUpdateNumFreq = (event) => {
     setNumOFNum(event.target.value);
-    console.log(numOfNum);
   };
 
   const handleUpdateDen = (event) => {
     setNumOfDen(event.target.value);
-    console.log(numOfDen);
+
   };
 
   function handleUpdateDuration(event) {

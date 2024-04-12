@@ -39,20 +39,27 @@ export async function getTasks(listId) {
   return await pool.query(`SELECT * FROM tasks WHERE list_id='${listId}';`);
 }
 
-router.post("/edit/:taskId/:taskName", async (req, res) => {
+router.post("/saveChanges/:taskId", async (req, res) => {
   const taskId = req.params.taskId;
-  const taskName = req.params.taskName;
+  const body = req.body;
+  console.log(req.body);
   try {
-    const query = await editTask(taskId, taskName);
+    const query = await saveChanges(taskId, body);
     res.json(query.rows);
   } catch (error) {
     console.log(error);
+    res
+      .json({
+        status: "error",
+        message: error.message,
+      })
+      .status(400);
   }
 });
 
-export async function editTask(id, newName) {
+export async function saveChanges(id, body) {
   return await pool.query(
-    `UPDATE tasks SET name = '${newName}' WHERE id = ${id};`
+    `UPDATE tasks SET name='${body.name}', category='${body.category}', repeats='${body.repeats}', frequency='${body.frequency}' WHERE id='${id}';`
   );
 }
 

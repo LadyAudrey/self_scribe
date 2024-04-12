@@ -15,18 +15,24 @@ export function EditTask(props) {
   const [taskName, setTaskName] = useState(task.name);
   const [editingName, setEditingName] = useState(false);
 
-  const [category, setCategory] = useState("");
-  const [repeating, setRepeating] = useState(false);
+  const [category, setCategory] = useState(task.category);
+  const [repeating, setRepeating] = useState(task.repeats ?? false);
+
+  // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
+  const [numOfNum, setNumOFNum] = useState(task.frequency?.split(":")[0] ?? "");
+  console.log(task.frequency?.split(":")[0] ?? "", " EditTask num printout");
+  // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
+  const [numOfDen, setNumOfDen] = useState(task.frequency?.split(":")[1] ?? "");
+
+  const [errorMsg, setErrorMsg] = useState("");
 
   function handleUpdateCategory(event) {
     setCategory(event.target.value);
-    // TODO push category onto an array in the DB task
+    // TODO push category onto an array in the DB task via handleSaveChanges
   }
 
   function handleUpdateRepeating(event) {
-    console.log(repeating);
     setRepeating(!repeating);
-    console.log(repeating);
   }
 
   function handleEditChange() {
@@ -34,8 +40,36 @@ export function EditTask(props) {
   }
 
   async function handleSaveChanges(event) {
+    event.preventDefault();
     // TODO setters for every UI input in here
+    const body = {
+      name: taskName,
+      category,
+      repeats: repeating,
+      frequency: numOfNum + ":" + numOfDen,
+    };
     // hook up to appropriate BE Fx's
+    try {
+      console.log("sending fetch", task);
+      const response = await fetch(
+        `http://localhost:3001/tasks/saveChanges/${task.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        setEditingTask(false);
+      } else {
+        setErrorMsg("Update was not successful");
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMsg("Update was not successful");
+    }
   }
 
   // TODO: update all fetches with try catch blocks
@@ -101,7 +135,7 @@ export function EditTask(props) {
             <div className="flex">
               {/* a drop down of user categories and an option to create a new one */}
               <h3>Category</h3>
-              <label for="category">
+              <label htmlFor="category">
                 <select
                   className="bg-black"
                   name="category"
@@ -121,14 +155,21 @@ export function EditTask(props) {
                 <h3>Repeating</h3>
                 <input
                   type="checkbox"
-                  name="Repeating"
-                  value={repeating}
-                  placeholder="false"
+                  name="repeating"
+                  checked={repeating}
+                  // placeholder="false"
                   onChange={handleUpdateRepeating}
                   className="bg-black w-fit rounded-md border-slate-800 border-2"
                 ></input>
               </div>
-              {repeating ? <EditFrequency /> : null}
+              {repeating ? (
+                <EditFrequency
+                  numOfNum={numOfNum}
+                  setNumOFNum={setNumOFNum}
+                  numOfDen={numOfDen}
+                  setNumOfDen={setNumOfDen}
+                />
+              ) : null}
             </div>
             <div className="flex justify-around">
               <button
@@ -145,6 +186,7 @@ export function EditTask(props) {
                 Delete
               </button>
             </div>
+            {errorMsg && <p className="text-center text-red-400">{errorMsg}</p>}
           </legend>
         </fieldset>
       </div>
