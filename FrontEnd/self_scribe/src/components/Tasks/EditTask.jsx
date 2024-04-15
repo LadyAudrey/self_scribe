@@ -20,7 +20,6 @@ export function EditTask(props) {
 
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
   const [numOfNum, setNumOFNum] = useState(task.frequency?.split(":")[0] ?? "");
-  console.log(task.frequency?.split(":")[0] ?? "", " EditTask num printout");
   // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
   const [numOfDen, setNumOfDen] = useState(task.frequency?.split(":")[1] ?? "");
 
@@ -69,6 +68,25 @@ export function EditTask(props) {
     } catch (error) {
       console.log(error);
       setErrorMsg("Update was not successful");
+    }
+  }
+
+  async function handlePause(event) {
+    event.preventDefault();
+    setRepeating(!repeating);
+    try {
+      const response = await fetch(
+        `http:localhost:3001/tasks/pause/${task.id}`,
+        {
+          method: "POST",
+        }
+      );
+      console.log(response, "tasks from handlePause in editTask.jsx");
+      if (response.ok) {
+        setRepeating(!repeating);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -178,7 +196,12 @@ export function EditTask(props) {
               >
                 Save Changes
               </button>
-              <button className="place-self-center editBtns">Pause</button>
+              <button
+                className="place-self-center editBtns"
+                onClick={handlePause}
+              >
+                Pause
+              </button>
               <button
                 className="place-self-end editBtns"
                 onClick={handleDelete}

@@ -92,6 +92,19 @@ export async function saveChanges(id, body) {
   );
 }
 
+// unsure if it's working quite right
+router.post("/pause/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = await pool.query(`UPDATE tasks
+    SET repeats = CASE
+      WHEN repeats = TRUE THEN FALSE
+      ELSE TRUE
+      END
+  WHERE id=${id};`);
+  } catch (error) {}
+});
+
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
