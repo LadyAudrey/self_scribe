@@ -99,7 +99,7 @@ export function EditTask(props) {
 
   return (
     <>
-      <div className="flex flex-col w-fit text-white border-yellow-400 card">
+      <div className="flex flex-col w-fit text-white card">
         <fieldset>
           <legend className="flex flex-col my-4 gap-4">
             <div className="flex justify-between">
@@ -132,7 +132,7 @@ export function EditTask(props) {
             </div>
             {/* How long would each instance be? (drop down) */}
             {/* Category (fill in the blank or dropdown) */}
-            <div className="flex">
+            <div className="flex items-center">
               {/* a drop down of user categories and an option to create a new one */}
               <h3>Category</h3>
               <label htmlFor="category">

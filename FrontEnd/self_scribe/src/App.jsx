@@ -38,6 +38,7 @@ export default function Home() {
       if (response.ok) {
         const result = await response.json();
         tasks.push(...result);
+        console.log(result);
       } else {
         console.log("I'm broke, line 35 in App.jsx");
       }

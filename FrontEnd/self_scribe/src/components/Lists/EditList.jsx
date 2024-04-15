@@ -65,7 +65,7 @@ export default function EditList(props) {
     <>
       <div>
         {/* needs background to be correct gradient */}
-        <div className="absolute top-0 z-50 flex flex-col card border-slate-400">
+        <div className="absolute top-0 z-50 flex flex-col card ">
           <div className="flex gap-4">
             <img
             // I disapear when editingName is active... why?? TODO

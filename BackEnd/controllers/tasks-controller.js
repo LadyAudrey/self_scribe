@@ -19,9 +19,16 @@ router.post("/add/:listID/:taskName", async (req, res) => {
 });
 
 export async function createTask(listID, taskName) {
-  return await pool.query(
+  const task = await pool.query(
     `INSERT INTO tasks (list_id, name, description, category) VALUES
           ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
+  );
+  const taskId = task.rows[0]?.id;
+  if (!taskId) {
+    throw new Error("Failed to create task");
+  }
+  return await pool.query(
+    `INSERT INTO task_history (task_id) VALUES('${taskId}') RETURNING *;`
   );
 }
 
@@ -35,8 +42,30 @@ router.get("/read/:listId", async (req, res) => {
   }
 });
 
+/*{
+  "id": 1,
+  "list_id": 1,
+  "name": "testing",
+  "created_on": "2024-03-28T15:55:17.284Z",
+  "last_updated": "2024-03-28T15:55:17.284Z",
+  "description": "Description of Task 1",
+  "category": "category2",
+  "completed": false,
+  "repeats": true,
+  "frequency": "010",
+  "last_occurrence": "2024-04-04T15:53:17.909Z"
+}*/
+
+// finish aggregating data of task_history into the task item that is sent to FE
+
 export async function getTasks(listId) {
-  return await pool.query(`SELECT * FROM tasks WHERE list_id='${listId}';`);
+  const tasks = await pool.query(
+    `SELECT * FROM tasks WHERE list_id='${listId}';`
+  );
+  for (const task of tasks.rows) {
+    console.log(task);
+  }
+  return tasks;
 }
 
 router.post("/saveChanges/:taskId", async (req, res) => {

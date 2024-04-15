@@ -9,7 +9,6 @@ export default function EditFrequency(props) {
 
   const handleUpdateDen = (event) => {
     setNumOfDen(event.target.value);
-
   };
 
   function handleUpdateDuration(event) {
@@ -18,14 +17,14 @@ export default function EditFrequency(props) {
 
   return (
     <>
-      <div className="wi-fit flex m-5">
+      <div className="wi-fit flex m-5 items-center">
         {/* Desired Frequency (x units in y time) */}
         <input
           type="number"
           name="numOfNum"
           value={numOfNum}
           onChange={handleUpdateNumFreq}
-          className="bg-black w-1/4 rounded-md border-slate-800 border-2"
+          className="bg-black w-1/12 rounded-md border-slate-800 p-1 border-2"
         ></input>
         <p className="flex">days every</p>
         <input
@@ -33,9 +32,8 @@ export default function EditFrequency(props) {
           name="numOfDen"
           value={numOfDen}
           onChange={handleUpdateDen}
-          className="bg-black w-1/4 rounded-md mx-2 border-slate-800 border-2"
+          className="bg-black w-1/12 rounded-md mx-2 border-slate-800 border-2"
         ></input>
-
         <p>days</p>
       </div>
     </>

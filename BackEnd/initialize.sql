@@ -20,6 +20,7 @@ created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 description TEXT,
 category VARCHAR (50),
+-- TODO delete
 completed BOOLEAN DEFAULT FALSE,
 repeats BOOLEAN DEFAULT FALSE,
 frequency VARCHAR (25),
@@ -28,13 +29,12 @@ last_occurrence TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 _________ refactored to here
 
-CREATE TABLE tracking (
+CREATE TABLE task_history (
 id SERIAL PRIMARY KEY,
-CONSTRAINT task_id
-FOREIGN KEY(id)
-REFERENCES tasks(id),
-reported_on TIMESTAMP NOT NULL,
-history VARCHAR [] NOT NULL
+task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
+created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+completed BOOLEAN DEFAULT FALSE,
+notes TEXT
 );
 
 
