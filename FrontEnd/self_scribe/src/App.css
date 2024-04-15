@@ -4,6 +4,9 @@
 
 .mainBg {
   background: url("/assets/BGgradient.png");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
 }
 
 @layer components {
@@ -33,7 +36,7 @@
     @apply border-solid rounded-md border-white 
   }
   .card {
-    @apply m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400
+    @apply absolute m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50
   }
   .card_data {
   @apply self-center
