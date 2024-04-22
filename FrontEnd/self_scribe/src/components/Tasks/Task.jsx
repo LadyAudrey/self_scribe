@@ -5,11 +5,13 @@ import { TasksContext } from "../../Contexts/TasksContext.js";
 
 export function Task({ taskId }) {
   const [editingTask, setEditingTask] = useState(false);
-  const [taskCompleted, setTaskCompleted] = useState(false);
   const { tasks, setTasks } = useContext(TasksContext);
   const task = tasks.find((task) => {
     return task.id === taskId;
   });
+  const completed =
+    task.taskHistory.length > 0 && task.taskHistory[0].completed;
+  const [taskCompleted, setTaskCompleted] = useState(completed);
   return (
     <div className="flex px-8 gap-3">
       <div className="flex h-fit">

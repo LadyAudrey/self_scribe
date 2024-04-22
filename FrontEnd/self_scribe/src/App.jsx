@@ -42,6 +42,7 @@ export default function Home() {
         console.log("I'm broke, line 35 in App.jsx");
       }
     }
+    console.log(tasks);
     return tasks;
   }
 

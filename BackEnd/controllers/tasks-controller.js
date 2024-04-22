@@ -36,9 +36,9 @@ router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   try {
     const query = await getTasks(listId);
-    res.json(query.rows);
+    res.json(query);
   } catch (error) {
-    console.log({ error }, " line 28 in tasks-controller");
+    console.log({ error }, " read/listId in tasks-controller");
   }
 });
 
@@ -59,13 +59,63 @@ router.get("/read/:listId", async (req, res) => {
 // finish aggregating data of task_history into the task item that is sent to FE
 
 export async function getTasks(listId) {
-  const tasks = await pool.query(
+  const query = await pool.query(
     `SELECT * FROM tasks WHERE list_id='${listId}';`
   );
-  for (const task of tasks.rows) {
-    console.log(task);
+  if (query.rowCount === 0) {
+    return query.rows;
+  }
+  let tasks = [];
+  for (const task of query.rows) {
+    const taskId = task.id;
+    const history = await pool.query(
+      `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC;`
+    );
+    const newTask = {
+      ...task,
+      taskHistory: history.rows,
+    };
+    if (task.repeats) {
+      // check if most recent is valid
+      const isValid = isCurrent(history.rows[0]);
+      console.log("is Valid check", isValid);
+      if (!isValid) {
+        const newOccurance = await pool.query(
+          `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
+        );
+        newTask.taskHistory.unshift(newOccurance.rows[0]);
+      }
+    }
+    tasks.push(newTask);
+    //
+    // post
+    // const taskDate = parsePostgresDate(createdOn);
+    // 2024-03-29 18:40:19.070107
+    // const taskDate = new Date(history.rows[0].created_on);
+    // console.log(taskDate.getDay(), " day");
   }
   return tasks;
+}
+
+function isCurrent(taskOccurance) {
+  if (taskOccurance !== undefined) {
+    const dateNow = new Date();
+    const taskDate = taskOccurance.created_on;
+    const equal =
+      dateNow.getFullYear() === taskDate.getFullYear() &&
+      dateNow.getMonth() === taskDate.getMonth() &&
+      dateNow.getDate() === taskDate.getDate();
+    return equal;
+  }
+  return false;
+}
+
+function parsePostgresDate(postgresDate) {
+  const timeRemoved = postgresDate.split(" ")[0];
+  const [year, month, day] = timeRemoved.split("-");
+  const newDate = new Date();
+  newDate.setFullYear(year, month, day);
+  return newDate;
 }
 
 router.post("/saveChanges/:taskId", async (req, res) => {
