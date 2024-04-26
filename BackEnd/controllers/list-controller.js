@@ -18,7 +18,8 @@ router.post("/add/:user/:listName", async (req, res) => {
 
 export async function createList(userName, listName, description) {
   return await pool.query(
-    `INSERT INTO lists(name, user_name, description) VALUES('${listName}', '${userName}', '${description}') RETURNING *;`
+    "INSERT INTO lists(name, user_name, description) VALUES($1, $2, $3) RETURNING *;",
+    [listName, userName, description]
   );
 }
 router.get("/read/:user", async (req, res) => {

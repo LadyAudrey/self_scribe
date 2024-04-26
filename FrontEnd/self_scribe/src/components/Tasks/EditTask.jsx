@@ -102,7 +102,6 @@ export function EditTask(props) {
           method: "POST",
         }
       );
-      console.log(response, " tasks in Delete editTask.jsx");
       if (response.ok) {
         // delete from local storage
         const newTasks = tasks.filter((element) => {

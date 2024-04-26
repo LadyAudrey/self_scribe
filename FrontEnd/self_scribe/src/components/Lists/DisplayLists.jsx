@@ -6,29 +6,13 @@ import { ListsContext } from "../../Contexts/ListsContext";
 
 import { List } from "./List";
 import AddList from "./AddList";
+import { Kudos } from "./Kudos";
 
-const kudos = [];
-
-export function DisplayLists() {
+export function DisplayLists(kudos) {
   const { lists, setLists } = useContext(ListsContext);
   const [addingList, setAddingList] = useState(false);
-  async function handleChange(event) {
-    const updatedTasks = list.todos.map((task) => {
-      if (task.name === event.target.name) {
-        if (event.target.checked === true) {
-          kudos.push(task);
-        } else {
-          const index = kudos.indexOf(task);
-          kudos.splice(index, 1);
-        }
-        return {
-          name: task.name,
-          completed: event.target.checked,
-        };
-      }
-      return task;
-    });
 
+  async function handleChange(event) {
     function handleSubmit(event) {
       event.preventDefault();
       console.log(listName);
@@ -44,7 +28,7 @@ export function DisplayLists() {
 
   return (
     <div>
-      <div className="flex flex-col gap-10">
+      <div className="flex gap-10">
         <fieldset>
           <legend className="text-2xl">TDL</legend>
           <div>
@@ -76,27 +60,9 @@ export function DisplayLists() {
             <button>Boolean with list symbol</button>
           </div> */}
         </fieldset>
-      </div>
-      <div>
-        <fieldset>
-          <legend className="legend title">Kudos!</legend>
-          {kudos.map((task, index) => (
-            <div key={index}>
-              <label htmlFor={task.name} className="legend-title">
-                {task.name}
-              </label>
-              <input
-                id={task.name}
-                name={task.name}
-                type="checkbox"
-                onChange={handleChange}
-                className="m-2"
-                checked={task.completed}
-              />
-              <button>Edit</button>
-            </div>
-          ))}
-        </fieldset>
+        <div>
+          <Kudos kudos={kudos} />
+        </div>
       </div>
     </div>
   );

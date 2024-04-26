@@ -18,7 +18,11 @@ export function Tasks(props) {
       <div className="">
         {filteredTasks.length > 0 &&
           filteredTasks.map((task) => {
-            return <Task key={uuidv4()} taskId={task.id} />;
+            return (
+              task.completed == false && (
+                <Task key={uuidv4()} taskId={task.id} />
+              )
+            );
           })}
       </div>
     </>

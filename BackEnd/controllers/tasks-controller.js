@@ -78,7 +78,6 @@ export async function getTasks(listId) {
     if (task.repeats) {
       // check if most recent is valid
       const isValid = isCurrent(history.rows[0]);
-      console.log("is Valid check", isValid);
       if (!isValid) {
         const newOccurance = await pool.query(
           `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
@@ -140,6 +139,29 @@ export async function saveChanges(id, body) {
   return await pool.query(
     `UPDATE tasks SET name='${body.name}', category='${body.category}', repeats='${body.repeats}', frequency='${body.frequency}' WHERE id='${id}';`
   );
+}
+
+router.post("/update-completed", async (req, res) => {
+  try {
+    const { taskHistoryId, completed } = req.body;
+    console.log(taskHistoryId, completed);
+    const query = await updateCompleted(completed, taskHistoryId);
+    res.json(query.rows);
+  } catch (error) {
+    res
+      .json({
+        status: "error",
+        message: error.message,
+      })
+      .status(400);
+  }
+});
+
+export async function updateCompleted(completed, taskHistoryId) {
+  return await pool.query("UPDATE task_history SET completed=$1 WHERE id=$2", [
+    completed,
+    taskHistoryId,
+  ]);
 }
 
 // unsure if it's working quite right
