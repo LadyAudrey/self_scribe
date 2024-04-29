@@ -10,7 +10,6 @@ router.post("/add/:listID/:taskName", async (req, res) => {
     const listID = req.params.listID;
     const taskName = req.params.taskName;
     const response = await createTask(listID, taskName);
-    console.log(response);
     res.json(response);
   } catch (error) {
     console.log(error);
@@ -19,17 +18,20 @@ router.post("/add/:listID/:taskName", async (req, res) => {
 });
 
 export async function createTask(listID, taskName) {
-  const task = await pool.query(
+  const taskQuery = await pool.query(
     `INSERT INTO tasks (list_id, name, description, category) VALUES
           ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
   );
-  const taskId = task.rows[0]?.id;
+  const taskId = taskQuery.rows[0]?.id;
   if (!taskId) {
     throw new Error("Failed to create task");
   }
-  return await pool.query(
+  const taskHistory = await pool.query(
     `INSERT INTO task_history (task_id) VALUES('${taskId}') RETURNING *;`
   );
+  taskQuery.rows[0].taskHistory = taskHistory.rows;
+  taskQuery.rows[0].completed = false;
+  return taskQuery;
 }
 
 router.get("/read/:listId", async (req, res) => {
@@ -73,7 +75,7 @@ export async function getTasks(listId) {
     );
     const newTask = {
       ...task,
-      taskHistory: history.rows,
+      taskHistory: history.rows ?? [],
     };
     if (task.repeats) {
       // check if most recent is valid
@@ -85,6 +87,7 @@ export async function getTasks(listId) {
         newTask.taskHistory.unshift(newOccurance.rows[0]);
       }
     }
+    newTask.completed = newTask.taskHistory[0]?.completed ?? false;
     tasks.push(newTask);
     //
     // post
@@ -120,7 +123,6 @@ function parsePostgresDate(postgresDate) {
 router.post("/saveChanges/:taskId", async (req, res) => {
   const taskId = req.params.taskId;
   const body = req.body;
-  console.log(req.body);
   try {
     const query = await saveChanges(taskId, body);
     res.json(query.rows);
@@ -144,7 +146,6 @@ export async function saveChanges(id, body) {
 router.post("/update-completed", async (req, res) => {
   try {
     const { taskHistoryId, completed } = req.body;
-    console.log(taskHistoryId, completed);
     const query = await updateCompleted(completed, taskHistoryId);
     res.json(query.rows);
   } catch (error) {

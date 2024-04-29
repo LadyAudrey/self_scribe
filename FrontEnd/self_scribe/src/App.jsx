@@ -12,7 +12,6 @@ import { Graphs } from "./components/Graphs/Graphs";
 export default function Home() {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [kudos, setKudos] = useState([]);
   const [pageTab, setPageTab] = useState("DisplayLists");
 
   // Kenson approved use of useEffect
@@ -36,18 +35,12 @@ export default function Home() {
       const response = await fetch(
         `http://localhost:3001/tasks/read/${list.id}/`
       );
-      const kudos = [];
       // This isn't working right and I'm not sure why
       if (response.ok) {
         const result = await response.json();
         for (let i = 0; i < result.length; i++) {
-          if (result[i].completed) {
-            kudos.push(result[i]);
-          } else {
-            tasks.push(result[i]);
-          }
+          tasks.push(result[i]);
         }
-        setKudos(kudos);
       } else {
         console.log("I'm broke, fetchTasks in App.jsx");
       }
@@ -91,7 +84,7 @@ export default function Home() {
             </div>
           </header>
           <div className="relative flex justify-around">
-            <DisplayLists kudos={kudos} />
+            <DisplayLists/>
           </div>
           <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
             <h1 className="text-4xl">Self Scribe</h1>

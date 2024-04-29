@@ -8,7 +8,7 @@ import { List } from "./List";
 import AddList from "./AddList";
 import { Kudos } from "./Kudos";
 
-export function DisplayLists(kudos) {
+export function DisplayLists() {
   const { lists, setLists } = useContext(ListsContext);
   const [addingList, setAddingList] = useState(false);
 
@@ -61,7 +61,7 @@ export function DisplayLists(kudos) {
           </div> */}
         </fieldset>
         <div>
-          <Kudos kudos={kudos} />
+          <Kudos />
         </div>
       </div>
     </div>

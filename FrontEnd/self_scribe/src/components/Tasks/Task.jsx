@@ -9,14 +9,14 @@ export function Task({ taskId }) {
   const task = tasks.find((task) => {
     return task.id === taskId;
   });
-  const completed =
-    task.taskHistory.length > 0 && task.taskHistory[0].completed;
+  const completed = task.completed;
   const [taskCompleted, setTaskCompleted] = useState(completed);
   const [updatePending, setUpdatePending] = useState(false);
   async function handleTaskComplete() {
     setUpdatePending(true);
     try {
       const completed = !taskCompleted;
+      console.log(completed);
       const response = await fetch(
         "http://localhost:3001/tasks/update-completed",
         {
@@ -33,11 +33,16 @@ export function Task({ taskId }) {
       }
       setTaskCompleted(completed);
       setUpdatePending(false);
+      const taskIndex = tasks.indexOf(task);
+      const newTasks = [...tasks];
+      newTasks[taskIndex].completed = completed;
+      setTasks(newTasks);
     } catch (error) {
       console.log(error);
       setUpdatePending(false);
     }
   }
+
   return (
     <div className="flex px-8 gap-3">
       <div className="flex h-fit">

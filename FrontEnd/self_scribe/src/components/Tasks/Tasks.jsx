@@ -9,21 +9,19 @@ export function Tasks(props) {
   const { listId } = props;
   const { tasks } = useContext(TasksContext);
 
-  const filteredTasks = tasks.filter((task) => {
-    return task.list_id === listId;
-  });
+  // const filteredTasks =
 
   return (
     <>
       <div className="">
-        {filteredTasks.length > 0 &&
-          filteredTasks.map((task) => {
-            return (
-              task.completed == false && (
-                <Task key={uuidv4()} taskId={task.id} />
-              )
-            );
-          })}
+        {tasks.length > 0 &&
+          tasks
+            .filter((task) => {
+              return task.list_id === listId && task.completed === false;
+            })
+            .map((task) => {
+              return <Task key={uuidv4()} taskId={task.id} />;
+            })}
       </div>
     </>
   );
