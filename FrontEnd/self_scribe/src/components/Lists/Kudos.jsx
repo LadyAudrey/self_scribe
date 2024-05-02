@@ -1,24 +1,24 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
 import { TasksContext } from "../../Contexts/TasksContext";
+import { Kudo } from "../Tasks/Kudo";
 
 export function Kudos() {
   const { tasks } = useContext(TasksContext);
   return (
     <>
-      <fieldset>
+      <fieldset className="side">
         <legend className="legend title">Kudos!</legend>
+        {/* why is task a string and not an object? */}
         {tasks
           .filter((task) => {
+            console.log(typeof task);
             return task.completed;
           })
           .map((task, index) => (
-            <div key={index}>
-              <h3>{task.name}</h3>
-              {/* <label htmlFor={task.name} className="legend-title">
-              {task.name}
-            </label> */}
-              <button>Edit</button>
-            </div>
+            <Kudo task={task} index={index} key={uuidv4()} />
           ))}
       </fieldset>
     </>
