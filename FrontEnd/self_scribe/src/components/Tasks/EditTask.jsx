@@ -1,9 +1,8 @@
 import { useState, useContext } from "react";
 
 import EditString from "../EditString";
-import EditFrequency from "./editFrequency";
-
 import { TasksContext } from "../../Contexts/TasksContext";
+import Frequency from "./Frequency";
 
 // need how to activate the editing UI
 // plan to go forward: We have outgrown EditString.jsx and need to do it locally
@@ -49,7 +48,6 @@ export function EditTask(props) {
     };
     // hook up to appropriate BE Fx's
     try {
-      console.log("sending fetch", task);
       const response = await fetch(
         `http://localhost:3001/tasks/saveChanges/${task.id}`,
         {
@@ -66,7 +64,7 @@ export function EditTask(props) {
         setErrorMsg("Update was not successful");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setErrorMsg("Update was not successful");
     }
   }
@@ -81,19 +79,17 @@ export function EditTask(props) {
           method: "POST",
         }
       );
-      console.log(response, "tasks from handlePause in editTask.jsx");
       if (response.ok) {
         setRepeating(!repeating);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
   // TODO: update all fetches with try catch blocks
   async function handleDelete(event) {
     event.preventDefault();
-    console.log("handleDelete");
     // TODO need identifier from parent
     try {
       const response = await fetch(
@@ -180,7 +176,7 @@ export function EditTask(props) {
                 ></input>
               </div>
               {repeating ? (
-                <EditFrequency
+                <Frequency
                   numOfNum={numOfNum}
                   setNumOFNum={setNumOFNum}
                   numOfDen={numOfDen}

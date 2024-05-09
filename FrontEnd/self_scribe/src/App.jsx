@@ -42,11 +42,9 @@ export default function Home() {
           tasks.push(result[i]);
         }
       } else {
-        console.log("I'm broke, fetchTasks in App.jsx");
+        console.error("I'm broke, fetchTasks in App.jsx");
       }
     }
-    // console.log(tasks, "tasks");
-    // console.log(kudos, "kudos");
     return tasks;
   }
 
@@ -84,7 +82,7 @@ export default function Home() {
             </div>
           </header>
           <div className="relative flex justify-around">
-            <DisplayLists/>
+            <DisplayLists />
           </div>
           <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
             <h1 className="text-4xl">Self Scribe</h1>

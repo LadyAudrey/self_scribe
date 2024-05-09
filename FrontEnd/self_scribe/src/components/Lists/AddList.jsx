@@ -36,7 +36,6 @@ export default function AddList(props) {
     );
     if (response.ok) {
       const result = await response.json();
-      console.log(result);
       setLists([...lists, result.rows[0]]);
     }
   }

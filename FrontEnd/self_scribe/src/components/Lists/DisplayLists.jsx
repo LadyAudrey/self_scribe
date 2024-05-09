@@ -15,7 +15,6 @@ export function DisplayLists() {
   async function handleChange(event) {
     function handleSubmit(event) {
       event.preventDefault();
-      console.log(listName);
       // Todo connect new list creation to backend
     }
 
@@ -27,7 +26,7 @@ export function DisplayLists() {
   }
 
   return (
-    <div className="flex gap-10 w-screen">
+    <div className="flex justify-around w-screen gap-4">
       <fieldset className="side">
         <legend className="text-2xl">TDL</legend>
         <div>
@@ -59,7 +58,7 @@ export function DisplayLists() {
             <button>Boolean with list symbol</button>
           </div> */}
       </fieldset>
-      <div>
+      <div className="side">
         <Kudos />
       </div>
     </div>

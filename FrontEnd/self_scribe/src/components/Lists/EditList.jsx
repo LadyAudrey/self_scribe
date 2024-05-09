@@ -39,7 +39,6 @@ export default function EditList(props) {
     if (response.ok) {
       setActive(!active);
     }
-    console.log(active);
   }
 
   function removeFromList() {

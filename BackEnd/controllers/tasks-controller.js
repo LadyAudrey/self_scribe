@@ -1,4 +1,4 @@
-import { Router, response } from "express";
+import { Router } from "express";
 import { pool } from "../models/db.js";
 
 const router = Router();
@@ -61,42 +61,50 @@ router.get("/read/:listId", async (req, res) => {
 // finish aggregating data of task_history into the task item that is sent to FE
 
 export async function getTasks(listId) {
-  const query = await pool.query(
-    `SELECT * FROM tasks WHERE list_id='${listId}';`
-  );
-  if (query.rowCount === 0) {
-    return query.rows;
-  }
-  let tasks = [];
-  for (const task of query.rows) {
-    const taskId = task.id;
-    const history = await pool.query(
-      `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC;`
+  const tasks = await getTasksFromDB(listId);
+  return await Promise.all(tasks.map(prepareTaskHistory));
+}
+
+async function getTasksFromDB(listId) {
+  try {
+    const query = await pool.query(
+      `SELECT * FROM tasks WHERE list_id='${listId}';`
     );
-    const newTask = {
-      ...task,
-      taskHistory: history.rows ?? [],
-    };
-    if (task.repeats) {
-      // check if most recent is valid
-      const isValid = isCurrent(history.rows[0]);
-      if (!isValid) {
-        const newOccurance = await pool.query(
-          `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
-        );
-        newTask.taskHistory.unshift(newOccurance.rows[0]);
-      }
+    if (query.rowCount === 0) {
+      return [];
     }
-    newTask.completed = newTask.taskHistory[0]?.completed ?? false;
-    tasks.push(newTask);
-    //
-    // post
-    // const taskDate = parsePostgresDate(createdOn);
-    // 2024-03-29 18:40:19.070107
-    // const taskDate = new Date(history.rows[0].created_on);
-    // console.log(taskDate.getDay(), " day");
+    return query.rows;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
-  return tasks;
+}
+
+// TODO: break this function down to smaller helper functions
+async function prepareTaskHistory(task) {
+  const taskId = task.id;
+  const history = await pool.query(
+    `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC;`
+  );
+  const newTask = {
+    ...task,
+    taskHistory: history.rows ?? [],
+  };
+  if (task.repeats) {
+    // check if most recent is valid
+    const isValid = isCurrent(history.rows[0]);
+    if (!isValid) {
+      const newOccurance = await pool.query(
+        `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
+      );
+      newTask.taskHistory.unshift(newOccurance.rows[0]);
+      // TODO: set up back-propagation for cl not logging in for several days
+      // TODO: set up algo to validate cycle over active + inactive days (greedy algo)
+      // TODO: set up reminder if active day has not been interacted for the inactive days, put task into UI
+    }
+  }
+  newTask.completed = newTask.taskHistory[0]?.completed ?? false;
+  return newTask;
 }
 
 function isCurrent(taskOccurance) {

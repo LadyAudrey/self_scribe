@@ -34,7 +34,7 @@
   }
 
   .side {
-    @apply bg-black min-w-max px-20
+    @apply w-2/5 px-20
   }
   .card {
     @apply absolute m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50

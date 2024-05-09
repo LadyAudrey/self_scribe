@@ -11,14 +11,12 @@ export function Kudos() {
     <>
       <fieldset className="side">
         <legend className="legend title">Kudos!</legend>
-        {/* why is task a string and not an object? */}
         {tasks
           .filter((task) => {
-            console.log(typeof task);
             return task.completed;
           })
-          .map((task, index) => (
-            <Kudo task={task} index={index} key={uuidv4()} />
+          .map((task) => (
+            <Kudo taskId={task.id} key={uuidv4()} />
           ))}
       </fieldset>
     </>

@@ -9,21 +9,17 @@ export function Task({ taskId }) {
   const task = tasks.find((task) => {
     return task.id === taskId;
   });
-  const completed = task.completed;
-  const [taskCompleted, setTaskCompleted] = useState(completed);
   const [updatePending, setUpdatePending] = useState(false);
   async function handleTaskComplete() {
     setUpdatePending(true);
     try {
-      const completed = !taskCompleted;
-      console.log(completed);
       const response = await fetch(
         "http://localhost:3001/tasks/update-completed",
         {
           method: "POST",
           body: JSON.stringify({
             taskHistoryId: task.taskHistory[0].id,
-            completed,
+            completed: true,
           }),
           headers: { "Content-Type": "application/json" },
         }
@@ -31,14 +27,13 @@ export function Task({ taskId }) {
       if (!response.ok) {
         throw new Error("failed to set completed value");
       }
-      setTaskCompleted(completed);
       setUpdatePending(false);
       const taskIndex = tasks.indexOf(task);
       const newTasks = [...tasks];
-      newTasks[taskIndex].completed = completed;
+      newTasks[taskIndex].completed = true;
       setTasks(newTasks);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setUpdatePending(false);
     }
   }
@@ -52,7 +47,7 @@ export function Task({ taskId }) {
           disabled={updatePending}
           onChange={handleTaskComplete}
           className="m-2"
-          checked={taskCompleted}
+          checked={false}
         />
       </div>
       {editingTask && (

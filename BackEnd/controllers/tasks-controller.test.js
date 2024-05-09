@@ -14,7 +14,6 @@ describe("tasks-controller", () => {
     it("should add a new task", async () => {
       const response = createTask();
       expect(response).toBeDefined();
-      console.log(response);
       //   id = response.rows[0].id;
       //   exp(id).toBeGreaterThan(0);
     });

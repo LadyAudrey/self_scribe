@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function EditFrequency(props) {
+export default function Frequency(props) {
   const { numOfNum, setNumOFNum, numOfDen, setNumOfDen } = props;
 
   const handleUpdateNumFreq = (event) => {
@@ -12,7 +12,7 @@ export default function EditFrequency(props) {
   };
 
   function handleUpdateDuration(event) {
-    setDuration(even.target.value);
+    setDuration(event.target.value);
   }
 
   return (
@@ -20,7 +20,7 @@ export default function EditFrequency(props) {
       <div className="wi-fit flex m-5 items-center">
         {/* Desired Frequency (x units in y time) */}
         <input
-          type="number"
+          type="range"
           name="numOfNum"
           value={numOfNum}
           onChange={handleUpdateNumFreq}
@@ -28,7 +28,7 @@ export default function EditFrequency(props) {
         ></input>
         <p className="flex">days every</p>
         <input
-          type="number"
+          type="range"
           name="numOfDen"
           value={numOfDen}
           onChange={handleUpdateDen}
