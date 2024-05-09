@@ -57,4 +57,4 @@ report_end TIMESTAMP,
 severity INT NOT NULL
 );
 
---  to access postgres terminal "sudo -u evergreen  psql -d self_scribe"
+--  to access postgres terminal "sudo -u evergreen psql -d self_scribe"

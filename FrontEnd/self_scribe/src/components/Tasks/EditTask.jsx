@@ -18,9 +18,13 @@ export function EditTask(props) {
   const [repeating, setRepeating] = useState(task.repeats ?? false);
 
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
-  const [numOfNum, setNumOFNum] = useState(task.frequency?.split(":")[0] ?? "");
+  const [numOfNum, setNumOFNum] = useState(
+    task.frequency?.split(":")[0] ?? "1"
+  );
   // named as such because it's the top number when saying "7 days in a week" - 3/7 *the denominator*
-  const [numOfDen, setNumOfDen] = useState(task.frequency?.split(":")[1] ?? "");
+  const [numOfDen, setNumOfDen] = useState(
+    task.frequency?.split(":")[1] ?? "0"
+  );
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -175,14 +179,14 @@ export function EditTask(props) {
                   className="bg-black w-fit rounded-md border-slate-800 border-2"
                 ></input>
               </div>
-              {repeating ? (
+              {repeating && (
                 <Frequency
                   numOfNum={numOfNum}
                   setNumOFNum={setNumOFNum}
                   numOfDen={numOfDen}
                   setNumOfDen={setNumOfDen}
                 />
-              ) : null}
+              )}
             </div>
             <div className="flex justify-around">
               <button

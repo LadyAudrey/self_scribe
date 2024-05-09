@@ -132,6 +132,9 @@ router.post("/saveChanges/:taskId", async (req, res) => {
   const taskId = req.params.taskId;
   const body = req.body;
   try {
+    if (body.repeats && !body.frequency) {
+      throw new Error("repeat requires a frequency");
+    }
     const query = await saveChanges(taskId, body);
     res.json(query.rows);
   } catch (error) {

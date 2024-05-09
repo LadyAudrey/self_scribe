@@ -11,16 +11,12 @@ export default function Frequency(props) {
     setNumOfDen(event.target.value);
   };
 
-  function handleUpdateDuration(event) {
-    setDuration(event.target.value);
-  }
-
   return (
     <>
       <div className="wi-fit flex m-5 items-center">
         {/* Desired Frequency (x units in y time) */}
         <input
-          type="range"
+          type="number"
           name="numOfNum"
           value={numOfNum}
           onChange={handleUpdateNumFreq}
@@ -28,7 +24,7 @@ export default function Frequency(props) {
         ></input>
         <p className="flex">days every</p>
         <input
-          type="range"
+          type="number"
           name="numOfDen"
           value={numOfDen}
           onChange={handleUpdateDen}
