@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .mainBg {
-  background: url("/assets/BGgradient.png");
+  /* background: url("/assets/BGgradient.png"); */
+  background-image: conic-gradient(#0A4072, #00301B);
 }
 
 @layer components {

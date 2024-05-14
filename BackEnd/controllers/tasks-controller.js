@@ -34,16 +34,6 @@ export async function createTask(listID, taskName) {
   return taskQuery;
 }
 
-router.get("/read/:listId", async (req, res) => {
-  const listId = req.params.listId;
-  try {
-    const query = await getTasks(listId);
-    res.json(query);
-  } catch (error) {
-    console.log({ error }, " read/listId in tasks-controller");
-  }
-});
-
 /*{
   "id": 1,
   "list_id": 1,
@@ -57,8 +47,15 @@ router.get("/read/:listId", async (req, res) => {
   "frequency": "010",
   "last_occurrence": "2024-04-04T15:53:17.909Z"
 }*/
-
-// finish aggregating data of task_history into the task item that is sent to FE
+router.get("/read/:listId", async (req, res) => {
+  const listId = req.params.listId;
+  try {
+    const query = await getTasks(listId);
+    res.json(query);
+  } catch (error) {
+    console.log({ error }, " read/listId in tasks-controller");
+  }
+});
 
 export async function getTasks(listId) {
   const tasks = await getTasksFromDB(listId);
@@ -81,15 +78,33 @@ async function getTasksFromDB(listId) {
 }
 
 // TODO: break this function down to smaller helper functions
+// TODO: denest code with a gaurd statement on task.repeats, to create 2 paths
 async function prepareTaskHistory(task) {
   const taskId = task.id;
+  let limit = 1;
+  if (!task.repeats) {
+    return await handleNotRepeatingTask(task);
+  }
+  if (task.repeats) {
+    const frequency = task.frequency.split(":");
+    // accessing numerator #, we don't need denominator for past-propegation
+    limit = parseInt(frequency[0]);
+  }
   const history = await pool.query(
-    `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC;`
+    `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC LIMIT ${limit};`
   );
   const newTask = {
     ...task,
     taskHistory: history.rows ?? [],
   };
+  if (task.repeats && newTask.taskHistory.length === 0) {
+    const newOccurance = await pool.query(
+      `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
+    );
+    newTask.taskHistory.unshift(newOccurance.rows[0]);
+    newTask.completed = false;
+    return newTask;
+  }
   if (task.repeats) {
     // check if most recent is valid
     const isValid = isCurrent(history.rows[0]);
@@ -107,6 +122,50 @@ async function prepareTaskHistory(task) {
   return newTask;
 }
 
+async function handleNotRepeatingTask(task) {
+  try {
+    const history = await pool.query(
+      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT 1;`
+    );
+    if (!history) {
+      throw new Error("failed to fetch taskHistory");
+    }
+    const newTask = {
+      ...task,
+      taskHistory: history.rows ?? [],
+    };
+    if (newTask.taskHistory.length === 0) {
+      const newOccurance = await pool.query(
+        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
+      );
+      if (!newOccurance) {
+        throw new Error("failed to create newOccurance");
+      }
+      newTask.taskHistory.unshift(newOccurance.rows[0]);
+    }
+    newTask.completed = newTask.taskHistory[0]?.completed ?? false;
+    return newTask;
+  } catch (error) {
+    console.error(error);
+    return {
+      ...task,
+      completed: false,
+      taskHistory: [],
+    };
+  }
+}
+
+// this is where we stopped on 5.13
+async function handleRepeatingTask(task) {
+  const [num, den] = task.frequency.split(":").map((number) => {
+    return parseInt(number ?? "1");
+  });
+  const history = await pool.query(
+    `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
+  );
+  const taskHistory = history.rows ?? [];
+}
+
 function isCurrent(taskOccurance) {
   if (taskOccurance !== undefined) {
     const dateNow = new Date();
@@ -118,14 +177,6 @@ function isCurrent(taskOccurance) {
     return equal;
   }
   return false;
-}
-
-function parsePostgresDate(postgresDate) {
-  const timeRemoved = postgresDate.split(" ")[0];
-  const [year, month, day] = timeRemoved.split("-");
-  const newDate = new Date();
-  newDate.setFullYear(year, month, day);
-  return newDate;
 }
 
 router.post("/saveChanges/:taskId", async (req, res) => {
