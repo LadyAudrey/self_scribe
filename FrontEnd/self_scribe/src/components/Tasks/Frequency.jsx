@@ -18,6 +18,8 @@ export default function Frequency(props) {
         <input
           type="number"
           name="numOfNum"
+          min={1}
+          max={365}
           value={numOfNum}
           onChange={handleUpdateNumFreq}
           className="bg-black w-1/12 rounded-md border-slate-800 p-1 border-2"
@@ -27,6 +29,8 @@ export default function Frequency(props) {
           type="number"
           name="numOfDen"
           value={numOfDen}
+          min={0}
+          max={365}
           onChange={handleUpdateDen}
           className="bg-black w-1/12 rounded-md mx-2 border-slate-800 border-2"
         ></input>

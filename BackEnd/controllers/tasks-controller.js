@@ -3,7 +3,7 @@ import { pool } from "../models/db.js";
 
 const router = Router();
 
-//  accept description in UI
+const MILLISECS_TO_DAYS = 1000 * 60 * 60 * 24;
 
 router.post("/add/:listID/:taskName", async (req, res) => {
   try {
@@ -80,46 +80,10 @@ async function getTasksFromDB(listId) {
 // TODO: break this function down to smaller helper functions
 // TODO: denest code with a gaurd statement on task.repeats, to create 2 paths
 async function prepareTaskHistory(task) {
-  const taskId = task.id;
-  let limit = 1;
   if (!task.repeats) {
     return await handleNotRepeatingTask(task);
   }
-  if (task.repeats) {
-    const frequency = task.frequency.split(":");
-    // accessing numerator #, we don't need denominator for past-propegation
-    limit = parseInt(frequency[0]);
-  }
-  const history = await pool.query(
-    `SELECT * FROM task_history WHERE task_id = '${taskId}' ORDER BY created_on DESC LIMIT ${limit};`
-  );
-  const newTask = {
-    ...task,
-    taskHistory: history.rows ?? [],
-  };
-  if (task.repeats && newTask.taskHistory.length === 0) {
-    const newOccurance = await pool.query(
-      `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
-    );
-    newTask.taskHistory.unshift(newOccurance.rows[0]);
-    newTask.completed = false;
-    return newTask;
-  }
-  if (task.repeats) {
-    // check if most recent is valid
-    const isValid = isCurrent(history.rows[0]);
-    if (!isValid) {
-      const newOccurance = await pool.query(
-        `INSERT INTO task_history (task_id) VALUES ('${taskId}') RETURNING *;`
-      );
-      newTask.taskHistory.unshift(newOccurance.rows[0]);
-      // TODO: set up back-propagation for cl not logging in for several days
-      // TODO: set up algo to validate cycle over active + inactive days (greedy algo)
-      // TODO: set up reminder if active day has not been interacted for the inactive days, put task into UI
-    }
-  }
-  newTask.completed = newTask.taskHistory[0]?.completed ?? false;
-  return newTask;
+  return await handleRepeatingTask(task);
 }
 
 async function handleNotRepeatingTask(task) {
@@ -155,26 +119,116 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
-// this is where we stopped on 5.13
 async function handleRepeatingTask(task) {
-  const [num, den] = task.frequency.split(":").map((number) => {
-    return parseInt(number ?? "1");
-  });
-  const history = await pool.query(
-    `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
+  try {
+    const [num, den] = task.frequency.split(":").map((number, index) => {
+      if (index === 0) {
+        return parseInt(number ?? "1");
+      }
+      return parseInt(number ?? "0");
+    });
+    const history = await pool.query(
+      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
+    );
+    const taskHistory = history.rows ?? [];
+    if (taskHistory.length === 0 || !isCurrent(taskHistory[0])) {
+      const newOccurance = await pool.query(
+        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
+      );
+      taskHistory.unshift(newOccurance.rows[0]);
+    }
+    return {
+      ...task,
+      taskHistory,
+      completed: taskHistory[0]?.completed ?? false,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      ...task,
+      taskHistory: [],
+      completed: false,
+    };
+  }
+}
+
+// TODO refactor for maintenance by future Devs
+// returns a boolean of if the active days are exhausted (more than Num) *AND* adds to the db
+async function activeDaysExhausted(taskHistory, activeDays) {
+  if (taskHistory.length === 0) {
+    return false;
+  }
+  const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+  const mostRecentTaskDate = Math.trunc(
+    taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
   );
-  const taskHistory = history.rows ?? [];
+  let allDaysExhausted = false;
+  let count = 1;
+  while (!allDaysExhausted) {
+    const nextMostRecent = taskHistory[count];
+    if (!nextMostRecent) {
+      break;
+    }
+    const nextMostRecentDate = Math.trunc(
+      nextMostRecent.created_on.getTime() / MILLISECS_TO_DAYS
+    );
+    if (nextMostRecentDate + count === mostRecentTaskDate) {
+      count++;
+      if (count === activeDays) {
+        allDaysExhausted = true;
+      }
+      continue;
+    }
+    break;
+  }
+  if (allDaysExhausted || dateNow === mostRecentTaskDate) {
+    return true;
+  }
+  let forwardDays = 1;
+  while (!allDaysExhausted) {
+    const nextDay =
+      mostRecentTaskDate * MILLISECS_TO_DAYS + forwardDays * MILLISECS_TO_DAYS;
+    try {
+      const query = await pool.query(
+        `INSERT INTO task_history (task_id, created_on) VALUES('${taskId}', '${new Date(
+          nextDay
+        )}') RETURNING *;`
+      );
+      count++;
+      if (count === activeDays) {
+        return true;
+      }
+      if (mostRecentTaskDate + forwardDays === dateNow) {
+        return false;
+      }
+      forwardDays++;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return false;
+}
+
+// starting here on 5/27 (Monday)
+function inactiveDaysExhausted(taskHistory, inactiveDays) {
+  if (taskHistory.length === 0) {
+    // true might be the better default, pending future logic
+    return false;
+  }
+  const dateNow = new Date();
+  const mostRecentTaskDate = taskHistory[0].created_on;
+  const difference =
+    Math.abs(dateNow.getDay() - mostRecentTaskDate.getDay()) + (7 % 7);
+  return difference > inactiveDays;
 }
 
 function isCurrent(taskOccurance) {
   if (taskOccurance !== undefined) {
-    const dateNow = new Date();
-    const taskDate = taskOccurance.created_on;
-    const equal =
-      dateNow.getFullYear() === taskDate.getFullYear() &&
-      dateNow.getMonth() === taskDate.getMonth() &&
-      dateNow.getDate() === taskDate.getDate();
-    return equal;
+    const today = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+    const taskDay = Math.trunc(
+      taskOccurance.created_on.getTime() / MILLISECS_TO_DAYS
+    );
+    return today === taskDay;
   }
   return false;
 }

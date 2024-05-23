@@ -53,10 +53,6 @@ export function DisplayLists() {
             Add List
           </button>
         )}
-        {/* <div className="flex">
-            <p>View My Lists</p>
-            <button>Boolean with list symbol</button>
-          </div> */}
       </fieldset>
       <div className="side">
         <Kudos />
