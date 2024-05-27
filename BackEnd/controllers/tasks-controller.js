@@ -119,6 +119,7 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
+// next time: test by inserting an old task into task_history and see if it propogates on Thursday 5/30
 async function handleRepeatingTask(task) {
   try {
     const [num, den] = task.frequency.split(":").map((number, index) => {
@@ -131,11 +132,33 @@ async function handleRepeatingTask(task) {
       `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
     );
     const taskHistory = history.rows ?? [];
-    if (taskHistory.length === 0 || !isCurrent(taskHistory[0])) {
+    if (taskHistory.length === 0) {
       const newOccurance = await pool.query(
         `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
       );
       taskHistory.unshift(newOccurance.rows[0]);
+    }
+    while (true) {
+      if (
+        !activeDaysExhausted(taskHistory, num) ||
+        inactiveDaysExhausted(taskHistory, den)
+      ) {
+        break;
+      }
+      const newTaskDate =
+        Math.trunc(taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS) +
+        den +
+        1;
+      const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+      if (dateNow <= newTaskDate) {
+        break;
+      }
+      const query = await pool.query(
+        `INSERT INTO task_history (task_id, created_on) VALUES('${
+          taskHistory[0].task_id
+        }', '${new Date(newTaskDate * MILLISECS_TO_DAYS)}') RETURNING *;`
+      );
+      taskHistory.unshift(query.rows[0]);
     }
     return {
       ...task,
@@ -194,6 +217,7 @@ async function activeDaysExhausted(taskHistory, activeDays) {
           nextDay
         )}') RETURNING *;`
       );
+      taskHistory.unshift(query.rows[0]);
       count++;
       if (count === activeDays) {
         return true;
@@ -209,16 +233,16 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   return false;
 }
 
-// starting here on 5/27 (Monday)
 function inactiveDaysExhausted(taskHistory, inactiveDays) {
   if (taskHistory.length === 0) {
     // true might be the better default, pending future logic
     return false;
   }
-  const dateNow = new Date();
-  const mostRecentTaskDate = taskHistory[0].created_on;
-  const difference =
-    Math.abs(dateNow.getDay() - mostRecentTaskDate.getDay()) + (7 % 7);
+  const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+  const mostRecentTaskDate = Math.trunc(
+    taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
+  );
+  const difference = dateNow - mostRecentTaskDate;
   return difference > inactiveDays;
 }
 

@@ -26,6 +26,7 @@ export function DisplayLists() {
   }
 
   return (
+    // extract 30-57 into it's own component
     <div className="flex justify-around w-screen gap-4">
       <fieldset className="side">
         <legend className="text-2xl">TDL</legend>
