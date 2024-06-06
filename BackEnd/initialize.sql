@@ -27,7 +27,6 @@ frequency VARCHAR (25),
 last_occurrence TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-_________ refactored to here
 
 CREATE TABLE task_history (
 id SERIAL PRIMARY KEY,
@@ -37,6 +36,7 @@ completed BOOLEAN DEFAULT FALSE,
 notes TEXT
 );
 
+-- _________ refactored to here
 
 
 CREATE TABLE symptoms (

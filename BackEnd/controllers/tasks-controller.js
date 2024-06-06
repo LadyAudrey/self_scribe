@@ -120,6 +120,7 @@ async function handleNotRepeatingTask(task) {
 }
 
 // next time: test by inserting an old task into task_history and see if it propogates on Thursday 5/30
+// set up unit tests, but needs function to clear and create DB
 async function handleRepeatingTask(task) {
   try {
     const [num, den] = task.frequency.split(":").map((number, index) => {
@@ -153,10 +154,9 @@ async function handleRepeatingTask(task) {
       if (dateNow <= newTaskDate) {
         break;
       }
+      const difference = dateNow - newTaskDate;
       const query = await pool.query(
-        `INSERT INTO task_history (task_id, created_on) VALUES('${
-          taskHistory[0].task_id
-        }', '${new Date(newTaskDate * MILLISECS_TO_DAYS)}') RETURNING *;`
+        `INSERT INTO task_history (task_id, created_on) VALUES('${taskHistory[0].task_id}', NOW() - INTERVAL '${difference}' day) RETURNING *;`
       );
       taskHistory.unshift(query.rows[0]);
     }
@@ -207,25 +207,30 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   if (allDaysExhausted || dateNow === mostRecentTaskDate) {
     return true;
   }
-  let forwardDays = 1;
+  let forwardDays = dateNow - mostRecentTaskDate + 1;
+  count++;
+  const taskId = taskHistory[0].task_id;
   while (!allDaysExhausted) {
-    const nextDay =
-      mostRecentTaskDate * MILLISECS_TO_DAYS + forwardDays * MILLISECS_TO_DAYS;
+    // 5/6 DEBUG why sometimes we have duplicates (sometimes)
+    const nextDate = taskHistory[0].created_on;
     try {
       const query = await pool.query(
-        `INSERT INTO task_history (task_id, created_on) VALUES('${taskId}', '${new Date(
-          nextDay
-        )}') RETURNING *;`
+        `
+        INSERT INTO task_history
+        (task_id, created_on)
+        VALUES('${taskId}', NOW() - interval '${forwardDays}' day)
+        RETURNING *;
+        `
       );
       taskHistory.unshift(query.rows[0]);
       count++;
       if (count === activeDays) {
         return true;
       }
-      if (mostRecentTaskDate + forwardDays === dateNow) {
+      if (forwardDays === 0) {
         return false;
       }
-      forwardDays++;
+      forwardDays--;
     } catch (error) {
       console.error(error);
     }
