@@ -59,10 +59,12 @@ router.get("/read/:listId", async (req, res) => {
 
 export async function getTasks(listId) {
   const tasks = await getTasksFromDB(listId);
+  console.log(tasks, "getTasks");
   return await Promise.all(tasks.map(prepareTaskHistory));
 }
 
 async function getTasksFromDB(listId) {
+  console.log("entering getTasksFromDB");
   try {
     const query = await pool.query(
       `SELECT * FROM tasks WHERE list_id='${listId}';`
@@ -139,22 +141,21 @@ async function handleRepeatingTask(task) {
       );
       taskHistory.unshift(newOccurance.rows[0]);
     }
-    while (true) {
-      if (
-        !activeDaysExhausted(taskHistory, num) ||
-        inactiveDaysExhausted(taskHistory, den)
-      ) {
+    // this may create bugs bc of using server time
+    const today = Date.now() / MILLISECS_TO_DAYS;
+    let mostRecentTaskDate =
+      taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS;
+    while (mostRecentTaskDate < today) {
+      if (activeDaysExhausted(taskHistory, num)) {
+        // makes inactiveDaysExhausted obsolete
+        mostRecentTaskDate += den;
+      }
+      mostRecentTaskDate++;
+      if (mostRecentTaskDate > today) {
         break;
       }
-      const newTaskDate =
-        Math.trunc(taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS) +
-        den +
-        1;
-      const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
-      if (dateNow <= newTaskDate) {
-        break;
-      }
-      const difference = dateNow - newTaskDate;
+      const difference = today - mostRecentTaskDate;
+      console.log("entering handleRepeatingTask insert");
       const query = await pool.query(
         `INSERT INTO task_history (task_id, created_on) VALUES('${taskHistory[0].task_id}', NOW() - INTERVAL '${difference}' day) RETURNING *;`
       );
@@ -188,6 +189,7 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   let allDaysExhausted = false;
   let count = 1;
   while (!allDaysExhausted) {
+    console.log("count is ", count);
     const nextMostRecent = taskHistory[count];
     if (!nextMostRecent) {
       break;
@@ -195,47 +197,46 @@ async function activeDaysExhausted(taskHistory, activeDays) {
     const nextMostRecentDate = Math.trunc(
       nextMostRecent.created_on.getTime() / MILLISECS_TO_DAYS
     );
+    if (count >= activeDays) {
+      allDaysExhausted = true;
+    }
     if (nextMostRecentDate + count === mostRecentTaskDate) {
       count++;
-      if (count === activeDays) {
-        allDaysExhausted = true;
-      }
       continue;
     }
     break;
   }
-  if (allDaysExhausted || dateNow === mostRecentTaskDate) {
+  if (dateNow <= mostRecentTaskDate) {
     return true;
   }
-  let forwardDays = dateNow - mostRecentTaskDate + 1;
-  count++;
-  const taskId = taskHistory[0].task_id;
-  while (!allDaysExhausted) {
-    // 5/6 DEBUG why sometimes we have duplicates (sometimes)
-    const nextDate = taskHistory[0].created_on;
-    try {
-      const query = await pool.query(
-        `
-        INSERT INTO task_history
-        (task_id, created_on)
-        VALUES('${taskId}', NOW() - interval '${forwardDays}' day)
-        RETURNING *;
-        `
-      );
-      taskHistory.unshift(query.rows[0]);
-      count++;
-      if (count === activeDays) {
-        return true;
-      }
-      if (forwardDays === 0) {
-        return false;
-      }
-      forwardDays--;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  return false;
+  // let forwardDays = dateNow - mostRecentTaskDate - 1;
+  // const taskId = taskHistory[0].task_id;
+  // while (!allDaysExhausted) {
+  //   console.log("forwardDays = ", forwardDays, "count = ", count);
+  //   try {
+  //     console.log("entering activeDaysExhausted insert");
+  //     const query = await pool.query(
+  //       `
+  //       INSERT INTO task_history
+  //       (task_id, created_on)
+  //       VALUES('${taskId}', NOW() - interval '${forwardDays}' day)
+  //       RETURNING *;
+  //       `
+  //     );
+  //     taskHistory.unshift(query.rows[0]);
+  //     count++;
+  //     if (count === activeDays) {
+  //       return true;
+  //     }
+  //     if (forwardDays === 0) {
+  //       return false;
+  //     }
+  //     forwardDays--;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  return allDaysExhausted;
 }
 
 function inactiveDaysExhausted(taskHistory, inactiveDays) {
