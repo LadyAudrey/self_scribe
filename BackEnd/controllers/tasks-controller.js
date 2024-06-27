@@ -79,8 +79,6 @@ async function getTasksFromDB(listId) {
   }
 }
 
-// TODO: break this function down to smaller helper functions
-// TODO: denest code with a gaurd statement on task.repeats, to create 2 paths
 async function prepareTaskHistory(task) {
   if (!task.repeats) {
     return await handleNotRepeatingTask(task);
@@ -121,7 +119,8 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
-// next time: test by inserting an old task into task_history and see if it propogates on Thursday 5/30
+// 6/24 BUG TODO generates an extra day on the first sequence during back propagation
+// test with more frequencies (we know 2:5 created 3 days on the first cycle)
 // set up unit tests, but needs function to clear and create DB
 async function handleRepeatingTask(task) {
   try {
@@ -131,6 +130,7 @@ async function handleRepeatingTask(task) {
       }
       return parseInt(number ?? "0");
     });
+
     const history = await pool.query(
       `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
     );
@@ -146,11 +146,11 @@ async function handleRepeatingTask(task) {
     let mostRecentTaskDate =
       taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS;
     while (mostRecentTaskDate < today) {
-      if (activeDaysExhausted(taskHistory, num)) {
+      mostRecentTaskDate++;
+      if (await activeDaysExhausted(taskHistory, num)) {
         // makes inactiveDaysExhausted obsolete
         mostRecentTaskDate += den;
       }
-      mostRecentTaskDate++;
       if (mostRecentTaskDate > today) {
         break;
       }
@@ -189,9 +189,9 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   let allDaysExhausted = false;
   let count = 1;
   while (!allDaysExhausted) {
-    console.log("count is ", count);
     const nextMostRecent = taskHistory[count];
     if (!nextMostRecent) {
+
       break;
     }
     const nextMostRecentDate = Math.trunc(
@@ -209,33 +209,6 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   if (dateNow <= mostRecentTaskDate) {
     return true;
   }
-  // let forwardDays = dateNow - mostRecentTaskDate - 1;
-  // const taskId = taskHistory[0].task_id;
-  // while (!allDaysExhausted) {
-  //   console.log("forwardDays = ", forwardDays, "count = ", count);
-  //   try {
-  //     console.log("entering activeDaysExhausted insert");
-  //     const query = await pool.query(
-  //       `
-  //       INSERT INTO task_history
-  //       (task_id, created_on)
-  //       VALUES('${taskId}', NOW() - interval '${forwardDays}' day)
-  //       RETURNING *;
-  //       `
-  //     );
-  //     taskHistory.unshift(query.rows[0]);
-  //     count++;
-  //     if (count === activeDays) {
-  //       return true;
-  //     }
-  //     if (forwardDays === 0) {
-  //       return false;
-  //     }
-  //     forwardDays--;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
   return allDaysExhausted;
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 
@@ -9,17 +9,35 @@ import { DisplayLists } from "./components/Lists/DisplayLists";
 import { Symptoms } from "./components/Symptoms/Symptoms";
 import { Graphs } from "./components/Graphs/Graphs";
 
+// cannot change the key/value pairs at all bc of Object.freeze
+const PAGE_KEYS = Object.freeze({
+  DISPLAY_LISTS: "DisplayLists",
+  SYMPTOMS: "Symptoms",
+  GRAPHS: "Graphs",
+  SETTINGS: "Settings",
+});
+
+const PAGES = Object.freeze({
+  [PAGE_KEYS.DISPLAY_LISTS]: <DisplayLists />,
+  [PAGE_KEYS.SYMPTOMS]: <Symptoms />,
+  [PAGE_KEYS.GRAPHS]: <Graphs />,
+});
+
 export default function Home() {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [pageTab, setPageTab] = useState("DisplayLists");
+  const [pageTab, setPageTab] = useState(PAGE_KEYS.DISPLAY_LISTS);
+  const dataInitialized = useRef(false);
 
-  // Kenson approved use of useEffect
   useEffect(() => {
-    fetchTDL();
+    if (!dataInitialized.current) {
+      fetchTDL();
+      dataInitialized.current = true;
+    }
   }, []);
 
   async function fetchTDL() {
+    console.log("entering fetchTDL");
     const response = await fetch("http://localhost:3001/lists/read/audrey");
     const result = await response.json();
     setLists(result);
@@ -48,8 +66,6 @@ export default function Home() {
     return tasks;
   }
 
-  // create frequency function TODO
-
   return (
     // TODO: background gradient file not working
     <ListsContext.Provider value={{ lists, setLists }}>
@@ -59,31 +75,35 @@ export default function Home() {
             <div>
               <button
                 className="mainBtns"
-                onClick={() => setPageTab("DisplayLists")}
+                onClick={() => setPageTab(PAGE_KEYS.DISPLAY_LISTS)}
               >
                 Lists
               </button>
               {/* this will load the load the lists page */}
               <button
                 className="mainBtns"
-                onClick={() => setPageTab("Symptoms")}
+                onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
               >
                 Symptoms
               </button>
               {/* this will load the symptoms page */}
-              <button className="mainBtns" onClick={() => setPageTab("Graphs")}>
+              <button
+                className="mainBtns"
+                onClick={() => setPageTab(PAGE_KEYS.GRAPHS)}
+              >
                 Graphs
               </button>
-              {/* this will load the graphing page */}
             </div>
             <div>
-              <button className="mainBtns">Settings</button>
-              {/* this will load the Settings for the app */}
+              <button
+                className="mainBtns"
+                onClick={() => setPageTab(PAGE_KEYS.SETTINGS)}
+              >
+                Settings
+              </button>
             </div>
           </header>
-          <div className="relative flex justify-around">
-            <DisplayLists />
-          </div>
+          <div className="relative flex justify-around">{PAGES[pageTab]}</div>
           <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
             <h1 className="text-4xl">Self Scribe</h1>
           </footer>

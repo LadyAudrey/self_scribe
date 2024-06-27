@@ -43,7 +43,7 @@ export function Kudo(props) {
   return (
     <>
       <div className="flex">
-        <h3>{task.name}</h3>
+        <h4>{task.name}</h4>
         {/* <label htmlFor={task.name} className="legend-title">
               {task.name}
             </label> */}

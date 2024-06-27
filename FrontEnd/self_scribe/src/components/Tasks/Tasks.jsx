@@ -12,17 +12,15 @@ export function Tasks(props) {
   // const filteredTasks =
 
   return (
-    <>
-      <div className="">
-        {tasks.length > 0 &&
-          tasks
-            .filter((task) => {
-              return task.list_id === listId && task.completed === false;
-            })
-            .map((task) => {
-              return <Task key={uuidv4()} taskId={task.id} />;
-            })}
-      </div>
-    </>
+    <div className="">
+      {tasks.length > 0 &&
+        tasks
+          .filter((task) => {
+            return task.list_id === listId && task.completed === false;
+          })
+          .map((task) => {
+            return <Task key={uuidv4()} taskId={task.id} />;
+          })}
+    </div>
   );
 }
