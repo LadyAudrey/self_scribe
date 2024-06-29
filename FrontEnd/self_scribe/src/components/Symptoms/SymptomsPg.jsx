@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
-import { SymptomsContext } from "../../Contexts/Symptoms.Context";
+import { SymptomsContext } from "../../Contexts/Symptoms";
 
 import { SymptomBank } from "./SymptomBank";
 import { TodaysSymptoms } from "./TodaysSymptoms";

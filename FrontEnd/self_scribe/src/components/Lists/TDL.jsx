@@ -25,33 +25,32 @@ export function TDL() {
   }
 
   return (
-    <div className="">
-        <div className="text-2xl">TDL</div>
-        <div>
-          {!lists && <h2>data pending</h2>}
-          {lists.length &&
-            lists.map((list) => {
-              return <List key={uuidv4()} list={list} />;
-            })}
-        </div>
-        {addingList ? (
-          <AddList
-            lists={lists}
-            setLists={setLists}
-            addingList={addingList}
-            setAddingList={setAddingList}
-          />
-        ) : (
-          <button
-            onClick={() => {
-              setAddingList(!addingList);
-            }}
-            className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
-          >
-            Add List
-          </button>
-        )}
-
-    </div>
+    <>
+      <div className="text-2xl">TDL</div>
+      <div>
+        {!lists && <h2>data pending</h2>}
+        {lists.length &&
+          lists.map((list) => {
+            return <List key={uuidv4()} list={list} />;
+          })}
+      </div>
+      {addingList ? (
+        <AddList
+          lists={lists}
+          setLists={setLists}
+          addingList={addingList}
+          setAddingList={setAddingList}
+        />
+      ) : (
+        <button
+          onClick={() => {
+            setAddingList(!addingList);
+          }}
+          className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
+        >
+          Add List
+        </button>
+      )}
+    </>
   );
 }

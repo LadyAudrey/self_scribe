@@ -6,7 +6,7 @@ import { ListsContext } from "./Contexts/ListsContext";
 import { TasksContext } from "./Contexts/TasksContext";
 
 import { DisplayLists } from "./components/Lists/DisplayLists";
-import { Symptoms } from "./components/Symptoms/Symptoms";
+import { Symptoms } from "./components/Symptoms/SymptomsPg";
 import { Graphs } from "./components/Graphs/Graphs";
 
 // cannot change the key/value pairs at all bc of Object.freeze
