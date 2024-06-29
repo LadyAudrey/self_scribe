@@ -6,6 +6,7 @@ import { ListsContext } from "../../Contexts/ListsContext";
 
 import { List } from "./List";
 import AddList from "./AddList";
+import { TDL } from "./TDL";
 import { Kudos } from "./Kudos";
 
 export function DisplayLists() {
@@ -28,33 +29,9 @@ export function DisplayLists() {
   return (
     // extract 30-57 into it's own component
     <div className="flex justify-around w-screen gap-4">
-      <fieldset className="side">
-        <legend className="text-2xl">TDL</legend>
-        <div>
-          {!lists && <h2>data pending</h2>}
-          {lists.length &&
-            lists.map((list) => {
-              return <List key={uuidv4()} list={list} />;
-            })}
-        </div>
-        {addingList ? (
-          <AddList
-            lists={lists}
-            setLists={setLists}
-            addingList={addingList}
-            setAddingList={setAddingList}
-          />
-        ) : (
-          <button
-            onClick={() => {
-              setAddingList(!addingList);
-            }}
-            className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
-          >
-            Add List
-          </button>
-        )}
-      </fieldset>
+      <div className="side">
+        <TDL />
+      </div>
       <div className="side">
         <Kudos />
       </div>
