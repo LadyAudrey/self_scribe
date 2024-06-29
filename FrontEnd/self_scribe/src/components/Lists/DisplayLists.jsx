@@ -27,7 +27,6 @@ export function DisplayLists() {
   }
 
   return (
-    // extract 30-57 into it's own component
     <div className="flex justify-around w-screen gap-4">
       <div className="side">
         <TDL />

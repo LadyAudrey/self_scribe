@@ -4,30 +4,18 @@ import { v4 as uuidv4 } from "uuid";
 
 import { SymptomsContext } from "../../Contexts/Symptoms.Context";
 
+import { SymptomBank } from "./SymptomBank";
+import { TodaysSymptoms } from "./TodaysSymptoms";
+
 export function Symptoms() {
   return (
-    <>
-      <div>
-        <h2 className="text-2xl">Symptoms</h2>
-        <label for="search-symptoms">
-          <input
-            type="search"
-            placeholder="Search for symptoms"
-            id="search-symptoms"
-            name="search-symptoms"
-            className="bg-black"
-          ></input>
-        </label>
-        <fieldset>
-          <legend className="text-2xl">Recent Symptoms</legend>
-        </fieldset>
+    <div className="flex justify-around w-screen gap-4">
+      <div className="side">
+        <SymptomBank />
       </div>
-
-      {/* Pieces:
-        Symptoms Header (DONE!)
-        Search Bar (DONE!)
-        Recent Symptoms
-        Today's Symptoms */}
-    </>
+      <div className="side">
+        <TodaysSymptoms />
+      </div>
+    </div>
   );
 }
