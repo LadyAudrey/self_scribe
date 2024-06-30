@@ -14,7 +14,6 @@ export function TDL() {
   async function handleChange(event) {
     function handleSubmit(event) {
       event.preventDefault();
-      // Todo connect new list creation to backend
     }
 
     await fetch("http://localhost:3001/listItems", {

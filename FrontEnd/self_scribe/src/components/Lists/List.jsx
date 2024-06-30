@@ -12,12 +12,11 @@ export function List(props) {
   const [editing, setEditing] = useState(false);
   const [listCompleted, setListCompleted] = useState(false);
 
-  const handleChange = () => {
-    setEditing(!editing);
-  };
-
   const handleVisibility = () => {
     setSeeTasks(!seeTasks);
+  };
+  const handleChange = () => {
+    setEditing(!editing);
   };
 
   return (

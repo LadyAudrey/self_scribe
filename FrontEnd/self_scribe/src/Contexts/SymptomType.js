@@ -7,7 +7,7 @@ const defaultSymptomTypes = {
       created_on: "2024-01-29T16:32:56.916Z",
       id: 27,
       last_updated: "2024-01-29 08:32:56.916733-08",
-      name: "gfgsfaa",
+      name: "Im a symptom type :)",
       user_name: "audrey",
       active: true,
     },
