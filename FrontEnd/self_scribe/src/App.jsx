@@ -8,6 +8,7 @@ import { TasksContext } from "./Contexts/TasksContext";
 import { DisplayLists } from "./components/Lists/DisplayLists";
 import { Symptoms } from "./components/Symptoms/SymptomsPg";
 import { Graphs } from "./components/Graphs/Graphs";
+import { Settings } from "./components/Settings/Settings";
 
 // cannot change the key/value pairs at all bc of Object.freeze
 const PAGE_KEYS = Object.freeze({
@@ -21,6 +22,7 @@ const PAGES = Object.freeze({
   [PAGE_KEYS.DISPLAY_LISTS]: <DisplayLists />,
   [PAGE_KEYS.SYMPTOMS]: <Symptoms />,
   [PAGE_KEYS.GRAPHS]: <Graphs />,
+  [PAGE_KEYS.SETTINGS]: <Settings />,
 });
 
 export default function Home() {
