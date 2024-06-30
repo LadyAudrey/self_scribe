@@ -11,5 +11,5 @@ export function SymptomsList(props) {
   const handleVisibility = () => {
     setSeeSymptoms(!seeSymptoms);
   };
-  return <div>SymptomsList</div>;
+  return <Symptoms />;
 }

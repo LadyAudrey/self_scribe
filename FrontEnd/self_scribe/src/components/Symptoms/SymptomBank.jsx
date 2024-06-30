@@ -8,7 +8,9 @@ import { SymptomTypesContext } from "../../Contexts/SymptomType";
 import { SymptomsList } from "./SymptomsList";
 
 export function SymptomBank() {
-  const { symptomType, setSymptomType } = useContext(SymptomTypesContext);
+  // not importing properly via useContext(), using dummy data
+  const { symptomType, setSymptomType } = useState(SymptomTypesContext);
+  setSymptomType(["digestion", "inflamation"]);
   console.log("symptomtype", symptomType);
   return (
     <>
