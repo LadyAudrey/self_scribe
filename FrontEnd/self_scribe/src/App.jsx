@@ -110,7 +110,7 @@ export default function Home() {
 
   async function fetchSymptoms() {
     try {
-      const response = await fetch("http://localhost:3001/symptoms/1");
+      const response = await fetch("http://localhost:3001/symptoms/bank/1");
       if (response.ok) {
         const result = await response.json();
         setSymptoms(result);

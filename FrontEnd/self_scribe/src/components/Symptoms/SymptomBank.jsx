@@ -21,7 +21,9 @@ export function SymptomBank() {
               console.log(symptom);
               return symptom?.category === category;
             });
-            return <Symptoms symptoms={list} category={category} />;
+            return (
+              <Symptoms symptoms={list} category={category} key={uuidv4()} />
+            );
           })}
         {symptoms.length && (
           <Symptoms

@@ -55,14 +55,12 @@ category VARCHAR ( 200 )
 
 -- _________ refactored to here
 
-CREATE TABLE occurances (
+CREATE TABLE symptoms_history (
 id SERIAL PRIMARY KEY,
-CONSTRAINT symptom_id
-FOREIGN KEY(id)
-REFERENCES symptoms(id),
-reported_on TIMESTAMP NOT NULL,
-report_end TIMESTAMP,
-severity INT NOT NULL
+symptom_id INTEGER NOT NULL REFERENCES symptoms(id) ON DELETE CASCADE,
+created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+intensity INT NOT NULL,
+description TEXT
 );
 
 --  to access postgres terminal "sudo -u evergreen psql -d self_scribe"
