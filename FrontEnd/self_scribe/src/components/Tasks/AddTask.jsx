@@ -35,7 +35,7 @@ export function AddTask(props) {
           value={taskName}
           onChange={handleAddTaskChange}
           // tried to use max-w-fit, unsuccessful, want it to fit close to the words
-          className=" bg-black max-w-fit rounded-md border-emerald-500 p-2 border-2"
+          className=" bg-black w-fit rounded-md border-emerald-500 p-2 border-2"
         />
       </label>
     </form>

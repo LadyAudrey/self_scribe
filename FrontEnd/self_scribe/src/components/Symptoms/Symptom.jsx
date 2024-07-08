@@ -10,7 +10,7 @@ export function Symptom(symptom) {
           onChangeIntensity(event, symptom.id);
         }}
         defaultValue={0}
-        className="block w-full p-2 mb-6 text-sm text-white border border-yellow-300 rounded-lg bg-yellow-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-blue-900 dark:border-yellow-600 dark:placeholder-yellow-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="block w-fit p-2 mb-6 text-sm text-white border border-yellow-300 rounded-lg bg-yellow-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-blue-900 dark:border-yellow-600 dark:placeholder-yellow-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         {/* TDL fill in up to 9 */}
         <option value={0}>0</option>
