@@ -25,7 +25,7 @@ export function TDL() {
 
   return (
     <>
-      <div className="text-2xl">TDL</div>
+      <div className="text-2xl">To Do List</div>
       <div>
         {!lists && <h2>data pending</h2>}
         {lists.length &&

@@ -27,7 +27,7 @@ export function DisplayLists() {
   }
 
   return (
-    <div className="flex justify-around w-screen gap-4">
+    <div className="page">
       <div className="side">
         <TDL />
       </div>

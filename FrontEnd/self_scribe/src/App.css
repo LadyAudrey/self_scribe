@@ -21,7 +21,12 @@
   .mainBtns {
     @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600
   }
-
+  .page{
+    @apply flex justify-around w-screen gap-4
+  }
+  .card_data{
+    @apply flex flex-col gap-2 my-2 relative
+  }
   .userInput{
     @apply bg-black w-fit rounded-md border-slate-800 border-2
   }
@@ -44,7 +49,5 @@
   .card {
     @apply absolute m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50
   }
-  .card_data {
-  @apply self-center
-  }
+
 }

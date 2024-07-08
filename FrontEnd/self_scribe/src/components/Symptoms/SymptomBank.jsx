@@ -13,7 +13,7 @@ export function SymptomBank() {
   return (
     <>
       <div className="text-2xl">Symptom Bank</div>
-      <div>
+      <div className="card_data">
         {!symptoms && <h2>Data Pending</h2>}
         {symptoms.length &&
           CATEGORIES.map((category) => {

@@ -10,6 +10,11 @@ import { Kudo } from "../Tasks/Kudo";
 export function Kudos() {
   const { lists } = useContext(ListsContext);
   const { tasks } = useContext(TasksContext);
+  const [seeKudos, setSeeKudos] = useState(true);
+
+  const handleVisibility = () => {
+    setSeeKudos(!seeKudos);
+  };
 
   return (
     <div className="side">
@@ -23,12 +28,10 @@ export function Kudos() {
           return <div key={uuidv4()}></div>;
         }
         return (
-          <div className="flex flex-col gap-2 my-2 relative" key={uuidv4()}>
+          <div className="card_data" key={uuidv4()}>
             <div className="flex gap-5">
-              <button
-                className="h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]"
-                // onClick={handleVisibility}
-              ></button>
+              {/* why isn't the button rendering??? */}
+              <button className="visible" onClick={handleVisibility}></button>
               <h3 className="title">{list.name}</h3>
               {/* TODO: hook up Fxs */}
               <input

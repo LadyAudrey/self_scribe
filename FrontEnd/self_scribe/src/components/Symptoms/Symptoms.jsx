@@ -41,8 +41,8 @@ export function Symptoms(props) {
   };
 
   return (
-    <div>
-      <div className="flex">
+    <div className="header">
+      <div className="flex gap-5">
         <button className="visible" onClick={handleVisibility}></button>
         <h3>{category ?? "Miscellaneous"}</h3>
       </div>
@@ -51,8 +51,8 @@ export function Symptoms(props) {
         symptoms.length > 0 &&
         symptoms.map((symptom) => {
           return (
-            <div className="flex gap-2" key={uuidv4()}>
-              <div key={uuidv4()}>{symptom.name}</div>
+            <div className="flex px-8 gap-3" key={uuidv4()}>
+              <h4 key={uuidv4()}>{symptom.name}</h4>
               <select
                 name="intensity"
                 onChange={(event) => {

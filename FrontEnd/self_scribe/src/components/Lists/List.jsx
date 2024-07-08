@@ -20,7 +20,7 @@ export function List(props) {
   };
 
   return (
-    <div className="flex flex-col gap-2 my-2 relative">
+    <div className="card_data">
       <div className="flex gap-5">
         <button className="visible" onClick={handleVisibility}></button>
         <h3 className="title">{list.name}</h3>
