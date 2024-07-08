@@ -18,7 +18,6 @@ export function SymptomBank() {
         {symptoms.length &&
           CATEGORIES.map((category) => {
             const list = symptoms.filter((symptom) => {
-              console.log(symptom);
               return symptom?.category === category;
             });
             return (

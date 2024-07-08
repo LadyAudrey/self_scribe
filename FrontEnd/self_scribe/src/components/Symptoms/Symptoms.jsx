@@ -50,23 +50,7 @@ export function Symptoms(props) {
       {seeSymptoms &&
         symptoms.length > 0 &&
         symptoms.map((symptom) => {
-          return (
-            <div className="flex px-8 gap-3" key={uuidv4()}>
-              <h4 key={uuidv4()}>{symptom.name}</h4>
-              <select
-                name="intensity"
-                onChange={(event) => {
-                  onChangeIntensity(event, symptom.id);
-                }}
-                defaultValue={0}
-              >
-                {/* TDL fill in up to 9 */}
-                <option value={0}>0</option>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-              </select>
-            </div>
-          );
+          return <Symptom symptom={symptom} key={uuidv4()} />;
         })}
     </div>
   );
