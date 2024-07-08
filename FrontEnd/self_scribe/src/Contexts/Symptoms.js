@@ -4,15 +4,16 @@ import { createContext } from "react";
 const defaultSymptoms = {
   symptoms: [
     {
-      created_on: "2024-01-29T16:32:56.916Z",
       id: 27,
-      last_updated: "2024-01-29 08:32:56.916733-08",
       name: "gfgsfaa",
+      created_on: "2024-01-29T16:32:56.916Z",
+      last_updated: "2024-01-29 08:32:56.916733-08",
       user_name: "audrey",
-      active: true,
+      description: "",
+      category: "",
     },
   ],
-  setLists: (new_value) => {},
+  setSymptoms: (new_value) => {},
 };
 
 // create the context based on the shape you provide

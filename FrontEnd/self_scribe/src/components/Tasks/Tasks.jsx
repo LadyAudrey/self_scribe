@@ -9,8 +9,6 @@ export function Tasks(props) {
   const { listId } = props;
   const { tasks } = useContext(TasksContext);
 
-  // const filteredTasks =
-
   return (
     <div className="">
       {tasks.length > 0 &&

@@ -1,4 +1,10 @@
--- TODO: add a "user" column to all tables
+CREATE TABLE IF NOT EXISTS users(
+    id SERIAL PRIMARY KEY,
+    email VARCHAR (256) NOT NULL,
+    name VARCHAR (256),
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "email_unique_index" ON "users" USING btree (lower("email"));
 
 -- add an active/ on hold status
 CREATE TABLE lists (
@@ -36,16 +42,18 @@ completed BOOLEAN DEFAULT FALSE,
 notes TEXT
 );
 
--- _________ refactored to here
 
 
 CREATE TABLE symptoms (
 id SERIAL PRIMARY KEY,
-sympt_name VARCHAR ( 20 ) UNIQUE NOT NULL,
-created_on TIMESTAMP NOT NULL,
-description VARCHAR ( 200 ) NOT NULL
+user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+name VARCHAR ( 20 ) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+description TEXT,
+category VARCHAR ( 200 )
 );
 
+-- _________ refactored to here
 
 CREATE TABLE occurances (
 id SERIAL PRIMARY KEY,

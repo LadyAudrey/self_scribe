@@ -26,6 +26,10 @@
     @apply bg-black w-fit rounded-md border-slate-800 border-2
   }
 
+  .visible {
+    @apply h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]
+  }
+
   .editBtns {
     @apply bg-green-900 p-5 m-5 rounded-lg border-solid border-yellow-400 border-2
   }

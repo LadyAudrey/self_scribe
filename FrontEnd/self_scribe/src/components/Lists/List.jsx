@@ -22,10 +22,7 @@ export function List(props) {
   return (
     <div className="flex flex-col gap-2 my-2 relative">
       <div className="flex gap-5">
-        <button
-          className="h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]"
-          onClick={handleVisibility}
-        ></button>
+        <button className="visible" onClick={handleVisibility}></button>
         <h3 className="title">{list.name}</h3>
         {/* TODO: hook up Fxs */}
         <input

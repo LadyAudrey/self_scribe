@@ -14,10 +14,12 @@ app.use(express.urlencoded({ extended: false }));
 import rootController from "./controllers/root-controller.js";
 import listController from "./controllers/list-controller.js";
 import tasksController from "./controllers/tasks-controller.js";
+import symptomsController from "./controllers/symptoms-controller.js";
 
 app.use("/", rootController);
 app.use("/lists", listController);
 app.use("/tasks", tasksController);
+app.use("/symptoms", symptomsController);
 
 app.get("/listItems", async (req, res) => {
   try {
