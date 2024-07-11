@@ -41,7 +41,7 @@ export function Symptoms(props) {
   };
 
   return (
-    <div className="header">
+    <div className="">
       <div className="flex gap-5">
         <button className="visible" onClick={handleVisibility}></button>
         <h3>{category ?? "Miscellaneous"}</h3>
