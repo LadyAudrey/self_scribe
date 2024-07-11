@@ -11,7 +11,7 @@ import { CATEGORIES } from "../../App";
 export function SymptomBank() {
   const { symptoms, setSymptoms } = useContext(SymptomsContext);
   return (
-    <>
+    <div className="side">
       <div className="text-2xl">Symptom Bank</div>
       <div className="card_data">
         {!symptoms && <h2>Data Pending</h2>}
@@ -33,6 +33,6 @@ export function SymptomBank() {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

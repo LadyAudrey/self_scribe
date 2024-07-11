@@ -17,9 +17,8 @@ export function Kudos() {
   };
 
   return (
-    <div className="side">
+    <div className="">
       <div className="title text-2xl">Kudos!</div>
-
       {lists.map((list) => {
         const filteredTasks = tasks.filter((task) => {
           return task.list_id === list.id && task.completed;
