@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 export function Symptom(props) {
   return (
     <div className="flex gap-2">

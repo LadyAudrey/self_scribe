@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { SymptomsContext } from "../../Contexts/Symptoms";
+import { SymptomsContext } from "../../Contexts/SymptomsContext";
 
 export function TodaysSymptoms() {
   const { symptoms, setSymptoms } = useContext(SymptomsContext);

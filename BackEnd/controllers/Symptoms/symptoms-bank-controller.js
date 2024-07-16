@@ -2,6 +2,7 @@ import { pool } from "../../models/db.js";
 import { Router } from "express";
 
 const router = new Router();
+// all these routes are prepended with /symptoms/bank
 router.get("/:userId", getSymptoms);
 
 export async function getSymptoms(req, res) {
@@ -17,8 +18,10 @@ export async function getSymptoms(req, res) {
   }
 }
 
+router.post("/create", addSymptom);
 export async function addSymptom(req, res) {
   const { userId, name, description, category } = req.body;
+  console.log(userId, name, description, category);
   if (!userId) {
     res.status(400).json({
       message: "userId is invalid",
@@ -36,6 +39,7 @@ export async function addSymptom(req, res) {
       "INSERT INTO symptoms (user_id, name, description, category) VALUES($1, $2, $3, $4) RETURNING *",
       [userId, name, description, category]
     );
+    console.log(query);
     res.json(query.rows[0]);
   } catch (error) {
     console.error(error);

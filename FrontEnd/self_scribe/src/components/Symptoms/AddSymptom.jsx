@@ -1,38 +1,62 @@
 import { useContext } from "react";
 import { useState } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { SymptomsContext } from "../../Contexts/SymptomsContext";
 
-export default function AddSymptom(props) {
-  const { setAddingSymptom, userId } = props;
-  const { symptoms, setSymptoms } = useContext(SymptomsContext);
-  const [newSymptom, setNewSymptom] = useState();
+import { CATEGORIES } from "../../App";
+
+export function AddSymptom(props) {
+  const { setAddingSymptom } = props;
   const [symptomName, setSymptomName] = useState("");
   const [symptomCategory, setSymptomCategory] = useState("");
   const [symptomDescription, setSymptomDescription] = useState("");
 
-  function handleAddSymptom(event) {
-    const newSymptom = {
-      userId,
-      // note: need to update below data pieces to be taken from the event
+  const handleAddSymptom = async (event) => {
+    event.preventDefault();
+    console.log({
       symptomName,
-      category,
-      description,
-    };
-    setNewSymptom(newSymptom);
+      symptomCategory,
+      symptomDescription,
+    });
+    // create fetch
+    try {
+      const requestBody = {
+        // need to hardcode userId as 1
+        // names on the backend have to be proper types and names
+        userId: 1,
+        name: symptomName,
+        category: symptomCategory,
+        intensity: parseInt(event.target.value),
+        description: symptomDescription,
+      };
+      const response = await fetch(
+        "http://localhost:3001/symptoms/bank/create",
+        {
+          method: "POST",
+          body: JSON.stringify(requestBody),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
     setAddingSymptom(false);
-  }
+  };
 
   return (
     <>
       <div className="flex flex-col card border-slate-400">
         <img
-          onClick={setAddingSymptom(false)}
+          onClick={() => {
+            setAddingSymptom(false);
+          }}
           src="/Buttons/exit.svg"
           className="w-1/12"
         />
         <form
-          onSubmit={handleAddSymptom()}
+          onSubmit={handleAddSymptom}
           className="self-end flex flex-col gap-5"
         >
           <label className="flex flex-col">
@@ -42,29 +66,44 @@ export default function AddSymptom(props) {
               name="newSymptom"
               placeholder="New Symptom Name"
               value={symptomName}
-              onChange={setSymptomName}
+              onChange={(event) => {
+                setSymptomName(event.target.value);
+              }}
               className="bg-black rounded-md mx-2 border-slate-800 border-2"
             ></input>
           </label>
           <label className="flex flex-col">
             Symptom Category
-            <input
+            <select
               type="text"
               name="newSymptomCategory"
-              placeholder="Ex: Sleep"
-              value={category}
-              onChange={setSymptomCategory}
+              value={symptomCategory}
+              onChange={(event) => {
+                setSymptomCategory(event.target.value);
+              }}
               className="bg-black rounded-md mx-2 border-slate-800 border-2"
-            ></input>
+            >
+              <option value={""}>No Category</option>
+              {CATEGORIES.map((category) => {
+                return (
+                  <option value={category} key={uuidv4()}>
+                    {category}
+                  </option>
+                );
+              })}
+            </select>
           </label>
+
           <label className="flex flex-col">
             Symptom Description
             <input
               type="text"
               name="newSymptomDescription"
               placeholder="Symptom"
-              value={description}
-              onChange={setSymptomDescription}
+              value={symptomDescription}
+              onChange={(event) => {
+                setSymptomDescription(event.target.value);
+              }}
               className="bg-black rounded-md mx-2 border-slate-800 border-2"
             ></input>
           </label>
