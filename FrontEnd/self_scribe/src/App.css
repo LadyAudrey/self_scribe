@@ -12,11 +12,12 @@
     @apply text-4xl pb-5
   }
   h3 {
-    @apply text-3xl text-yellow-100 mx-5
+    @apply text-4xl text-yellow-100 italic font-bold self-center
   }
   h4 {
     @apply text-2xl
   }
+  label { @apply text-2xl}
 
   .mainBtns {
     @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600

@@ -2,19 +2,22 @@ import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
+import { EditList } from "./EditList";
 import { AddTask } from "../Tasks/AddTask";
-import EditList from "./EditList";
+import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
+import { EditBtn } from "../UI_Pieces/EditBtn";
+
 import { Tasks } from "../Tasks/Tasks";
 
 export function List(props) {
   const { list } = props;
-  const [seeTasks, setSeeTasks] = useState(true);
+  const [visible, setVisible] = useState(true);
   const [editing, setEditing] = useState(false);
   const [listCompleted, setListCompleted] = useState(false);
 
-  const handleVisibility = () => {
-    setSeeTasks(!seeTasks);
-  };
+  // const handleVisibility = () => {
+  //   setVisible(!visible);
+  // };
   const handleChange = () => {
     setEditing(!editing);
   };
@@ -22,7 +25,7 @@ export function List(props) {
   return (
     <div className="card_data">
       <div className="flex gap-5">
-        <button className="visible" onClick={handleVisibility}></button>
+        <VisibleBtn setVisible={setVisible} visible={visible} />
         <h3 className="title">{list.name}</h3>
         {/* TODO: hook up Fxs */}
         <input
@@ -42,16 +45,10 @@ export function List(props) {
             key={uuidv4()}
           />
         )}
-        {!editing && (
-          <button
-            className="h-6 w-6  bg-cover pencil bg-[url('/Buttons/Edit.svg')]"
-            onClick={handleChange}
-            key={uuidv4()}
-          ></button>
-        )}
+        {!editing && <EditBtn setEditing={setEditing} editing={editing} />}
         <AddTask listId={list.id} />
       </div>
-      {seeTasks && <Tasks listId={list.id} />}
+      {visible && <Tasks listId={list.id} />}
     </div>
   );
 }

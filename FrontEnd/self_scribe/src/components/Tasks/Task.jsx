@@ -1,7 +1,9 @@
 import { useState, useContext } from "react";
-import { EditTask } from "./EditTask.jsx";
 
 import { TasksContext } from "../../Contexts/TasksContext.js";
+
+import { EditBtn } from "../UI_Pieces/EditBtn.jsx";
+import { EditTask } from "./EditTask.jsx";
 
 export function Task({ taskId }) {
   const [editingTask, setEditingTask] = useState(false);
@@ -58,12 +60,7 @@ export function Task({ taskId }) {
         />
       )}
       {!editingTask && (
-        <button
-          className="h-6 w-6  bg-cover pencil bg-[url('/Buttons/Edit.svg')]"
-          onClick={() => {
-            setEditingTask(!editingTask);
-          }}
-        ></button>
+        <EditBtn setEditing={setEditingTask} editing={editingTask} />
       )}
     </div>
   );

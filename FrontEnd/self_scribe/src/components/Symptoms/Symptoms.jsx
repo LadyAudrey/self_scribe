@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
+import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
 import { Symptom } from "./Symptom";
 
 export function Symptoms(props) {
@@ -43,7 +44,7 @@ export function Symptoms(props) {
   return (
     <div className="">
       <div className="flex gap-5">
-        <button className="visible" onClick={handleVisibility}></button>
+        <VisibleBtn setVisible={setSeeSymptoms} visible={seeSymptoms} />
         <h3>{category ?? "Miscellaneous"}</h3>
       </div>
 

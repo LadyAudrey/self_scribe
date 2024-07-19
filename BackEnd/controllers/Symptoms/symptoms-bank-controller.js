@@ -49,4 +49,47 @@ export async function addSymptom(req, res) {
   }
 }
 
+// make sure to pass *all* necessary pieces, even if not updated in the UI
+router.post("/edit", editSymptom);
+export async function editSymptom(req, res) {
+  const { id, name, category, description } = req.body;
+  if (!id || !name) {
+    res.status(400).json({ serverMessage: "id or name missing" });
+  }
+  if (isNaN(parseInt(id))) {
+    res.status(400).json({ serverMessage: "invalid id" });
+  }
+  try {
+    const query = await pool.query(
+      "UPDATE symptoms SET name=$1, description=$2, category=$3  WHERE id = $4 RETURNING *",
+      [name, description, category, id]
+    );
+    res.json(query.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      serverMessage: "There was an error",
+      errorMessage: error.message,
+    });
+  }
+}
+
+router.post("/delete", deleteSymptom);
+export async function deleteSymptom(req, res) {
+  const symptomId = req.body.id;
+  if (!symptomId || isNaN(parseInt(symptomId))) {
+    res.status(400).json({ serverMessage: "invalid id" });
+  }
+  try {
+    await pool.query("DELETE FROM symptoms WHERE id = $1", [symptomId]);
+    res.json({ serverMessage: "delete successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      serverMessage: "There was an error",
+      errorMessage: error.message,
+    });
+  }
+}
+
 export default router;

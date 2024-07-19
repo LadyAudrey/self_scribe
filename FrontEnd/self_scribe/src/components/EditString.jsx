@@ -1,4 +1,6 @@
-export default function EditString(props) {
+// need to factor out EditString.jsx
+
+export function EditString(props) {
   const {
     id,
     setEditingName,

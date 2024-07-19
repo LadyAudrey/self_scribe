@@ -1,7 +1,10 @@
 import { useState, useContext } from "react";
 
-import EditString from "../EditString";
+import { EditString } from "../EditString";
 import { TasksContext } from "../../Contexts/TasksContext";
+
+import { ExitBtn } from "../UI_Pieces/ExitBtn";
+
 import Frequency from "./Frequency";
 
 // need how to activate the editing UI
@@ -122,7 +125,6 @@ export function EditTask(props) {
             <div className="flex justify-between">
               {!editingName && (
                 <h3
-                  className="text-yellow-100 font-bold self-center"
                   onDoubleClick={() => {
                     setEditingName(true);
                   }}
@@ -141,20 +143,13 @@ export function EditTask(props) {
                   structure={"tasks"}
                 />
               )}
-              <img
-                onClick={handleEditChange}
-                src="/Buttons/exit.svg"
-                className="w-1/12"
-              />
+              <ExitBtn setterFx={handleEditChange}></ExitBtn>
             </div>
-            {/* How long would each instance be? (drop down) */}
-            {/* Category (fill in the blank or dropdown) */}
-            <div className="flex items-center">
-              {/* a drop down of user categories and an option to create a new one */}
-              <h3>Category</h3>
+            <div className="flex items-center gap-2">
+              <h4>Category</h4>
               <label htmlFor="category">
                 <select
-                  className="bg-black"
+                  className="bg-black p-2"
                   name="category"
                   id="category-select"
                 >
@@ -168,8 +163,8 @@ export function EditTask(props) {
             {/* Stay in list before desired rhythm recurs? (boolean) */}
             {/* Repeating? (boolean, hover effect) */}
             <div className="gap-2">
-              <div className="flex">
-                <h3>Repeating</h3>
+              <div className="flex gap-2">
+                <h4>Repeating</h4>
                 <input
                   type="checkbox"
                   name="repeating"

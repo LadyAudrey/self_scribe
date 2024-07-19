@@ -1,7 +1,16 @@
+import { useState } from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
+import { EditBtn } from "../UI_Pieces/EditBtn";
+import { EditSymptom } from "./EditSymptom";
+
 export function Symptom(props) {
+  const [editingSymptom, setEditingSymptom] = useState(false);
   return (
     <div className="flex gap-2">
       <h4>{props.symptom.name}</h4>
+      {/* TODO create change handler */}
       <select
         name="intensity"
         onChange={(event) => {
@@ -14,7 +23,28 @@ export function Symptom(props) {
         <option value={0}>0</option>
         <option value={1}>1</option>
         <option value={2}>2</option>
+        <option value={3}>3</option>
+        <option value={4}>4</option>
+        <option value={5}>5</option>
+        <option value={6}>6</option>
+        <option value={7}>7</option>
+        <option value={8}>8</option>
+        <option value={9}>9</option>
+        <option value={10}>10</option>
       </select>
+      {editingSymptom && (
+        <EditSymptom
+          id={props.symptom.id}
+          name={props.symptom.name}
+          category={props.symptom.category}
+          description={props.symptom.description}
+          editingSymptom={editingSymptom}
+          setEditingSymptom={setEditingSymptom}
+        />
+      )}
+      {!editingSymptom && (
+        <EditBtn setEditing={setEditingSymptom} editing={editingSymptom} />
+      )}
     </div>
   );
 }

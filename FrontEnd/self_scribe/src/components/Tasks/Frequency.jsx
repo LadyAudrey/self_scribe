@@ -22,7 +22,7 @@ export default function Frequency(props) {
           max={365}
           value={numOfNum}
           onChange={handleUpdateNumFreq}
-          className="bg-black w-1/12 rounded-md border-slate-800 p-1 border-2"
+          className="bg-black w-1/12 rounded-md border-slate-800 border-2"
         ></input>
         <p className="flex">days every</p>
         <input
