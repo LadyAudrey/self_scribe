@@ -133,15 +133,16 @@ export function EditTask(props) {
                 </h3>
               )}
               {editingName && (
-                <EditString
-                  setEditingName={setEditingName}
-                  id={task.id}
-                  inputName={taskName}
-                  setInputName={setTaskName}
-                  state={tasks}
-                  setState={setTasks}
-                  structure={"tasks"}
-                />
+                <div>
+                  <input
+                    autoFocus
+                    value={taskName}
+                    className="bg-black text-3xl"
+                    onChange={(event) => {
+                      setTaskName(event.target.value);
+                    }}
+                  />
+                </div>
               )}
               <ExitBtn setterFx={handleEditChange}></ExitBtn>
             </div>
