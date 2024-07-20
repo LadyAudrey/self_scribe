@@ -83,15 +83,16 @@ export function EditList(props) {
               </div>
             )}
             {editingName && (
-              <EditString
-                setEditingName={setEditingName}
-                id={id}
-                inputName={listName}
-                setInputName={setListName}
-                state={lists}
-                setState={setLists}
-                structure={"lists"}
-              />
+              <div>
+                <input
+                  autoFocus
+                  value={listName}
+                  className="bg-black text-3xl"
+                  onChange={(event) => {
+                    setListName(event.target.value);
+                  }}
+                />
+              </div>
             )}
           </div>
           <div className="flex flex-row gap-2 justify-around text-yellow-200">

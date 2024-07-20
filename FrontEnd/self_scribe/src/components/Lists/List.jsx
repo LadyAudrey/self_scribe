@@ -15,9 +15,6 @@ export function List(props) {
   const [editing, setEditing] = useState(false);
   const [listCompleted, setListCompleted] = useState(false);
 
-  // const handleVisibility = () => {
-  //   setVisible(!visible);
-  // };
   const handleChange = () => {
     setEditing(!editing);
   };
