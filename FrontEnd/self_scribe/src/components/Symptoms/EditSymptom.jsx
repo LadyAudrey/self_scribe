@@ -18,41 +18,46 @@ export function EditSymptom(props) {
   const [symptomCategory, setSymptomCategory] = useState();
   const [symptomDescription, setSymptomDescription] = useState(description);
 
-  function handleEditChange() {
+  function handleExitEdit() {
     setEditingSymptom(!editingSymptom);
   }
 
   async function handleSaveChanges(event) {
     event.preventDefault();
-    const body = { name: symptomName, category, description };
+    const body = { id, name: symptomName, category, description };
     console.log(body);
-    // try {
-    //   const response = await fetch("http://localhost:3001/symptoms/bank/edit", {
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    //   if (response.ok) {
-    //     setEditingSymptom(false);
-    //   } else {
-    //     setErrorMsg("Update was not successful");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   setErrorMsg("Update was not successful");
-    // }
+    try {
+      const response = await fetch("/symptoms/bank/edit", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.ok) {
+        setEditingSymptom(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
-
-  function handlePause() {}
 
   function handleDelete() {}
 
   return (
     <>
       <div className="flex flex-col w-fit text-white card">
-        <ExitBtn setterFx={setEditingSymptom} />
+        <ExitBtn setterFx={handleExitEdit} />
         <fieldset>
           <legend className="flex flex-col my-4 gap-4">
+            <div>
+              <input
+                autoFocus
+                value={symptomName}
+                className="bg-black text-3xl"
+                onChange={(event) => {
+                  setSymptomName(event.target.value);
+                }}
+              />
+            </div>
             <div className="flex items-center gap-2">
               <label htmlFor="category">
                 <label className="flex">
@@ -98,12 +103,6 @@ export function EditSymptom(props) {
                 onClick={handleSaveChanges}
               >
                 Save Changes
-              </button>
-              <button
-                className="place-self-center editBtns"
-                onClick={handlePause}
-              >
-                Pause
               </button>
               <button
                 className="place-self-end editBtns"

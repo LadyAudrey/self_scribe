@@ -1,9 +1,6 @@
-import { useContext } from "react";
 import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
-
-import { SymptomsContext } from "../../Contexts/SymptomsContext";
 
 import { CATEGORIES } from "../../App";
 
@@ -31,14 +28,11 @@ export function AddSymptom(props) {
         intensity: parseInt(event.target.value),
         description: symptomDescription,
       };
-      const response = await fetch(
-        "http://localhost:3001/symptoms/bank/create",
-        {
-          method: "POST",
-          body: JSON.stringify(requestBody),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      await fetch("/symptoms/bank/create", {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+        headers: { "Content-Type": "application/json" },
+      });
     } catch (error) {
       console.error(error);
     }

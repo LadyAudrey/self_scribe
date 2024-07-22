@@ -16,7 +16,7 @@ export function Task({ taskId }) {
     setUpdatePending(true);
     try {
       const response = await fetch(
-        "http://localhost:3001/tasks/update-completed",
+        "/tasks/update-completed",
         {
           method: "POST",
           body: JSON.stringify({

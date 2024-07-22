@@ -7,6 +7,32 @@ import { EditSymptom } from "./EditSymptom";
 
 export function Symptom(props) {
   const [editingSymptom, setEditingSymptom] = useState(false);
+
+  const [intensityValue, setIntensityValue] = useState(0);
+
+  const onChangeIntensity = async (event, symptomId) => {
+    setIntensityValue(parseInt(event.target.value));
+    try {
+      if (parseInt(event.target.value) > 0) {
+        const requestBody = {
+          symptomId,
+          intensity: parseInt(event.target.value),
+        };
+        const response = await fetch("/symptoms/history/add", {
+          method: "POST",
+          body: JSON.stringify(requestBody),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          console.log("do something");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex gap-2">
       <h4>{props.symptom.name}</h4>

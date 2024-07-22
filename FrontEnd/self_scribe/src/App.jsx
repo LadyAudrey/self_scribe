@@ -33,54 +33,6 @@ export const CATEGORIES = Object.freeze([
   "Cognition",
 ]);
 
-const dummySymptoms = [
-  {
-    id: 0,
-    name: "intenstine discomfort",
-    created_on: "2024-01-29T16:32:56.916Z",
-    last_updated: "2024-01-29 08:32:56.916733-08",
-    user_name: "audrey",
-    description: "belly pain from food",
-    category: "Digestion",
-  },
-  {
-    id: 1,
-    name: "headache",
-    created_on: "2024-01-29T16:32:56.916Z",
-    last_updated: "2024-01-29 08:32:56.916733-08",
-    user_name: "audrey",
-    description: "inflammation of the head",
-    category: "Pain",
-  },
-  {
-    id: 2,
-    name: "insomnia",
-    created_on: "2024-01-29T16:32:56.916Z",
-    last_updated: "2024-01-29 08:32:56.916733-08",
-    user_name: "audrey",
-    description: "",
-    category: "Sleep",
-  },
-  {
-    id: 3,
-    name: "brainfog",
-    created_on: "2024-01-29T16:32:56.916Z",
-    last_updated: "2024-01-29 08:32:56.916733-08",
-    user_name: "audrey",
-    description: "Difficulty thinking",
-    category: "Cognition",
-  },
-  {
-    id: 4,
-    name: "low energy",
-    created_on: "2024-01-29T16:32:56.916Z",
-    last_updated: "2024-01-29 08:32:56.916733-08",
-    user_name: "audrey",
-    description: "malaise & depleted",
-    category: null,
-  },
-];
-
 export default function Home() {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -98,7 +50,7 @@ export default function Home() {
 
   async function fetchTDL() {
     try {
-      const response = await fetch("http://localhost:3001/lists/read/audrey");
+      const response = await fetch("/lists/read/audrey");
       const result = await response.json();
       setLists(result);
       const tasks = await fetchTasks(result);
@@ -110,7 +62,7 @@ export default function Home() {
 
   async function fetchSymptoms() {
     try {
-      const response = await fetch("http://localhost:3001/symptoms/bank/1");
+      const response = await fetch("/symptoms/bank/1");
       if (response.ok) {
         const result = await response.json();
         setSymptoms(result);
@@ -125,9 +77,7 @@ export default function Home() {
 
     for (let i = 0; i < lists.length; i++) {
       const list = lists[i];
-      const response = await fetch(
-        `http://localhost:3001/tasks/read/${list.id}/`
-      );
+      const response = await fetch(`/tasks/read/${list.id}/`);
       // This isn't working right and I'm not sure why
       if (response.ok) {
         const result = await response.json();

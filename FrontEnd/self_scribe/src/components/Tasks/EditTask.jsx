@@ -1,14 +1,10 @@
 import { useState, useContext } from "react";
 
-import { EditString } from "../EditString";
 import { TasksContext } from "../../Contexts/TasksContext";
 
 import { ExitBtn } from "../UI_Pieces/ExitBtn";
 
 import Frequency from "./Frequency";
-
-// need how to activate the editing UI
-// plan to go forward: We have outgrown EditString.jsx and need to do it locally
 
 export function EditTask(props) {
   const { task, editingTask, setEditingTask } = props;
@@ -17,7 +13,7 @@ export function EditTask(props) {
   const [taskName, setTaskName] = useState(task.name);
   const [editingName, setEditingName] = useState(false);
 
-  const [category, setCategory] = useState(task.category);
+  const [category, setCategory] = useState(task.category ?? "");
   const [repeating, setRepeating] = useState(task.repeats ?? false);
 
   // named as such because it's the top number when saying "3 days in a week" - 3/7 *the numerator*
@@ -31,12 +27,7 @@ export function EditTask(props) {
 
   const [errorMsg, setErrorMsg] = useState("");
 
-  function handleUpdateCategory(event) {
-    setCategory(event.target.value);
-    // TODO push category onto an array in the DB task via handleSaveChanges
-  }
-
-  function handleUpdateRepeating(event) {
+  function handleUpdateRepeating() {
     setRepeating(!repeating);
   }
 
@@ -55,16 +46,13 @@ export function EditTask(props) {
     };
     // hook up to appropriate BE Fx's
     try {
-      const response = await fetch(
-        `http://localhost:3001/tasks/saveChanges/${task.id}`,
-        {
-          method: "POST",
-          body: JSON.stringify(body),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`/tasks/saveChanges/${task.id}`, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.ok) {
         setEditingTask(false);
       } else {
@@ -80,12 +68,9 @@ export function EditTask(props) {
     event.preventDefault();
     setRepeating(!repeating);
     try {
-      const response = await fetch(
-        `http:localhost:3001/tasks/pause/${task.id}`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await fetch(`/tasks/pause/${task.id}`, {
+        method: "POST",
+      });
       if (response.ok) {
         setRepeating(!repeating);
       }
@@ -94,19 +79,14 @@ export function EditTask(props) {
     }
   }
 
-  // TODO: update all fetches with try catch blocks
   async function handleDelete(event) {
     event.preventDefault();
     // TODO need identifier from parent
     try {
-      const response = await fetch(
-        `http://localhost:3001/tasks/delete/${task.id}`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await fetch(`/tasks/delete/${task.id}`, {
+        method: "POST",
+      });
       if (response.ok) {
-        // delete from local storage
         const newTasks = tasks.filter((element) => {
           return task.id !== element.id;
         });
@@ -144,7 +124,7 @@ export function EditTask(props) {
                   />
                 </div>
               )}
-              <ExitBtn setterFx={handleEditChange}></ExitBtn>
+              <ExitBtn setterFx={handleEditChange} />
             </div>
             <div className="flex items-center gap-2">
               <h4>Category</h4>
@@ -153,6 +133,10 @@ export function EditTask(props) {
                   className="bg-black p-2"
                   name="category"
                   id="category-select"
+                  onChange={(event) => {
+                    setCategory(event.target.value);
+                  }}
+                  defaultValue={category}
                 >
                   <option value="">Select a category</option>
                   <option value="self-care">Self Care</option>
@@ -161,8 +145,6 @@ export function EditTask(props) {
                 </select>
               </label>
             </div>
-            {/* Stay in list before desired rhythm recurs? (boolean) */}
-            {/* Repeating? (boolean, hover effect) */}
             <div className="gap-2">
               <div className="flex gap-2">
                 <h4>Repeating</h4>
@@ -170,7 +152,6 @@ export function EditTask(props) {
                   type="checkbox"
                   name="repeating"
                   checked={repeating}
-                  // placeholder="false"
                   onChange={handleUpdateRepeating}
                   className="bg-black w-fit rounded-md border-slate-800 border-2"
                 ></input>

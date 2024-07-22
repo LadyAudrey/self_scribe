@@ -55,9 +55,11 @@ export async function editSymptom(req, res) {
   const { id, name, category, description } = req.body;
   if (!id || !name) {
     res.status(400).json({ serverMessage: "id or name missing" });
+    return;
   }
   if (isNaN(parseInt(id))) {
     res.status(400).json({ serverMessage: "invalid id" });
+    return;
   }
   try {
     const query = await pool.query(

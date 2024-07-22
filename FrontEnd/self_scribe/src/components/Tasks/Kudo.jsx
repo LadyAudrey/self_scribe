@@ -16,7 +16,7 @@ export function Kudo(props) {
     setUpdatePending(true);
     try {
       const response = await fetch(
-        "http://localhost:3001/tasks/update-completed",
+        "/tasks/update-completed",
         {
           method: "POST",
           body: JSON.stringify({
@@ -44,9 +44,6 @@ export function Kudo(props) {
     <>
       <div className="flex">
         <h4>{task.name}</h4>
-        {/* <label htmlFor={task.name} className="legend-title">
-              {task.name}
-            </label> */}
         <input
           type="checkbox"
           disabled={updatePending}

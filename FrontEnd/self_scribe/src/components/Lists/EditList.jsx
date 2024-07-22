@@ -1,15 +1,10 @@
-// EditString not updating UI- updates on reload but not automatically
-
 import { useState, useContext } from "react";
-// import { EditActivity } from "./EditActivity";
 
 import { ListsContext } from "../../Contexts/ListsContext";
-import { EditString } from "../EditString";
 
 export function EditList(props) {
   const { id, editing, setEditing } = props;
   const { lists, setLists } = useContext(ListsContext);
-  const [addActivity, setAddActivity] = useState(false);
   const [editingName, setEditingName] = useState(false);
 
   const list = lists.filter((list) => {
@@ -20,22 +15,15 @@ export function EditList(props) {
   const [listName, setListName] = useState(list.name);
 
   // to close the editing card
-  function handleEditChange(event) {
+  function handleEditChange() {
     setEditing(!editing);
-  }
-
-  function handleAddActivityChg() {
-    setAddActivity(!addActivity);
   }
 
   async function handlePause(event) {
     event.preventDefault();
-    const response = await fetch(
-      `http://localhost:3001/lists/pause/${list.id}`,
-      {
-        method: "POST",
-      }
-    );
+    const response = await fetch(`/lists/pause/${list.id}`, {
+      method: "POST",
+    });
     if (response.ok) {
       setActive(!active);
     }
@@ -51,10 +39,9 @@ export function EditList(props) {
 
   async function handleDelete(event) {
     event.preventDefault();
-    const response = await fetch(
-      `http://localhost:3001/lists/delete/${list.id}`,
-      { method: "POST" }
-    );
+    const response = await fetch(`/lists/delete/${list.id}`, {
+      method: "POST",
+    });
     if (response.ok) {
       removeFromList();
     }
@@ -67,7 +54,6 @@ export function EditList(props) {
         <div className="absolute top-0 z-50 flex flex-col card">
           <div className="flex gap-4">
             <img
-              // I disapear when editingName is active... why?? TODO
               onClick={handleEditChange}
               src="/Buttons/exit.svg"
               className="w-1/12"

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,18 +10,6 @@ import AddList from "./AddList";
 export function TDL() {
   const { lists, setLists } = useContext(ListsContext);
   const [addingList, setAddingList] = useState(false);
-
-  async function handleChange(event) {
-    function handleSubmit(event) {
-      event.preventDefault();
-    }
-
-    await fetch("http://localhost:3001/listItems", {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify(newList),
-    });
-  }
 
   return (
     <>

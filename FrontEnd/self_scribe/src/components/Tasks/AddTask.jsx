@@ -12,21 +12,16 @@ export function AddTask(props) {
 
   async function handleAddTaskSubmit(event) {
     event.preventDefault();
-    const response = await fetch(
-      `http://localhost:3001/tasks/add/${listId}/${taskName}`,
-      {
-        method: "POST",
-      }
-    );
+    const response = await fetch(`/tasks/add/${listId}/${taskName}`, {
+      method: "POST",
+    });
     if (response.ok) {
       const result = await response.json();
-      // TODO: create state consuming the Context
       setTasks([...tasks, result.rows[0]]);
     }
   }
   return (
     <form onSubmit={handleAddTaskSubmit} className="self-end text-white">
-      {/* <button type="submit">Add Task</button> */}
       <label>
         <input
           type="text"

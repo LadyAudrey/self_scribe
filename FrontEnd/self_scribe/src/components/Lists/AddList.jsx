@@ -22,19 +22,16 @@ export default function AddList(props) {
     event.preventDefault();
     setAddingList(!addingList);
     const user = "audrey";
-    const response = await fetch(
-      `http://localhost:3001/lists/add/${user}/${listName}`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          description: description || "placeholder description",
-        }), //  accept description in UI
+    const response = await fetch(`/lists/add/${user}/${listName}`, {
+      method: "POST",
+      body: JSON.stringify({
+        description: description || "placeholder description",
+      }), //  accept description in UI
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (response.ok) {
       const result = await response.json();
       setLists([...lists, result.rows[0]]);
