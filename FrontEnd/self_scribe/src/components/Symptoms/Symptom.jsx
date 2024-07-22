@@ -1,14 +1,15 @@
 import { useState } from "react";
 
-import { v4 as uuidv4 } from "uuid";
-
 import { EditBtn } from "../UI_Pieces/EditBtn";
 import { EditSymptom } from "./EditSymptom";
 
 export function Symptom(props) {
   const [editingSymptom, setEditingSymptom] = useState(false);
-
   const [intensityValue, setIntensityValue] = useState(0);
+  // TODO update to receive notes from BE
+  const [seeNotes, setSeeNotes] = useState("false");
+  console.log(seeNotes);
+  const [notes, setNotes] = useState("");
 
   const onChangeIntensity = async (event, symptomId) => {
     setIntensityValue(parseInt(event.target.value));
@@ -17,6 +18,7 @@ export function Symptom(props) {
         const requestBody = {
           symptomId,
           intensity: parseInt(event.target.value),
+          notes,
         };
         const response = await fetch("/symptoms/history/add", {
           method: "POST",
@@ -25,8 +27,8 @@ export function Symptom(props) {
             "Content-Type": "application/json",
           },
         });
-        if (response.ok) {
-          console.log("do something");
+        if (!response.ok) {
+          throw new Error("failed to set intensity value");
         }
       }
     } catch (error) {
@@ -70,6 +72,32 @@ export function Symptom(props) {
       )}
       {!editingSymptom && (
         <EditBtn setEditing={setEditingSymptom} editing={editingSymptom} />
+      )}
+      {seeNotes && (
+        <div className="flex flex-col gap-2">
+          <label htmlFor="notes">Notes</label>
+          <textarea
+            id="notes"
+            name="notes"
+            rows="1"
+            cols="11"
+            onChange={(event) => {
+              setNotes(event.target.value);
+            }}
+            defaultValue={notes}
+            className="bg-black text-white"
+          ></textarea>
+        </div>
+      )}
+      {!seeNotes && (
+        <button
+          onClick={() => {
+            setSeeNotes(!seeNotes);
+          }}
+          className="bg-green-700"
+        >
+          Notes
+        </button>
       )}
     </div>
   );
