@@ -7,7 +7,7 @@ export function Symptom(props) {
   const [editingSymptom, setEditingSymptom] = useState(false);
   const [intensityValue, setIntensityValue] = useState(0);
   // TODO update to receive notes from BE
-  const [seeNotes, setSeeNotes] = useState("false");
+  const [seeNotes, setSeeNotes] = useState(false);
   console.log(seeNotes);
   const [notes, setNotes] = useState("");
 
@@ -34,6 +34,11 @@ export function Symptom(props) {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const onChangeNotes = async (event) => {
+    setNotes(event.target.value);
+    setSeeNotes(false);
   };
   return (
     <div className="flex gap-2">
@@ -83,6 +88,9 @@ export function Symptom(props) {
             cols="11"
             onChange={(event) => {
               setNotes(event.target.value);
+            }}
+            onBlur={(event) => {
+              onChangeNotes(event.target.value);
             }}
             defaultValue={notes}
             className="bg-black text-white"
