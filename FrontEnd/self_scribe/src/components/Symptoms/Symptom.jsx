@@ -8,7 +8,6 @@ export function Symptom(props) {
   const [intensityValue, setIntensityValue] = useState(0);
   // TODO update to receive notes from BE
   const [seeNotes, setSeeNotes] = useState(false);
-  console.log(seeNotes);
   const [notes, setNotes] = useState("");
 
   const onChangeIntensity = async (event, symptomId) => {

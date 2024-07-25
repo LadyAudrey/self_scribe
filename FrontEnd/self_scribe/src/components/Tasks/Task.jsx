@@ -15,17 +15,14 @@ export function Task({ taskId }) {
   async function handleTaskComplete() {
     setUpdatePending(true);
     try {
-      const response = await fetch(
-        "/tasks/update-completed",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            taskHistoryId: task.taskHistory[0].id,
-            completed: true,
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch("/tasks/update-completed", {
+        method: "POST",
+        body: JSON.stringify({
+          taskHistoryId: task.taskHistory[0].id,
+          completed: true,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
       if (!response.ok) {
         throw new Error("failed to set completed value");
       }

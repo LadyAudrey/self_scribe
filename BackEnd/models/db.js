@@ -1,10 +1,9 @@
+// automagically runs config as a function bc of the "" formatting
+import "dotenv/config";
+
 import pkg from "pg";
 const { Pool } = pkg;
 
 export const pool = new Pool({
-  user: "evergreen",
-  database: "self_scribe",
-  password: "DBpw",
-  port: 5432,
-  host: "localhost",
+  connectionString: process.env.POSTGRES_URL,
 });

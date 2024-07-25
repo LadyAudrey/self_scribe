@@ -15,17 +15,14 @@ export function Kudo(props) {
   async function handleTaskReverse() {
     setUpdatePending(true);
     try {
-      const response = await fetch(
-        "/tasks/update-completed",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            taskHistoryId: task.taskHistory[0].id,
-            completed: false,
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch("/tasks/update-completed", {
+        method: "POST",
+        body: JSON.stringify({
+          taskHistoryId: task.taskHistory[0].id,
+          completed: false,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
       if (!response.ok) {
         throw new Error("failed to set completed value in Kudo.jsx");
       }
@@ -42,7 +39,7 @@ export function Kudo(props) {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex px-8 gap-3">
         <h4>{task.name}</h4>
         <input
           type="checkbox"
