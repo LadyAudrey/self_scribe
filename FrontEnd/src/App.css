@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mainBg {
+  /* background: url("/assets/BGgradient.png"); */
+  background-image: conic-gradient(#0A4072, #00301B);
+}
+
+@layer components {
+  h2 {
+    @apply text-4xl pb-5
+  }
+  h3 {
+    @apply text-4xl text-yellow-100 italic font-bold self-center
+  }
+  h4 {
+    @apply text-2xl
+  }
+  label { @apply text-2xl}
+
+  .mainBtns {
+    @apply bg-black text-5xl italic p-5 m-5 border-2 rounded-3xl border-slate-600
+  }
+  .page{
+    @apply flex justify-around w-screen gap-4
+  }
+  .card_data{
+    @apply flex flex-col gap-2 my-2 relative
+  }
+  .userInput{
+    @apply bg-black w-fit rounded-md border-slate-800 border-2
+  }
+
+  .visible {
+    @apply h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]
+  }
+
+  .editBtns {
+    @apply bg-green-900 p-5 m-5 rounded-lg border-solid border-yellow-400 border-2
+  }
+
+  .pencil {
+    @apply border-solid rounded-md border-white 
+  }
+
+  .side {
+    @apply w-2/5 px-20 flex flex-col h-fit px-8 gap-3
+  }
+  .card {
+    @apply absolute m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50
+  }
+
+}
