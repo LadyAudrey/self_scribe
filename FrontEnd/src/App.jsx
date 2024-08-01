@@ -8,21 +8,21 @@ import { SymptomsContext } from "./Contexts/SymptomsContext";
 
 import { DisplayLists } from "./components/Lists/DisplayLists";
 import { SymptomsPg } from "./components/Symptoms/SymptomsPg";
-import { Graphs } from "./components/Graphs/Graphs";
+import { Stats } from "./components/Stats/Stats";
 import { Settings } from "./components/Settings/Settings";
 
 // cannot change the key/value pairs at all bc of Object.freeze
 const PAGE_KEYS = Object.freeze({
   DISPLAY_LISTS: "DisplayLists",
   SYMPTOMS: "Symptoms",
-  GRAPHS: "Graphs",
+  STASTS: "Stats",
   SETTINGS: "Settings",
 });
 
 const PAGES = Object.freeze({
   [PAGE_KEYS.DISPLAY_LISTS]: <DisplayLists />,
   [PAGE_KEYS.SYMPTOMS]: <SymptomsPg />,
-  [PAGE_KEYS.GRAPHS]: <Graphs />,
+  [PAGE_KEYS.GRAPHS]: <Stats />,
   [PAGE_KEYS.SETTINGS]: <Settings />,
 });
 

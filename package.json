@@ -3,15 +3,15 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
     "watch": "jest --watch",
-    "start": "node server.js",
-    "dev": "concurrently \"vite\" \"nodemon server.js\"",
+    "start": "node index.js",
+    "dev": "concurrently \"vite\" \"nodemon index.js\"",
     "build": "vite build",
     "dev:frontend": "vite",
-    "dev:backend": "nodemon server.js"
+    "dev:backend": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
