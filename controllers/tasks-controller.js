@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pool } from "../models/db.js";
+import { db } from "../db/db.js";
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.post("/add/:listID/:taskName", async (req, res) => {
 });
 
 export async function createTask(listID, taskName) {
-  const taskQuery = await pool.query(
+  const taskQuery = db.run(
     `INSERT INTO tasks (list_id, name, description, category) VALUES
           ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
   );
@@ -26,7 +26,7 @@ export async function createTask(listID, taskName) {
   if (!taskId) {
     throw new Error("Failed to create task");
   }
-  const taskHistory = await pool.query(
+  const taskHistory = db.run(
     `INSERT INTO task_history (task_id) VALUES('${taskId}') RETURNING *;`
   );
   taskQuery.rows[0].taskHistory = taskHistory.rows;
@@ -66,9 +66,7 @@ export async function getTasks(listId) {
 async function getTasksFromDB(listId) {
   console.log("entering getTasksFromDB");
   try {
-    const query = await pool.query(
-      `SELECT * FROM tasks WHERE list_id='${listId}';`
-    );
+    const query = db.run(`SELECT * FROM tasks WHERE list_id='${listId}';`);
     if (query.rowCount === 0) {
       return [];
     }
@@ -88,7 +86,7 @@ async function prepareTaskHistory(task) {
 
 async function handleNotRepeatingTask(task) {
   try {
-    const history = await pool.query(
+    const history = db.run(
       `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT 1;`
     );
     if (!history) {
@@ -99,7 +97,7 @@ async function handleNotRepeatingTask(task) {
       taskHistory: history.rows ?? [],
     };
     if (newTask.taskHistory.length === 0) {
-      const newOccurance = await pool.query(
+      const newOccurance = db.run(
         `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
       );
       if (!newOccurance) {
@@ -131,12 +129,12 @@ async function handleRepeatingTask(task) {
       return parseInt(number ?? "0");
     });
 
-    const history = await pool.query(
+    const history = db.run(
       `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
     );
     const taskHistory = history.rows ?? [];
     if (taskHistory.length === 0) {
-      const newOccurance = await pool.query(
+      const newOccurance = db.run(
         `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
       );
       taskHistory.unshift(newOccurance.rows[0]);
@@ -156,7 +154,7 @@ async function handleRepeatingTask(task) {
       }
       const difference = today - mostRecentTaskDate;
       console.log("entering handleRepeatingTask insert");
-      const query = await pool.query(
+      const query = db.run(
         `INSERT INTO task_history (task_id, created_on) VALUES('${taskHistory[0].task_id}', NOW() - INTERVAL '${difference}' day) RETURNING *;`
       );
       taskHistory.unshift(query.rows[0]);
@@ -191,7 +189,6 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   while (!allDaysExhausted) {
     const nextMostRecent = taskHistory[count];
     if (!nextMostRecent) {
-
       break;
     }
     const nextMostRecentDate = Math.trunc(
@@ -257,7 +254,7 @@ router.post("/saveChanges/:taskId", async (req, res) => {
 });
 
 export async function saveChanges(id, body) {
-  return await pool.query(
+  return db.run(
     `UPDATE tasks SET name='${body.name}', category='${body.category}', repeats='${body.repeats}', frequency='${body.frequency}' WHERE id='${id}';`
   );
 }
@@ -278,7 +275,7 @@ router.post("/update-completed", async (req, res) => {
 });
 
 export async function updateCompleted(completed, taskHistoryId) {
-  return await pool.query("UPDATE task_history SET completed=$1 WHERE id=$2", [
+  return db.run("UPDATE task_history SET completed=$1 WHERE id=$2", [
     completed,
     taskHistoryId,
   ]);
@@ -288,7 +285,7 @@ export async function updateCompleted(completed, taskHistoryId) {
 router.post("/pause/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const query = await pool.query(`UPDATE tasks
+    const query = db.run(`UPDATE tasks
     SET repeats = CASE
       WHEN repeats = TRUE THEN FALSE
       ELSE TRUE
@@ -300,7 +297,7 @@ router.post("/pause/:id", async (req, res) => {
 router.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const query = await pool.query(`DELETE from tasks WHERE id = ${id}`);
+    const query = db.run(`DELETE from tasks WHERE id = ${id}`);
     res.json(query.rows);
   } catch (error) {
     res.status(500).json(error.message);

@@ -1,4 +1,4 @@
-import { pool } from "../../models/db.js";
+import { db } from "../../db/db.js";
 import { Router } from "express";
 
 const router = new Router();
@@ -8,10 +8,9 @@ router.get("/:userId", getSymptoms);
 export async function getSymptoms(req, res) {
   const userId = req.params.userId;
   try {
-    const symptoms = await pool.query(
-      "SELECT * FROM symptoms WHERE user_id = $1",
-      [userId]
-    );
+    const symptoms = db.run("SELECT * FROM symptoms WHERE user_id = $1", [
+      userId,
+    ]);
     res.json(symptoms.rows);
   } catch (error) {
     console.error(error);
@@ -35,7 +34,7 @@ export async function addSymptom(req, res) {
     return;
   }
   try {
-    const query = await pool.query(
+    const query = db.run(
       "INSERT INTO symptoms (user_id, name, description, category) VALUES($1, $2, $3, $4) RETURNING *",
       [userId, name, description, category]
     );
@@ -62,7 +61,7 @@ export async function editSymptom(req, res) {
     return;
   }
   try {
-    const query = await pool.query(
+    const query = db.run(
       "UPDATE symptoms SET name=$1, description=$2, category=$3  WHERE id = $4 RETURNING *",
       [name, description, category, id]
     );
@@ -83,7 +82,7 @@ export async function deleteSymptom(req, res) {
     res.status(400).json({ serverMessage: "invalid id" });
   }
   try {
-    await pool.query("DELETE FROM symptoms WHERE id = $1", [symptomId]);
+    db.run("DELETE FROM symptoms WHERE id = $1", [symptomId]);
     res.json({ serverMessage: "delete successful" });
   } catch (error) {
     console.error(error);

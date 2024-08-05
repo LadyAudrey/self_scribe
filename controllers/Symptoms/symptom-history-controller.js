@@ -1,4 +1,4 @@
-import { pool } from "../../models/db.js";
+import { db } from "../../db/db.js";
 import { Router } from "express";
 
 const router = new Router();
@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
     if (!symptomId || !intensity) {
       throw new Error("symptomId or intensity missing");
     }
-    const query = await pool.query(
+    const query = db.run(
       "INSERT INTO symptoms_history (symptom_id, intensity) VALUES ($1, $2) RETURNING *",
       [symptomId, intensity]
     );
