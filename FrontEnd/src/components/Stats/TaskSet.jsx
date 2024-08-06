@@ -11,16 +11,20 @@ import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
 export function TaskSet(props) {
   const { lists } = useContext(ListsContext);
   const { tasks } = useContext(TasksContext);
-  const { taskHistory, setTaskHistory } = useContext(TaskHistoryContext);
-
-  console.log("lists", lists);
-  console.log("tasks", tasks);
-  console.log("history", taskHistory);
-
+  const { taskHistory } = useContext(TaskHistoryContext);
+  const { graphingItems, setGraphingItems } = props;
   return (
     <>
-      <TaskHistoryContext.Provider value={{ taskHistory, setTaskHistory }}>
-        <h3>hello</h3>
+      <TaskHistoryContext.Provider value={{ taskHistory }}>
+        <div className="title text-2xl">All the Kudos!</div>
+        {lists.map((list) => {
+          {
+            /* how do I get a list of the tasks that have any occurances in task_history that the id with list.id? */
+          }
+          const filteredTasks = tasks.filter((task) => {
+            return;
+          });
+        })}
       </TaskHistoryContext.Provider>
     </>
   );
