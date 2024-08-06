@@ -26,7 +26,7 @@ export async function createList(userName, listName, description) {
 router.get("/read/:user", async (req, res) => {
   try {
     const response = await getLists(req.params.user);
-    console.log(response.);
+    console.log(response);
     res.json(response.rows);
   } catch (error) {
     console.log({ error }, "app.get, line 110");
