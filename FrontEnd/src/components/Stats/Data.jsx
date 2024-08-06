@@ -1,17 +1,20 @@
-import { useContext } from "react";
-
-import { SymptomsContext } from "../../Contexts/SymptomsContext";
+import { useContext, useState } from "react";
 
 import { TaskSet } from "./TaskSet";
 import { SymptomSet } from "./SymptomSet";
 
-export function Data() {
-
-  const { symptoms } = useContext(SymptomsContext);
+export function Data(props) {
+  const { graphingItems, setGraphingItems } = props;
   return (
     <div>
-      <TaskSet />
-      <SymptomSet symptoms={symptoms} />
+      <TaskSet
+        graphingItems={graphingItems}
+        setGraphingItems={setGraphingItems}
+      />
+      <SymptomSet
+        graphingItems={graphingItems}
+        setGraphingItems={setGraphingItems}
+      />
     </div>
   );
 }
