@@ -29,6 +29,7 @@ router.get("/read/:user", async (req, res) => {
   // check if user is valid #
   try {
     const response = await getLists(req.params.user);
+    console.log(response);
     res.json(response);
   } catch (error) {
     // need to return a 500 response

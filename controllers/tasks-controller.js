@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../db/db.js";
+import { select, insert, get, remove, update } from "../db/db.js";
 
 const router = Router();
 
@@ -18,20 +18,27 @@ router.post("/add/:listID/:taskName", async (req, res) => {
 });
 
 export async function createTask(listID, taskName) {
-  const taskQuery = db.run(
-    `INSERT INTO tasks (list_id, name, description, category) VALUES
-          ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
-  );
-  const taskId = taskQuery.rows[0]?.id;
+  const sql =
+    "INSERT INTO tasks (list_id, name, description, category) VALUES (?, ?, 'Description of Task 1', 'Category 1');";
+  const params = [listID, taskName];
+  const taskId = await insert(sql, params);
   if (!taskId) {
     throw new Error("Failed to create task");
   }
-  const taskHistory = db.run(
-    `INSERT INTO task_history (task_id) VALUES('${taskId}') RETURNING *;`
-  );
-  taskQuery.rows[0].taskHistory = taskHistory.rows;
-  taskQuery.rows[0].completed = false;
-  return taskQuery;
+  const sql2 = "INSERT INTO task_history (task_id) VALUES(?);";
+  const params2 = [taskId];
+  await insert(sql2, params2);
+  // taskQuery.rows[0].taskHistory = taskHistory.rows;
+  // taskQuery.rows[0].completed = false;
+  const sql3 = "SELECT * FROM tasks WHERE id = ?";
+  const params3 = [taskId];
+  const task = await get(sql3, params3);
+  const sql4 = "SELECT * FROM task_history WHERE task_id = ?";
+  const params4 = [taskId];
+  const taskHistory = await select(sql4, params4);
+  task.taskHistory = taskHistory;
+  task.completed = false;
+  return task;
 }
 
 /*{
@@ -47,6 +54,8 @@ export async function createTask(listID, taskName) {
   "frequency": "010",
   "last_occurrence": "2024-04-04T15:53:17.909Z"
 }*/
+
+// stopped here, need to convert to using helper functions
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   try {
