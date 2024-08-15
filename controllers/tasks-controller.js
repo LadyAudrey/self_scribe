@@ -58,6 +58,9 @@ export async function createTask(listID, taskName) {
 // stopped here, need to convert to using helper functions
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
+  if (!listId || isNaN(parseInt(listId))) {
+    return res.status(400).json({ error: "listId not valid" });
+  }
   try {
     const query = await getTasks(listId);
     res.json(query);
@@ -68,20 +71,20 @@ router.get("/read/:listId", async (req, res) => {
 
 export async function getTasks(listId) {
   const tasks = await getTasksFromDB(listId);
-  console.log(tasks, "getTasks");
   return await Promise.all(tasks.map(prepareTaskHistory));
 }
 
 async function getTasksFromDB(listId) {
-  console.log("entering getTasksFromDB");
   try {
-    const query = db.run(`SELECT * FROM tasks WHERE list_id='${listId}';`);
-    if (query.rowCount === 0) {
+    const sql = "SELECT * FROM tasks WHERE list_id=?;";
+    const params = [listId];
+    const rows = await select(sql, params);
+    if (rows.length === 0) {
       return [];
     }
-    return query.rows;
+    return rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }
@@ -95,24 +98,25 @@ async function prepareTaskHistory(task) {
 
 async function handleNotRepeatingTask(task) {
   try {
-    const history = db.run(
-      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT 1;`
-    );
-    if (!history) {
-      throw new Error("failed to fetch taskHistory");
-    }
+    const sql =
+      "SELECT * FROM task_history WHERE task_id = ? ORDER BY created_on DESC LIMIT 1";
+    const params = [task.id];
+    const history = get(sql, params);
     const newTask = {
       ...task,
-      taskHistory: history.rows ?? [],
+      taskHistory: history ? [history] : [],
     };
     if (newTask.taskHistory.length === 0) {
-      const newOccurance = db.run(
-        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
-      );
-      if (!newOccurance) {
-        throw new Error("failed to create newOccurance");
+      const sql = "INSERT INTO task_history (task_id) VALUES (?);";
+      const params = [task.id];
+      const newTaskOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newTaskOccurrenceId];
+      const newOccurrence = await get(sqlGet, paramsGet);
+      if (!newOccurrence) {
+        throw new Error("failed to create newOccurrence");
       }
-      newTask.taskHistory.unshift(newOccurance.rows[0]);
+      newTask.taskHistory.unshift(newOccurrence);
     }
     newTask.completed = newTask.taskHistory[0]?.completed ?? false;
     return newTask;
@@ -126,9 +130,6 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
-// 6/24 BUG TODO generates an extra day on the first sequence during back propagation
-// test with more frequencies (we know 2:5 created 3 days on the first cycle)
-// set up unit tests, but needs function to clear and create DB
 async function handleRepeatingTask(task) {
   try {
     const [num, den] = task.frequency.split(":").map((number, index) => {
@@ -138,36 +139,43 @@ async function handleRepeatingTask(task) {
       return parseInt(number ?? "0");
     });
 
-    const history = db.run(
-      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
-    );
-    const taskHistory = history.rows ?? [];
+    const sql =
+      "SELECT * FROM task_history WHERE task_id = ? ORDER BY created_on DESC LIMIT ?;";
+    const params = [task.id, num];
+    const history = await select(sql, params);
+
+    const taskHistory = history ?? [];
     if (taskHistory.length === 0) {
-      const newOccurance = db.run(
-        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
-      );
-      taskHistory.unshift(newOccurance.rows[0]);
+      const sql = "INSERT INTO task_history (task_id) VALUES (?);";
+      const params = [task.id];
+      const newOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newOccurrenceId];
+      const newOccurrence = await get(sqlGet, paramsGet);
+      taskHistory.unshift(newOccurrence);
     }
-    // this may create bugs bc of using server time
     const today = Date.now() / MILLISECS_TO_DAYS;
     let mostRecentTaskDate =
       taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS;
     while (mostRecentTaskDate < today) {
       mostRecentTaskDate++;
       if (await activeDaysExhausted(taskHistory, num)) {
-        // makes inactiveDaysExhausted obsolete
         mostRecentTaskDate += den;
       }
       if (mostRecentTaskDate > today) {
         break;
       }
       const difference = today - mostRecentTaskDate;
-      console.log("entering handleRepeatingTask insert");
-      const query = db.run(
-        `INSERT INTO task_history (task_id, created_on) VALUES('${taskHistory[0].task_id}', NOW() - INTERVAL '${difference}' day) RETURNING *;`
-      );
-      taskHistory.unshift(query.rows[0]);
+      const sql =
+        "INSERT INTO task_history (task_id, created_on) VALUES (?, date('now', '-? days'))";
+      const params = [taskHistory[0].task_id, difference];
+      const newTaskOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newTaskOccurrenceId];
+      const newTaskOccurrence = get(sqlGet, paramsGet);
+      taskHistory.unshift(newTaskOccurrence);
     }
+    // stopped here on August 15th
     return {
       ...task,
       taskHistory,
