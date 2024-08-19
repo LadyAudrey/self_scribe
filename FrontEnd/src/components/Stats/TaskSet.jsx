@@ -15,17 +15,15 @@ export function TaskSet(props) {
   const { graphingItems, setGraphingItems } = props;
   return (
     <>
-      <TaskHistoryContext.Provider value={{ taskHistory }}>
-        <div className="title text-2xl">All the Kudos!</div>
-        {lists.map((list) => {
-          {
-            /* how do I get a list of the tasks that have any occurances in task_history that the id with list.id? */
-          }
-          const filteredTasks = tasks.filter((task) => {
-            return;
-          });
-        })}
-      </TaskHistoryContext.Provider>
+      <div className="title text-2xl">All the Kudos!</div>
+      {lists.map((list) => {
+        {
+          /* how do I get a list of the tasks that have any occurances in task_history that the id with list.id? */
+        }
+        const filteredTasks = tasks.filter((task) => {
+          return;
+        });
+      })}
     </>
   );
 }
