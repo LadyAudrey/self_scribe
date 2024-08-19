@@ -4,6 +4,7 @@ import "./App.css";
 
 import { ListsContext } from "./Contexts/ListsContext";
 import { TasksContext } from "./Contexts/TasksContext";
+import { TaskHistoryContext } from "./Contexts/TaskHistoryContext";
 import { SymptomsContext } from "./Contexts/SymptomsContext";
 
 import { DisplayLists } from "./components/Lists/DisplayLists";
@@ -15,14 +16,14 @@ import { Settings } from "./components/Settings/Settings";
 const PAGE_KEYS = Object.freeze({
   DISPLAY_LISTS: "DisplayLists",
   SYMPTOMS: "Symptoms",
-  STASTS: "Stats",
+  STATS: "Stats",
   SETTINGS: "Settings",
 });
 
 const PAGES = Object.freeze({
   [PAGE_KEYS.DISPLAY_LISTS]: <DisplayLists />,
   [PAGE_KEYS.SYMPTOMS]: <SymptomsPg />,
-  [PAGE_KEYS.GRAPHS]: <Stats />,
+  [PAGE_KEYS.STATS]: <Stats />,
   [PAGE_KEYS.SETTINGS]: <Settings />,
 });
 
@@ -36,6 +37,7 @@ export const CATEGORIES = Object.freeze([
 export default function Home() {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [taskHistory, setTaskHistory] = useState([]);
   const [symptoms, setSymptoms] = useState([]);
   const [pageTab, setPageTab] = useState(PAGE_KEYS.DISPLAY_LISTS);
   const dataInitialized = useRef(false);
@@ -95,46 +97,50 @@ export default function Home() {
     // TODO: background gradient file not working
     <ListsContext.Provider value={{ lists, setLists }}>
       <TasksContext.Provider value={{ tasks, setTasks }}>
-        <SymptomsContext.Provider value={{ symptoms, setSymptoms }}>
-          <main className="h-screen w-screen mainBg text-white">
-            <header className="flex justify-between">
-              <div>
-                <button
-                  className="mainBtns"
-                  onClick={() => setPageTab(PAGE_KEYS.DISPLAY_LISTS)}
-                >
-                  Lists
-                </button>
-                {/* this will load the load the lists page */}
-                <button
-                  className="mainBtns"
-                  onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
-                >
-                  Symptoms
-                </button>
-                {/* this will load the symptoms page */}
-                <button
-                  className="mainBtns"
-                  onClick={() => setPageTab(PAGE_KEYS.GRAPHS)}
-                >
-                  Graphs
-                </button>
+        <TaskHistoryContext.Provider value={{ taskHistory, setTaskHistory }}>
+          <SymptomsContext.Provider value={{ symptoms, setSymptoms }}>
+            <main className="h-screen w-screen mainBg text-white">
+              <header className="flex justify-between">
+                <div>
+                  <button
+                    className="mainBtns"
+                    onClick={() => setPageTab(PAGE_KEYS.DISPLAY_LISTS)}
+                  >
+                    Lists
+                  </button>
+                  {/* this will load the load the lists page */}
+                  <button
+                    className="mainBtns"
+                    onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
+                  >
+                    Symptoms
+                  </button>
+                  {/* this will load the symptoms page */}
+                  <button
+                    className="mainBtns"
+                    onClick={() => setPageTab(PAGE_KEYS.GRAPHS)}
+                  >
+                    Graphs
+                  </button>
+                </div>
+                <div>
+                  <button
+                    className="mainBtns"
+                    onClick={() => setPageTab(PAGE_KEYS.SETTINGS)}
+                  >
+                    Settings
+                  </button>
+                </div>
+              </header>
+              <div className="relative flex justify-around">
+                {PAGES[pageTab]}
               </div>
-              <div>
-                <button
-                  className="mainBtns"
-                  onClick={() => setPageTab(PAGE_KEYS.SETTINGS)}
-                >
-                  Settings
-                </button>
-              </div>
-            </header>
-            <div className="relative flex justify-around">{PAGES[pageTab]}</div>
-            <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
-              <h1 className="text-4xl">Self Scribe</h1>
-            </footer>
-          </main>
-        </SymptomsContext.Provider>
+              <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
+                <h1 className="text-4xl">Self Scribe</h1>
+              </footer>
+            </main>
+          </SymptomsContext.Provider>
+        </TaskHistoryContext.Provider>
       </TasksContext.Provider>
     </ListsContext.Provider>
   );
