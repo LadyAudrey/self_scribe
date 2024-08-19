@@ -119,7 +119,7 @@ export default function Home() {
                   {/* this will load the symptoms page */}
                   <button
                     className="mainBtns"
-                    onClick={() => setPageTab(PAGE_KEYS.GRAPHS)}
+                    onClick={() => setPageTab(PAGE_KEYS.STATS)}
                   >
                     Graphs
                   </button>
