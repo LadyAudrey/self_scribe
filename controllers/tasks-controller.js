@@ -175,7 +175,6 @@ async function handleRepeatingTask(task) {
       const newTaskOccurrence = get(sqlGet, paramsGet);
       taskHistory.unshift(newTaskOccurrence);
     }
-    // stopped here on August 15th
     return {
       ...task,
       taskHistory,
@@ -225,40 +224,44 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   }
   return allDaysExhausted;
 }
+// commented out on August 19, 2024
+// function inactiveDaysExhausted(taskHistory, inactiveDays) {
+//   if (taskHistory.length === 0) {
+//     // true might be the better default, pending future logic
+//     return false;
+//   }
+//   const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+//   const mostRecentTaskDate = Math.trunc(
+//     taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
+//   );
+//   const difference = dateNow - mostRecentTaskDate;
+//   return difference > inactiveDays;
+// }
 
-function inactiveDaysExhausted(taskHistory, inactiveDays) {
-  if (taskHistory.length === 0) {
-    // true might be the better default, pending future logic
-    return false;
-  }
-  const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
-  const mostRecentTaskDate = Math.trunc(
-    taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
-  );
-  const difference = dateNow - mostRecentTaskDate;
-  return difference > inactiveDays;
-}
-
-function isCurrent(taskOccurance) {
-  if (taskOccurance !== undefined) {
-    const today = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
-    const taskDay = Math.trunc(
-      taskOccurance.created_on.getTime() / MILLISECS_TO_DAYS
-    );
-    return today === taskDay;
-  }
-  return false;
-}
+// commented out on August 19, 2024
+// function isCurrent(taskOccurance) {
+//   if (taskOccurance !== undefined) {
+//     const today = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+//     const taskDay = Math.trunc(
+//       taskOccurance.created_on.getTime() / MILLISECS_TO_DAYS
+//     );
+//     return today === taskDay;
+//   }
+//   return false;
+// }
 
 router.post("/saveChanges/:taskId", async (req, res) => {
   const taskId = req.params.taskId;
   const body = req.body;
   try {
+    if (!body.name) {
+      throw new Error("must provide name");
+    }
     if (body.repeats && !body.frequency) {
       throw new Error("repeat requires a frequency");
     }
     const query = await saveChanges(taskId, body);
-    res.json(query.rows);
+    res.json(query);
   } catch (error) {
     console.log(error);
     res
@@ -271,16 +274,23 @@ router.post("/saveChanges/:taskId", async (req, res) => {
 });
 
 export async function saveChanges(id, body) {
-  return db.run(
-    `UPDATE tasks SET name='${body.name}', category='${body.category}', repeats='${body.repeats}', frequency='${body.frequency}' WHERE id='${id}';`
-  );
+  const SQL =
+    "UPDATE tasks SET name=?, category=?, repeats=?, frequency=? WHERE id=?;";
+  const params = [body.name, body.category, body.repeats, body.frequency, id];
+  return update(SQL, params);
 }
 
 router.post("/update-completed", async (req, res) => {
+  if (!taskHistoryId) {
+    throw new Error("need taskHistoryId");
+  }
+  if (req.body.completed !== "true" && req.body.completed !== "false") {
+    throw new Error("completed must be a boolean");
+  }
   try {
     const { taskHistoryId, completed } = req.body;
     const query = await updateCompleted(completed, taskHistoryId);
-    res.json(query.rows);
+    res.json(query);
   } catch (error) {
     res
       .json({
@@ -292,30 +302,36 @@ router.post("/update-completed", async (req, res) => {
 });
 
 export async function updateCompleted(completed, taskHistoryId) {
-  return db.run("UPDATE task_history SET completed=$1 WHERE id=$2", [
-    completed,
-    taskHistoryId,
-  ]);
+  const sql = "UPDATE task_history SET completed=? WHERE id=?";
+  const params = [completed, taskHistoryId];
+  return update(sql, params);
 }
 
 // unsure if it's working quite right
-router.post("/pause/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const query = db.run(`UPDATE tasks
-    SET repeats = CASE
-      WHEN repeats = TRUE THEN FALSE
-      ELSE TRUE
-      END
-  WHERE id=${id};`);
-  } catch (error) {}
-});
+// router.post("/pause/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const query = db.run(`UPDATE tasks
+//     SET repeats = CASE
+//       WHEN repeats = TRUE THEN FALSE
+//       ELSE TRUE
+//       END
+//   WHERE id=${id};`);
+//   } catch (error) {}
+// });
 
 router.post("/delete/:id", async (req, res) => {
+  if (!isNaN(parseInt(req.params.id))) {
+    res.status(400).json({
+      error: "id must be a number",
+    });
+  }
   try {
     const id = req.params.id;
-    const query = db.run(`DELETE from tasks WHERE id = ${id}`);
-    res.json(query.rows);
+    const sql = "DELETE from tasks WHERE id = $";
+    const params = [id];
+    const query = await remove(sql, params);
+    res.json(query);
   } catch (error) {
     res.status(500).json(error.message);
   }
