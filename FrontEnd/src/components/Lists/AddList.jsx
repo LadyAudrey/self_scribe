@@ -27,14 +27,24 @@ export default function AddList(props) {
       body: JSON.stringify({
         description: description || "placeholder description",
       }), //  accept description in UI
-
       headers: {
         "Content-Type": "application/json",
       },
     });
+
     if (response.ok) {
-      const result = await response.json();
-      setLists([...lists, result.rows[0]]);
+      const id = await response.json();
+      const newList = {
+        competed: false,
+        created_on: Date.now().toString(),
+        description: description || "placeholder description",
+        id,
+        last_updated: Date.now().toString(),
+        name: listName,
+        repeats: false,
+        user_name: "audrey",
+      };
+      setLists([...lists, newList]);
     }
   }
   return (

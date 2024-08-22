@@ -54,7 +54,6 @@ export default function Home() {
       const result = await response.json();
       console.log("fetchTDL app.jsx ln 55", result);
       setLists(result);
-      // const tasks = await fetchTasks(result);
       setTasks([]);
     } catch (error) {
       console.error(error);
