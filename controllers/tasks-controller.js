@@ -119,9 +119,6 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
-// 6/24 BUG TODO generates an extra day on the first sequence during back propagation
-// test with more frequencies (we know 2:5 created 3 days on the first cycle)
-// set up unit tests, but needs function to clear and create DB
 async function handleRepeatingTask(task) {
   try {
     const [num, den] = task.frequency.split(":").map((number, index) => {

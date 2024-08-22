@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { ListsContext } from "../../Contexts/ListsContext";
@@ -8,11 +8,59 @@ import { TaskHistoryContext } from "../../Contexts/TaskHistoryContext";
 import { TaskItem } from "./TaskItem";
 import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
 
-export function TaskSet(props) {
+const mockTaskHistory = [
+  {
+    id: 4444,
+    task_id: 43,
+    created_on: "2024-04-18 09:04:37.943502",
+    completed: false,
+    notes: "details",
+  },
+  {
+    id: 4444,
+    task_id: 43,
+    created_on: "2024-04-18 09:04:37.943502",
+    completed: false,
+    notes: "details",
+  },
+  {
+    id: 4444,
+    task_id: 45,
+    created_on: "2024-04-18 09:04:37.943502",
+    completed: false,
+    notes: "details",
+  },
+  {
+    id: 4445,
+    task_id: 45,
+    created_on: "2024-04-19 09:04:59.282867",
+    completed: false,
+    notes: "more details",
+  },
+  {
+    id: 4446,
+    task_id: 45,
+    created_on: "2024-04-19 09:04:59.282867",
+    completed: false,
+    notes: "some more details",
+  },
+];
+
+export function TaskSet() {
   const { lists } = useContext(ListsContext);
   const { tasks } = useContext(TasksContext);
-  const { taskHistory } = useContext(TaskHistoryContext);
-  const { graphingItems, setGraphingItems } = props;
+  const { taskHistory } = useState(mockTaskHistory);
+  const { graphingItems, setGraphingItems } = [];
+
+  console.log(tasks);
+
+  async function fetchTaskHistory() {
+    try {
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <div className="title text-2xl">All the Kudos!</div>

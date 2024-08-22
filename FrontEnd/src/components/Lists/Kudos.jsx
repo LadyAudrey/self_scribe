@@ -22,7 +22,7 @@ export function Kudos() {
         });
         if (filteredTasks.length === 0) {
           return <div key={uuidv4()}></div>;
-        }
+     ''   }
         return (
           <div className="card_data" key={uuidv4()}>
             <div className="flex gap-5">
