@@ -1,4 +1,4 @@
-import { db } from "../../db/db.js";
+import { insert, remove, select, update } from "../../db/db.js";
 import { Router } from "express";
 
 const router = new Router();
@@ -7,11 +7,14 @@ router.get("/:userId", getSymptoms);
 
 export async function getSymptoms(req, res) {
   const userId = req.params.userId;
+  if (isNaN(parseInt(userId))) {
+    return res.status(400).json({ error: "user Id needs to be a number" });
+  }
   try {
-    const symptoms = db.run("SELECT * FROM symptoms WHERE user_id = $1", [
-      userId,
-    ]);
-    res.json(symptoms.rows);
+    const sql = "SELECT * FROM symptoms WHERE user_id = ?";
+    const params = [userId];
+    const symptoms = await select(sql, params);
+    res.json(symptoms);
   } catch (error) {
     console.error(error);
   }
@@ -20,26 +23,18 @@ export async function getSymptoms(req, res) {
 router.post("/create", addSymptom);
 export async function addSymptom(req, res) {
   const { userId, name, description, category } = req.body;
-  console.log(userId, name, description, category);
-  if (!userId) {
-    res.status(400).json({
-      message: "userId is invalid",
-    });
-    return;
+  if (isNaN(parseInt(userId))) {
+    return res.status(400).json({ error: "user Id needs to be a number" });
   }
   if (!name) {
-    res.status(400).json({
-      message: "name is required",
-    });
-    return;
+    return res.status(400).json({ error: "name is required" });
   }
   try {
-    const query = db.run(
-      "INSERT INTO symptoms (user_id, name, description, category) VALUES($1, $2, $3, $4) RETURNING *",
-      [userId, name, description, category]
-    );
-    console.log(query);
-    res.json(query.rows[0]);
+    const sql =
+      "INSERT INTO symptoms (user_id, name, description, category) VALUES(?, ?, ?, ?)";
+    const params = [userId, name, description, category];
+    const query = await insert(sql, params);
+    res.json(query);
   } catch (error) {
     console.error(error);
     res
@@ -52,20 +47,20 @@ export async function addSymptom(req, res) {
 router.post("/edit", editSymptom);
 export async function editSymptom(req, res) {
   const { id, name, category, description } = req.body;
-  if (!id || !name) {
-    res.status(400).json({ serverMessage: "id or name missing" });
+  if (!name) {
+    res.status(400).json({ error: "name missing" });
     return;
   }
   if (isNaN(parseInt(id))) {
-    res.status(400).json({ serverMessage: "invalid id" });
+    res.status(400).json({ error: "invalid id" });
     return;
   }
   try {
-    const query = db.run(
-      "UPDATE symptoms SET name=$1, description=$2, category=$3  WHERE id = $4 RETURNING *",
-      [name, description, category, id]
-    );
-    res.json(query.rows[0]);
+    const sql =
+      "UPDATE symptoms SET name=?, description=?, category=?  WHERE id = ?";
+    const params = [name, description, category, id];
+    const query = await update(sql, params);
+    res.json(query);
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -79,11 +74,13 @@ router.post("/delete", deleteSymptom);
 export async function deleteSymptom(req, res) {
   const symptomId = req.body.id;
   if (!symptomId || isNaN(parseInt(symptomId))) {
-    res.status(400).json({ serverMessage: "invalid id" });
+    res.status(400).json({ error: "invalid id" });
   }
   try {
-    db.run("DELETE FROM symptoms WHERE id = $1", [symptomId]);
-    res.json({ serverMessage: "delete successful" });
+    const sql = "DELETE FROM symptoms WHERE id = ?";
+    const params = [symptomId];
+    const query = await remove(sql, params);
+    res.json(query);
   } catch (error) {
     console.error(error);
     res.status(500).json({
