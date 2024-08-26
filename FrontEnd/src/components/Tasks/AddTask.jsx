@@ -15,17 +15,17 @@ export function AddTask(props) {
     const response = await fetch(`/tasks/add/${listId}/${taskName}`, {
       method: "POST",
     });
-    // got to here; current bug is addTask is not currently working August 22, 2024
+    // TODO: addTask is not autoreloading
     if (response.ok) {
-      const id = await response.json();
+      const { id } = await response.json();
       const newTask = {
         id,
         list_id: listId,
-        last_updated: Date.now().toString(),
+        last_updated: new Date().toISOString(),
         name: taskName,
         user_name: "audrey",
-        created_on: Date.now().toString(),
-        repeats: false,
+        created_on: new Date().toISOString(),
+        repeats: 0,
         frequency: "",
       };
       setTasks([...tasks, newTask]);

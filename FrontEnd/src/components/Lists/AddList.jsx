@@ -33,7 +33,8 @@ export default function AddList(props) {
     });
 
     if (response.ok) {
-      const id = await response.json();
+      const { id } = await response.json();
+      // console.log("id", typeof id, id);
       const newList = {
         competed: false,
         created_on: Date.now().toString(),

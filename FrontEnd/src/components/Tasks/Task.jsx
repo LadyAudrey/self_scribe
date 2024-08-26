@@ -19,7 +19,7 @@ export function Task({ taskId }) {
         method: "POST",
         body: JSON.stringify({
           taskHistoryId: task.taskHistory[0].id,
-          completed: true,
+          completed: "1",
         }),
         headers: { "Content-Type": "application/json" },
       });

@@ -101,7 +101,7 @@ async function handleNotRepeatingTask(task) {
     const sql =
       "SELECT * FROM task_history WHERE task_id = ? ORDER BY created_on DESC LIMIT 1";
     const params = [task.id];
-    const history = get(sql, params);
+    const history = await get(sql, params);
     const newTask = {
       ...task,
       taskHistory: history ? [history] : [],
@@ -281,28 +281,27 @@ export async function saveChanges(id, body) {
 }
 
 router.post("/update-completed", async (req, res) => {
-  if (!taskHistoryId) {
-    throw new Error("need taskHistoryId");
-  }
-  if (req.body.completed !== "true" && req.body.completed !== "false") {
-    throw new Error("completed must be a boolean");
-  }
+  const { taskHistoryId, completed } = req.body;
   try {
-    const { taskHistoryId, completed } = req.body;
+    if (!taskHistoryId) {
+      throw new Error("need taskHistoryId");
+    }
+    if (req.body.completed !== "1" && req.body.completed !== "0") {
+      throw new Error("completed must be a 0 or 1");
+    }
     const query = await updateCompleted(completed, taskHistoryId);
     res.json(query);
   } catch (error) {
-    res
-      .json({
-        status: "error",
-        message: error.message,
-      })
-      .status(400);
+    console.log(error);
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
 export async function updateCompleted(completed, taskHistoryId) {
-  const sql = "UPDATE task_history SET completed=? WHERE id=?";
+  const sql = "UPDATE task_history SET completed = ? WHERE id = ?";
   const params = [completed, taskHistoryId];
   return update(sql, params);
 }
