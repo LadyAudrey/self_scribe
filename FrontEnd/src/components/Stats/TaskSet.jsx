@@ -7,6 +7,7 @@ import { TaskHistoryContext } from "../../Contexts/TaskHistoryContext";
 
 import { TaskItem } from "./TaskItem";
 import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
+import { GraphItemsContext } from "../../Contexts/GraphingItemsContext";
 
 const mockTaskHistory = [
   {
@@ -50,10 +51,8 @@ export function TaskSet() {
   const { lists } = useContext(ListsContext);
   const { tasks } = useContext(TasksContext);
   const { taskHistory } = useState(mockTaskHistory);
-  const { graphingItems, setGraphingItems } = [];
-
-  console.log(tasks);
-
+  const { graphingItems, setGraphingItems } = useContext(GraphItemsContext);
+  console.log(taskHistory);
   async function fetchTaskHistory() {
     try {
     } catch (error) {
