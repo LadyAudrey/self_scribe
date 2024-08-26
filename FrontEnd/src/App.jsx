@@ -80,7 +80,6 @@ export default function Home() {
     for (let i = 0; i < lists.length; i++) {
       const list = lists[i];
       const response = await fetch(`/tasks/read/${list.id}/`);
-      // This isn't working right and I'm not sure why
       if (response.ok) {
         const result = await response.json();
         for (let i = 0; i < result.length; i++) {
@@ -94,7 +93,6 @@ export default function Home() {
   }
 
   return (
-    // TODO: background gradient file not working
     <ListsContext.Provider value={{ lists, setLists }}>
       <TasksContext.Provider value={{ tasks, setTasks }}>
         <TaskHistoryContext.Provider value={{ taskHistory, setTaskHistory }}>
@@ -108,14 +106,12 @@ export default function Home() {
                   >
                     Lists
                   </button>
-                  {/* this will load the load the lists page */}
                   <button
                     className="mainBtns"
                     onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
                   >
                     Symptoms
                   </button>
-                  {/* this will load the symptoms page */}
                   <button
                     className="mainBtns"
                     onClick={() => setPageTab(PAGE_KEYS.STATS)}

@@ -7,14 +7,8 @@ export function Data(props) {
   const { graphingItems, setGraphingItems } = props;
   return (
     <div>
-      <TaskSet
-        graphingItems={graphingItems}
-        setGraphingItems={setGraphingItems}
-      />
-      <SymptomSet
-        graphingItems={graphingItems}
-        setGraphingItems={setGraphingItems}
-      />
+      <TaskSet />
+      <SymptomSet />
     </div>
   );
 }
