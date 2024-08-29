@@ -15,9 +15,21 @@ export function AddTask(props) {
     const response = await fetch(`/tasks/add/${listId}/${taskName}`, {
       method: "POST",
     });
+    // TODO: addTask is not autoreloading
     if (response.ok) {
-      const result = await response.json();
-      setTasks([...tasks, result.rows[0]]);
+      const { id } = await response.json();
+      const newTask = {
+        id,
+        list_id: listId,
+        last_updated: new Date().toISOString(),
+        name: taskName,
+        user_name: "audrey",
+        created_on: new Date().toISOString(),
+        completed: 0,
+        repeats: 0,
+        frequency: "",
+      };
+      setTasks([...tasks, newTask]);
     }
   }
   return (

@@ -52,9 +52,10 @@ export default function Home() {
     try {
       const response = await fetch("/lists/read/audrey");
       const result = await response.json();
-      setLists(result);
       const tasks = await fetchTasks(result);
+      setLists(result);
       setTasks(tasks);
+      console.log(tasks);
     } catch (error) {
       console.error(error);
     }

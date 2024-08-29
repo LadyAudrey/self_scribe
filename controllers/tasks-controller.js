@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pool } from "../models/db.js";
+import { select, insert, get, remove, update } from "../db/db.js";
 
 const router = Router();
 
@@ -18,20 +18,27 @@ router.post("/add/:listID/:taskName", async (req, res) => {
 });
 
 export async function createTask(listID, taskName) {
-  const taskQuery = await pool.query(
-    `INSERT INTO tasks (list_id, name, description, category) VALUES
-          ('${listID}', '${taskName}', 'Description of Task 1', 'Category 1') RETURNING *;`
-  );
-  const taskId = taskQuery.rows[0]?.id;
+  const sql =
+    "INSERT INTO tasks (list_id, name, description, category) VALUES (?, ?, 'Description of Task 1', 'Category 1');";
+  const params = [listID, taskName];
+  const taskId = await insert(sql, params);
   if (!taskId) {
     throw new Error("Failed to create task");
   }
-  const taskHistory = await pool.query(
-    `INSERT INTO task_history (task_id) VALUES('${taskId}') RETURNING *;`
-  );
-  taskQuery.rows[0].taskHistory = taskHistory.rows;
-  taskQuery.rows[0].completed = false;
-  return taskQuery;
+  const sql2 = "INSERT INTO task_history (task_id) VALUES(?);";
+  const params2 = [taskId];
+  await insert(sql2, params2);
+  // taskQuery.rows[0].taskHistory = taskHistory.rows;
+  // taskQuery.rows[0].completed = false;
+  const sql3 = "SELECT * FROM tasks WHERE id = ?";
+  const params3 = [taskId];
+  const task = await get(sql3, params3);
+  const sql4 = "SELECT * FROM task_history WHERE task_id = ?";
+  const params4 = [taskId];
+  const taskHistory = await select(sql4, params4);
+  task.taskHistory = taskHistory;
+  task.completed = false;
+  return task;
 }
 
 /*{
@@ -47,8 +54,13 @@ export async function createTask(listID, taskName) {
   "frequency": "010",
   "last_occurrence": "2024-04-04T15:53:17.909Z"
 }*/
+
+// stopped here, need to convert to using helper functions
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
+  if (!listId || isNaN(parseInt(listId))) {
+    return res.status(400).json({ error: "listId not valid" });
+  }
   try {
     const query = await getTasks(listId);
     res.json(query);
@@ -59,22 +71,20 @@ router.get("/read/:listId", async (req, res) => {
 
 export async function getTasks(listId) {
   const tasks = await getTasksFromDB(listId);
-  console.log(tasks, "getTasks");
   return await Promise.all(tasks.map(prepareTaskHistory));
 }
 
 async function getTasksFromDB(listId) {
-  console.log("entering getTasksFromDB");
   try {
-    const query = await pool.query(
-      `SELECT * FROM tasks WHERE list_id='${listId}';`
-    );
-    if (query.rowCount === 0) {
+    const sql = "SELECT * FROM tasks WHERE list_id=?;";
+    const params = [listId];
+    const rows = await select(sql, params);
+    if (rows.length === 0) {
       return [];
     }
-    return query.rows;
+    return rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }
@@ -88,24 +98,25 @@ async function prepareTaskHistory(task) {
 
 async function handleNotRepeatingTask(task) {
   try {
-    const history = await pool.query(
-      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT 1;`
-    );
-    if (!history) {
-      throw new Error("failed to fetch taskHistory");
-    }
+    const sql =
+      "SELECT * FROM task_history WHERE task_id = ? ORDER BY created_on DESC LIMIT 1";
+    const params = [task.id];
+    const history = await get(sql, params);
     const newTask = {
       ...task,
-      taskHistory: history.rows ?? [],
+      taskHistory: history ? [history] : [],
     };
     if (newTask.taskHistory.length === 0) {
-      const newOccurance = await pool.query(
-        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
-      );
-      if (!newOccurance) {
-        throw new Error("failed to create newOccurance");
+      const sql = "INSERT INTO task_history (task_id) VALUES (?);";
+      const params = [task.id];
+      const newTaskOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newTaskOccurrenceId];
+      const newOccurrence = await get(sqlGet, paramsGet);
+      if (!newOccurrence) {
+        throw new Error("failed to create newOccurrence");
       }
-      newTask.taskHistory.unshift(newOccurance.rows[0]);
+      newTask.taskHistory.unshift(newOccurrence);
     }
     newTask.completed = newTask.taskHistory[0]?.completed ?? false;
     return newTask;
@@ -119,9 +130,6 @@ async function handleNotRepeatingTask(task) {
   }
 }
 
-// 6/24 BUG TODO generates an extra day on the first sequence during back propagation
-// test with more frequencies (we know 2:5 created 3 days on the first cycle)
-// set up unit tests, but needs function to clear and create DB
 async function handleRepeatingTask(task) {
   try {
     const [num, den] = task.frequency.split(":").map((number, index) => {
@@ -131,35 +139,41 @@ async function handleRepeatingTask(task) {
       return parseInt(number ?? "0");
     });
 
-    const history = await pool.query(
-      `SELECT * FROM task_history WHERE task_id = '${task.id}' ORDER BY created_on DESC LIMIT ${num};`
-    );
-    const taskHistory = history.rows ?? [];
+    const sql =
+      "SELECT * FROM task_history WHERE task_id = ? ORDER BY created_on DESC LIMIT ?;";
+    const params = [task.id, num];
+    const history = await select(sql, params);
+
+    const taskHistory = history ?? [];
     if (taskHistory.length === 0) {
-      const newOccurance = await pool.query(
-        `INSERT INTO task_history (task_id) VALUES ('${task.id}') RETURNING *;`
-      );
-      taskHistory.unshift(newOccurance.rows[0]);
+      const sql = "INSERT INTO task_history (task_id) VALUES (?);";
+      const params = [task.id];
+      const newOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newOccurrenceId];
+      const newOccurrence = await get(sqlGet, paramsGet);
+      taskHistory.unshift(newOccurrence);
     }
-    // this may create bugs bc of using server time
     const today = Date.now() / MILLISECS_TO_DAYS;
     let mostRecentTaskDate =
-      taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS;
+      new Date(taskHistory[0].created_on).getTime() / MILLISECS_TO_DAYS;
     while (mostRecentTaskDate < today) {
       mostRecentTaskDate++;
       if (await activeDaysExhausted(taskHistory, num)) {
-        // makes inactiveDaysExhausted obsolete
         mostRecentTaskDate += den;
       }
       if (mostRecentTaskDate > today) {
         break;
       }
       const difference = today - mostRecentTaskDate;
-      console.log("entering handleRepeatingTask insert");
-      const query = await pool.query(
-        `INSERT INTO task_history (task_id, created_on) VALUES('${taskHistory[0].task_id}', NOW() - INTERVAL '${difference}' day) RETURNING *;`
-      );
-      taskHistory.unshift(query.rows[0]);
+      const sql =
+        "INSERT INTO task_history (task_id, created_on) VALUES (?, date('now', '-? days'))";
+      const params = [taskHistory[0].task_id, difference];
+      const newTaskOccurrenceId = await insert(sql, params);
+      const sqlGet = "SELECT FROM task_history WHERE id = ?";
+      const paramsGet = [newTaskOccurrenceId];
+      const newTaskOccurrence = get(sqlGet, paramsGet);
+      taskHistory.unshift(newTaskOccurrence);
     }
     return {
       ...task,
@@ -191,7 +205,6 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   while (!allDaysExhausted) {
     const nextMostRecent = taskHistory[count];
     if (!nextMostRecent) {
-
       break;
     }
     const nextMostRecentDate = Math.trunc(
@@ -211,40 +224,44 @@ async function activeDaysExhausted(taskHistory, activeDays) {
   }
   return allDaysExhausted;
 }
+// commented out on August 19, 2024
+// function inactiveDaysExhausted(taskHistory, inactiveDays) {
+//   if (taskHistory.length === 0) {
+//     // true might be the better default, pending future logic
+//     return false;
+//   }
+//   const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+//   const mostRecentTaskDate = Math.trunc(
+//     taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
+//   );
+//   const difference = dateNow - mostRecentTaskDate;
+//   return difference > inactiveDays;
+// }
 
-function inactiveDaysExhausted(taskHistory, inactiveDays) {
-  if (taskHistory.length === 0) {
-    // true might be the better default, pending future logic
-    return false;
-  }
-  const dateNow = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
-  const mostRecentTaskDate = Math.trunc(
-    taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS
-  );
-  const difference = dateNow - mostRecentTaskDate;
-  return difference > inactiveDays;
-}
-
-function isCurrent(taskOccurance) {
-  if (taskOccurance !== undefined) {
-    const today = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
-    const taskDay = Math.trunc(
-      taskOccurance.created_on.getTime() / MILLISECS_TO_DAYS
-    );
-    return today === taskDay;
-  }
-  return false;
-}
+// commented out on August 19, 2024
+// function isCurrent(taskOccurance) {
+//   if (taskOccurance !== undefined) {
+//     const today = Math.trunc(Date.now() / MILLISECS_TO_DAYS);
+//     const taskDay = Math.trunc(
+//       taskOccurance.created_on.getTime() / MILLISECS_TO_DAYS
+//     );
+//     return today === taskDay;
+//   }
+//   return false;
+// }
 
 router.post("/saveChanges/:taskId", async (req, res) => {
   const taskId = req.params.taskId;
   const body = req.body;
   try {
+    if (!body.name) {
+      throw new Error("must provide name");
+    }
     if (body.repeats && !body.frequency) {
       throw new Error("repeat requires a frequency");
     }
     const query = await saveChanges(taskId, body);
-    res.json(query.rows);
+    res.json(query);
   } catch (error) {
     console.log(error);
     res
@@ -257,53 +274,66 @@ router.post("/saveChanges/:taskId", async (req, res) => {
 });
 
 export async function saveChanges(id, body) {
-  return await pool.query(
-    `UPDATE tasks SET name='${body.name}', category='${body.category}', repeats='${body.repeats}', frequency='${body.frequency}' WHERE id='${id}';`
-  );
+  const SQL =
+    "UPDATE tasks SET name=?, category=?, repeats=?, frequency=? WHERE id=?;";
+  const params = [body.name, body.category, body.repeats, body.frequency, id];
+  return update(SQL, params);
 }
 
 router.post("/update-completed", async (req, res) => {
+  const { taskHistoryId, completed } = req.body;
   try {
-    const { taskHistoryId, completed } = req.body;
+    if (!taskHistoryId) {
+      throw new Error("need taskHistoryId");
+    }
+    if (req.body.completed !== "1" && req.body.completed !== "0") {
+      throw new Error("completed must be a 0 or 1");
+    }
     const query = await updateCompleted(completed, taskHistoryId);
-    res.json(query.rows);
+    res.json(query);
   } catch (error) {
-    res
-      .json({
-        status: "error",
-        message: error.message,
-      })
-      .status(400);
+    console.log(error);
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
 export async function updateCompleted(completed, taskHistoryId) {
-  return await pool.query("UPDATE task_history SET completed=$1 WHERE id=$2", [
-    completed,
-    taskHistoryId,
-  ]);
+  const sql = "UPDATE task_history SET completed = ? WHERE id = ?";
+  const params = [completed, taskHistoryId];
+  return update(sql, params);
 }
 
 // unsure if it's working quite right
-router.post("/pause/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const query = await pool.query(`UPDATE tasks
-    SET repeats = CASE
-      WHEN repeats = TRUE THEN FALSE
-      ELSE TRUE
-      END
-  WHERE id=${id};`);
-  } catch (error) {}
-});
+// router.post("/pause/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const query = db.run(`UPDATE tasks
+//     SET repeats = CASE
+//       WHEN repeats = TRUE THEN FALSE
+//       ELSE TRUE
+//       END
+//   WHERE id=${id};`);
+//   } catch (error) {}
+// });
 
 router.post("/delete/:id", async (req, res) => {
+  if (isNaN(parseInt(req.params.id))) {
+    return res.status(400).json({
+      error: "id must be a number",
+    });
+  }
   try {
     const id = req.params.id;
-    const query = await pool.query(`DELETE from tasks WHERE id = ${id}`);
-    res.json(query.rows);
+    const sql = "DELETE from tasks WHERE id = ?";
+    const params = [id];
+    const query = await remove(sql, params);
+    res.json(query);
   } catch (error) {
     res.status(500).json(error.message);
+    console.error(error);
   }
 });
 

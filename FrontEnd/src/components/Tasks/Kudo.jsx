@@ -19,7 +19,7 @@ export function Kudo(props) {
         method: "POST",
         body: JSON.stringify({
           taskHistoryId: task.taskHistory[0].id,
-          completed: false,
+          completed: "0",
         }),
         headers: { "Content-Type": "application/json" },
       });

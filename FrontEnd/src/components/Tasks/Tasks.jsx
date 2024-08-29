@@ -14,7 +14,7 @@ export function Tasks(props) {
       {tasks.length > 0 &&
         tasks
           .filter((task) => {
-            return task.list_id === listId && task.completed === false;
+            return task.list_id === listId && task.completed == 0;
           })
           .map((task) => {
             return <Task key={uuidv4()} taskId={task.id} />;
