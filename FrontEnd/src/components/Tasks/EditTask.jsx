@@ -44,7 +44,6 @@ export function EditTask(props) {
       repeats: repeating,
       frequency: numOfNum + ":" + numOfDen,
     };
-    // hook up to appropriate BE Fx's
     try {
       const response = await fetch(`/tasks/saveChanges/${task.id}`, {
         method: "POST",
@@ -55,6 +54,17 @@ export function EditTask(props) {
       });
       if (response.ok) {
         setEditingTask(false);
+        const editedTask = tasks.find((element) => {
+          return element.id === task.id;
+        });
+        editedTask.name = body.name;
+        editedTask.category = body.category;
+        editedTask.repeats = body.repeats;
+        editedTask.frequency = body.frequency;
+        const filteredTasks = tasks.filter((element) => {
+          return element.id !== task.id;
+        });
+        setTasks([...filteredTasks, editedTask]);
       } else {
         setErrorMsg("Update was not successful");
       }
@@ -171,12 +181,6 @@ export function EditTask(props) {
                 onClick={handleSaveChanges}
               >
                 Save Changes
-              </button>
-              <button
-                className="place-self-center editBtns"
-                onClick={handlePause}
-              >
-                Pause
               </button>
               <button
                 className="place-self-end editBtns"

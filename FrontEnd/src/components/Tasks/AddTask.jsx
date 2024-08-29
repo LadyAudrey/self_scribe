@@ -25,6 +25,7 @@ export function AddTask(props) {
         name: taskName,
         user_name: "audrey",
         created_on: new Date().toISOString(),
+        completed: 0,
         repeats: 0,
         frequency: "",
       };
