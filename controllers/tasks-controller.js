@@ -55,7 +55,6 @@ export async function createTask(listID, taskName) {
   "last_occurrence": "2024-04-04T15:53:17.909Z"
 }*/
 
-// stopped here, need to convert to using helper functions
 router.get("/read/:listId", async (req, res) => {
   const listId = req.params.listId;
   if (!listId || isNaN(parseInt(listId))) {
@@ -65,7 +64,7 @@ router.get("/read/:listId", async (req, res) => {
     const query = await getTasks(listId);
     res.json(query);
   } catch (error) {
-    console.log({ error }, " read/listId in tasks-controller");
+    console.error({ error }, " read/listId in tasks-controller");
   }
 });
 
@@ -76,7 +75,7 @@ export async function getTasks(listId) {
 
 async function getTasksFromDB(listId) {
   try {
-    const sql = "SELECT * FROM tasks WHERE list_id=?;";
+    const sql = "SELECT * FROM tasks WHERE list_id = ?;";
     const params = [listId];
     const rows = await select(sql, params);
     if (rows.length === 0) {

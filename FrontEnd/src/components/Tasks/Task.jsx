@@ -4,6 +4,8 @@ import { TasksContext } from "../../Contexts/TasksContext.js";
 
 import { EditBtn } from "../UI_Pieces/EditBtn.jsx";
 import { EditTask } from "./EditTask.jsx";
+import { TaskHistory } from "./TaskHistory.jsx";
+import { VisibleBtn } from "../UI_Pieces/VisibleBtn.jsx";
 
 export function Task({ taskId }) {
   const [editingTask, setEditingTask] = useState(false);
@@ -12,6 +14,7 @@ export function Task({ taskId }) {
     return task.id === taskId;
   });
   const [updatePending, setUpdatePending] = useState(false);
+  const [seeHistory, setSeeHistory] = useState(false);
   async function handleTaskComplete() {
     setUpdatePending(true);
     try {
@@ -58,6 +61,18 @@ export function Task({ taskId }) {
       )}
       {!editingTask && (
         <EditBtn setEditing={setEditingTask} editing={editingTask} />
+      )}
+      {seeHistory && (
+        <div className="card">
+          <TaskHistory
+            seeHistory={seeHistory}
+            setSeeHistory={setSeeHistory}
+            task={task}
+          />
+        </div>
+      )}
+      {!seeHistory && (
+        <VisibleBtn visible={seeHistory} setVisible={setSeeHistory} />
       )}
     </div>
   );
