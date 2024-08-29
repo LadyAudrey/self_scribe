@@ -156,7 +156,7 @@ async function handleRepeatingTask(task) {
     }
     const today = Date.now() / MILLISECS_TO_DAYS;
     let mostRecentTaskDate =
-      taskHistory[0].created_on.getTime() / MILLISECS_TO_DAYS;
+      new Date(taskHistory[0].created_on).getTime() / MILLISECS_TO_DAYS;
     while (mostRecentTaskDate < today) {
       mostRecentTaskDate++;
       if (await activeDaysExhausted(taskHistory, num)) {
@@ -320,19 +320,20 @@ export async function updateCompleted(completed, taskHistoryId) {
 // });
 
 router.post("/delete/:id", async (req, res) => {
-  if (!isNaN(parseInt(req.params.id))) {
-    res.status(400).json({
+  if (isNaN(parseInt(req.params.id))) {
+    return res.status(400).json({
       error: "id must be a number",
     });
   }
   try {
     const id = req.params.id;
-    const sql = "DELETE from tasks WHERE id = $";
+    const sql = "DELETE from tasks WHERE id = ?";
     const params = [id];
     const query = await remove(sql, params);
     res.json(query);
   } catch (error) {
     res.status(500).json(error.message);
+    console.error(error);
   }
 });
 
