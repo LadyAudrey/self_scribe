@@ -57,7 +57,6 @@ export default function Home() {
       const tasks = await fetchTasks(result);
       setLists(result);
       setTasks(tasks);
-      console.log(tasks);
     } catch (error) {
       console.error(error);
     }

@@ -37,7 +37,6 @@ export function EditTask(props) {
 
   async function handleSaveChanges(event) {
     event.preventDefault();
-    // TODO setters for every UI input in here
     const body = {
       name: taskName,
       category,

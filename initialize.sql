@@ -52,7 +52,6 @@ id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 symptom_id INTEGER NOT NULL REFERENCES symptoms(id) ON DELETE CASCADE,
 created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 intensity INT NOT NULL,
-description TEXT
+notes TEXT
 );
 
---  to access postgres terminal "sudo -u evergreen psql -d self_scribe"

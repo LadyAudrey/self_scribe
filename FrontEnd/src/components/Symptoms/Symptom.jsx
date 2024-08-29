@@ -17,7 +17,7 @@ export function Symptom(props) {
         const requestBody = {
           symptomId,
           intensity: parseInt(event.target.value),
-          notes,
+          notes: notes,
         };
         const response = await fetch("/symptoms/history/add", {
           method: "POST",
@@ -35,10 +35,6 @@ export function Symptom(props) {
     }
   };
 
-  const onChangeNotes = async (event) => {
-    setNotes(event.target.value);
-    setSeeNotes(false);
-  };
   return (
     <div className="flex gap-2">
       <h4>{props.symptom.name}</h4>
@@ -51,7 +47,6 @@ export function Symptom(props) {
         defaultValue={0}
         className="block w-fit p-2 mb-6 text-sm text-white border border-yellow-300 rounded-lg bg-yellow-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-blue-900 dark:border-yellow-600 dark:placeholder-yellow-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
-        {/* TDL fill in up to 9 */}
         <option value={0}>0</option>
         <option value={1}>1</option>
         <option value={2}>2</option>
@@ -64,19 +59,6 @@ export function Symptom(props) {
         <option value={9}>9</option>
         <option value={10}>10</option>
       </select>
-      {editingSymptom && (
-        <EditSymptom
-          id={props.symptom.id}
-          name={props.symptom.name}
-          category={props.symptom.category}
-          description={props.symptom.description}
-          editingSymptom={editingSymptom}
-          setEditingSymptom={setEditingSymptom}
-        />
-      )}
-      {!editingSymptom && (
-        <EditBtn setEditing={setEditingSymptom} editing={editingSymptom} />
-      )}
       {seeNotes && (
         <div className="flex flex-col gap-2">
           <label htmlFor="notes">Notes</label>
@@ -87,9 +69,6 @@ export function Symptom(props) {
             cols="11"
             onChange={(event) => {
               setNotes(event.target.value);
-            }}
-            onBlur={(event) => {
-              onChangeNotes(event.target.value);
             }}
             defaultValue={notes}
             className="bg-black text-white"
@@ -105,6 +84,19 @@ export function Symptom(props) {
         >
           Notes
         </button>
+      )}
+      {editingSymptom && (
+        <EditSymptom
+          id={props.symptom.id}
+          name={props.symptom.name}
+          category={props.symptom.category}
+          description={props.symptom.description}
+          editingSymptom={editingSymptom}
+          setEditingSymptom={setEditingSymptom}
+        />
+      )}
+      {!editingSymptom && (
+        <EditBtn setEditing={setEditingSymptom} editing={editingSymptom} />
       )}
     </div>
   );
