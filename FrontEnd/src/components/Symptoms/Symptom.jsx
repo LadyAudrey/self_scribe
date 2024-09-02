@@ -2,13 +2,11 @@ import { useState } from "react";
 
 import { EditBtn } from "../UI_Pieces/EditBtn";
 import { EditSymptom } from "./EditSymptom";
+import AddSymptomInstance from "./AddSymptomInstance";
 
 export function Symptom(props) {
   const [editingSymptom, setEditingSymptom] = useState(false);
-  const [intensityValue, setIntensityValue] = useState(0);
-  // TODO update to receive notes from BE
-  const [seeNotes, setSeeNotes] = useState(false);
-  const [notes, setNotes] = useState("");
+  const [addingInstance, setAddingInstance] = useState(false);
 
   const onChangeIntensity = async (event, symptomId) => {
     setIntensityValue(parseInt(event.target.value));
@@ -38,52 +36,19 @@ export function Symptom(props) {
   return (
     <div className="flex gap-2">
       <h4>{props.symptom.name}</h4>
-      {/* TODO create change handler */}
-      <select
-        name="intensity"
-        onChange={(event) => {
-          onChangeIntensity(event, props.symptom.id);
-        }}
-        defaultValue={0}
-        className="block w-fit p-2 mb-6 text-sm text-white border border-yellow-300 rounded-lg bg-yellow-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-blue-900 dark:border-yellow-600 dark:placeholder-yellow-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option value={0}>0</option>
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-        <option value={3}>3</option>
-        <option value={4}>4</option>
-        <option value={5}>5</option>
-        <option value={6}>6</option>
-        <option value={7}>7</option>
-        <option value={8}>8</option>
-        <option value={9}>9</option>
-        <option value={10}>10</option>
-      </select>
-      {seeNotes && (
-        <div className="flex flex-col gap-2">
-          <label htmlFor="notes">Notes</label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows="1"
-            cols="11"
-            onChange={(event) => {
-              setNotes(event.target.value);
-            }}
-            defaultValue={notes}
-            className="bg-black text-white"
-          ></textarea>
-        </div>
+      {addingInstance && (
+        <AddSymptomInstance
+          setAddingInstance={setAddingInstance}
+          id={props.symptom.id}
+        />
       )}
-      {!seeNotes && (
+      {!addingInstance && (
         <button
+          className="h-6 w-6 bg-cover bg-[url('/Buttons/add.svg')] z-10"
           onClick={() => {
-            setSeeNotes(!seeNotes);
+            setAddingInstance(!addingInstance);
           }}
-          className="bg-green-700"
-        >
-          Notes
-        </button>
+        />
       )}
       {editingSymptom && (
         <EditSymptom
