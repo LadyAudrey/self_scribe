@@ -4,7 +4,7 @@ import { SymptomsContext } from "../../Contexts/SymptomsContext";
 
 import { ExitBtn } from "../UI_Pieces/ExitBtn";
 
-export default function AddSymptomInstance(props) {
+export function AddSymptomInstance(props) {
   const [notes, setNotes] = useState("");
   const [intensityValue, setIntensityValue] = useState(0);
   const [fetching, setFetching] = useState(false);

@@ -24,4 +24,21 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.get("/:userId", getSymptoms);
+
+export async function getSymptoms(req, res) {
+  const userId = req.params.userId;
+  if (isNaN(parseInt(userId))) {
+    return res.status(400).json({ error: "user Id needs to be a number" });
+  }
+  try {
+    const sql = "SELECT * FROM symptoms_history WHERE user_id = ?";
+    const params = [userId];
+    const query = await select(sql, params);
+    res.json(query);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default router;

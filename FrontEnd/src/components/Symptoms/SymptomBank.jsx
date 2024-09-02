@@ -14,7 +14,6 @@ export function SymptomBank() {
   const [addingSymptom, setAddingSymptom] = useState(false);
 
   function handleClick() {
-    console.log("entered handleClick");
     setAddingSymptom(!addingSymptom);
   }
 
