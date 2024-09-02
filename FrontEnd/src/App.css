@@ -39,7 +39,9 @@
   .editBtns {
     @apply bg-green-900 p-5 m-5 rounded-lg border-solid border-yellow-400 border-2
   }
-
+  .addBtns {
+  @apply bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2
+  }
   .pencil {
     @apply border-solid rounded-md border-white 
   }

@@ -33,7 +33,7 @@ export function TDL() {
           onClick={() => {
             setAddingList(!addingList);
           }}
-          className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
+          className="addBtns"
         >
           Add List
         </button>

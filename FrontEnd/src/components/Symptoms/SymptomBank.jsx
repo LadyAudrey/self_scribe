@@ -44,16 +44,11 @@ export function SymptomBank() {
       <div className="flex gap-5">
         {addingSymptom && <AddSymptom setAddingSymptom={setAddingSymptom} />}
         {!addingSymptom && (
-          <button
-            onClick={handleClick}
-            className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2"
-          >
+          <button onClick={handleClick} className="addBtns">
             Add Symptom
           </button>
         )}
-        <button className="bg-black p-3 my-5 rounded-lg border-solid border-yellow-400 border-2">
-          Add Category
-        </button>
+        <button className="addBtns">Add Category</button>
       </div>
     </div>
   );
