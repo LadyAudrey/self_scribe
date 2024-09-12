@@ -1,4 +1,4 @@
-import { insert } from "../../db/db.js";
+import { insert, select } from "../../db/db.js";
 import { Router } from "express";
 
 const router = new Router();
@@ -24,15 +24,15 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.get("/:userId", getSymptoms);
+router.get("/:userId", getSymptomHistory);
 
-export async function getSymptoms(req, res) {
+export async function getSymptomHistory(req, res) {
   const userId = req.params.userId;
   if (isNaN(parseInt(userId))) {
     return res.status(400).json({ error: "user Id needs to be a number" });
   }
   try {
-    const sql = "SELECT * FROM symptoms_history WHERE user_id = ?";
+    const sql = "SELECT * FROM symptoms_history WHERE symptom_id = ?";
     const params = [userId];
     const query = await select(sql, params);
     res.json(query);

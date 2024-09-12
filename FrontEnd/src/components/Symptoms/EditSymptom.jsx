@@ -15,7 +15,7 @@ export function EditSymptom(props) {
   const { symptoms, setSymptoms } = useContext(SymptomsContext);
 
   const [symptomName, setSymptomName] = useState(name);
-  const [symptomCategory, setSymptomCategory] = useState();
+  const [symptomCategory, setSymptomCategory] = useState(category);
   const [symptomDescription, setSymptomDescription] = useState(description);
 
   function handleExitEdit() {
@@ -24,8 +24,12 @@ export function EditSymptom(props) {
 
   async function handleSaveChanges(event) {
     event.preventDefault();
-    const body = { id, name: symptomName, category, description };
-    console.log(body);
+    const body = {
+      id,
+      name: symptomName,
+      category: symptomCategory,
+      description: symptomDescription,
+    };
     try {
       const response = await fetch("/symptoms/bank/edit", {
         method: "POST",
@@ -33,6 +37,16 @@ export function EditSymptom(props) {
         headers: { "Content-Type": "application/json" },
       });
       if (response.ok) {
+        const newSymptom = symptoms.filter((element) => {
+          return element.id === id;
+        })[0];
+        const newSymptoms = symptoms.filter((element) => {
+          return element.id !== id;
+        });
+        newSymptom.name = symptomName;
+        newSymptom.category = symptomCategory;
+        newSymptom.description = symptomDescription;
+        setSymptoms([...newSymptoms, newSymptom]);
         setEditingSymptom(false);
       }
     } catch (error) {
@@ -40,7 +54,25 @@ export function EditSymptom(props) {
     }
   }
 
-  function handleDelete() {}
+  async function handleDelete(event) {
+    event.preventDefault();
+    try {
+      const response = await fetch(`/symptoms/bank/delete/${id}`, {
+        method: "POST",
+      });
+      console.log("I've fetched");
+      if (response.ok) {
+        console.log("entered ok");
+        const newSymptoms = symptoms.filter((element) => {
+          return id !== element.id;
+        });
+        setSymptoms(newSymptoms);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setEditingSymptom(false);
+  }
 
   return (
     <>

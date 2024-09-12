@@ -4,7 +4,6 @@ import { Router } from "express";
 const router = new Router();
 // all these routes are prepended with /symptoms/bank
 router.get("/:userId", getSymptoms);
-
 export async function getSymptoms(req, res) {
   const userId = req.params.userId;
   if (isNaN(parseInt(userId))) {
@@ -34,7 +33,7 @@ export async function addSymptom(req, res) {
       "INSERT INTO symptoms (user_id, name, description, category) VALUES(?, ?, ?, ?)";
     const params = [userId, name, description, category];
     const query = await insert(sql, params);
-    res.json(query);
+    res.json({ id: query });
   } catch (error) {
     console.error(error);
     res
@@ -43,7 +42,6 @@ export async function addSymptom(req, res) {
   }
 }
 
-// make sure to pass *all* necessary pieces, even if not updated in the UI
 router.post("/edit", editSymptom);
 export async function editSymptom(req, res) {
   const { id, name, category, description } = req.body;
@@ -70,11 +68,12 @@ export async function editSymptom(req, res) {
   }
 }
 
-router.post("/delete", deleteSymptom);
+router.post("/delete/:id", deleteSymptom);
 export async function deleteSymptom(req, res) {
-  const symptomId = req.body.id;
+  const symptomId = req.params.id;
+  console.log("entered BE delete Fx");
   if (!symptomId || isNaN(parseInt(symptomId))) {
-    res.status(400).json({ error: "invalid id" });
+    return res.status(400).json({ error: "invalid id" });
   }
   try {
     const sql = "DELETE FROM symptoms WHERE id = ?";
@@ -82,11 +81,11 @@ export async function deleteSymptom(req, res) {
     const query = await remove(sql, params);
     res.json(query);
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       serverMessage: "There was an error",
       errorMessage: error.message,
     });
+    console.error(error);
   }
 }
 

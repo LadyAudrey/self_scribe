@@ -52,7 +52,6 @@ export function TaskSet() {
   const { tasks } = useContext(TasksContext);
   const { taskHistory } = useState(mockTaskHistory);
   const { graphingItems, setGraphingItems } = useContext(GraphItemsContext);
-  console.log(taskHistory);
   async function fetchTaskHistory() {
     try {
     } catch (error) {

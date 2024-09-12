@@ -45,7 +45,6 @@ const mockTaskHistory = [
 
 export function Stats() {
   const [graphingItems, setGraphingItems] = useState(mockTaskHistory);
-  console.log(graphingItems);
   return (
     <GraphItemsContext.Provider value={{ graphingItems, setGraphingItems }}>
       <div className="page">

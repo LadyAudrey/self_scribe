@@ -5,6 +5,10 @@
 .mainBg {
   /* background: url("/assets/BGgradient.png"); */
   background-image: conic-gradient(#0A4072, #00301B);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 @layer components {
@@ -25,8 +29,11 @@
   .page{
     @apply flex justify-around w-screen gap-4
   }
+  .card {
+    @apply absolute m-5 min-w-fit w-max sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50
+  }
   .card_data{
-    @apply flex flex-col gap-2 my-2 relative
+    @apply flex flex-col w-max gap-2 my-2 relative
   }
   .userInput{
     @apply bg-black w-fit rounded-md border-slate-800 border-2
@@ -49,8 +56,6 @@
   .side {
     @apply w-2/5 px-20 flex flex-col h-fit px-8 gap-3
   }
-  .card {
-    @apply absolute m-5 min-w-fit w-2/5 sm:min-h-fit p-4 gap-2 border-solid border-2 rounded-lg font-bold bg-gradient-to-br from-green-800 to-blue-800  border-yellow-400 z-50
-  }
+  
 
 }

@@ -1,59 +1,27 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import { SymptomHistoryContext } from "../../Contexts/SymptomsHistoryContext";
 
 import { EditBtn } from "../UI_Pieces/EditBtn";
 import { EditSymptom } from "./EditSymptom";
+import { ExitBtn } from "../UI_Pieces/ExitBtn";
 import { AddSymptomInstance } from "./AddSymptomInstance";
-import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
-import { ViewInstances } from "./ViewInstances";
+import { ViewInstance } from "./ViewInstance";
 
 export function Symptom(props) {
+  const { symptomsHistory, setSymptomsHistory } = useContext(
+    SymptomHistoryContext
+  );
   const [editingSymptom, setEditingSymptom] = useState(false);
   const [addingInstance, setAddingInstance] = useState(false);
   const [seeInstances, setSeeInstances] = useState(false);
-  const [symptomInstances, getSymptomInstances] = useState([]);
 
-  // const onChangeIntensity = async (event, symptomId) => {
-  //   setIntensityValue(parseInt(event.target.value));
-  //   try {
-  //     if (parseInt(event.target.value) > 0) {
-  //       const requestBody = {
-  //         symptomId,
-  //         intensity: parseInt(event.target.value),
-  //         notes: notes,
-  //       };
-  //       const response = await fetch("/symptoms/history/add", {
-  //         method: "POST",
-  //         body: JSON.stringify(requestBody),
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       if (!response.ok) {
-  //         throw new Error("failed to set intensity value");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // fetch data
-  async function fetchSymptomHistory() {
-    try {
-      const response = await fetch(`/symptoms/history/get/${props.symptom.id}`);
-      console.log("symptomInstances Data", response);
-      if (response.ok) {
-        const result = await response.json();
-        setSymptomInstances(result);
-        console.log(symptomInstances);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const instanceList = symptomsHistory.filter((element) => {
+    return element.symptom_id === props.symptom.id;
+  });
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 w-max">
       <h4>{props.symptom.name}</h4>
       {addingInstance && (
         <AddSymptomInstance
@@ -84,10 +52,23 @@ export function Symptom(props) {
       )}
       {seeInstances && (
         <div className="card">
-          <ViewInstances
-            symptomId={props.symptom.id}
-            symptomName={props.symptom.name}
-          />
+          <div className="flex justify-between">
+            <h5>{props.symptom.name}</h5>
+            <ExitBtn
+              setterFx={() => {
+                setSeeInstances(false);
+              }}
+            />
+          </div>
+          {console.log(instanceList.length)}
+          {instanceList.map((instance) => {
+            return (
+              <ViewInstance
+                instance={instance}
+                symptomName={props.symptom.name}
+              />
+            );
+          })}
         </div>
       )}
       {!seeInstances && (
@@ -95,7 +76,6 @@ export function Symptom(props) {
           className="h-6 w-6 bg-cover bg-[url('/Buttons/viewLists.svg')]"
           onClick={() => {
             setSeeInstances(true);
-            fetchSymptomHistory(props.symptom.id);
           }}
         />
       )}

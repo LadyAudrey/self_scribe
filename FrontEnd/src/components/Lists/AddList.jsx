@@ -34,7 +34,6 @@ export default function AddList(props) {
 
     if (response.ok) {
       const { id } = await response.json();
-      // console.log("id", typeof id, id);
       const newList = {
         competed: false,
         created_on: Date.now().toString(),
@@ -84,7 +83,9 @@ export default function AddList(props) {
               className="bg-black rounded-md mx-2 border-slate-800 border-2"
             ></input>
           </label>
-          <button type="submit">Add List</button>
+          <button className="addBtns" type="submit">
+            Add List
+          </button>
         </form>
       </div>
     </>

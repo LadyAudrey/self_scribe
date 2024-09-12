@@ -6,6 +6,7 @@ import { ListsContext } from "./Contexts/ListsContext";
 import { TasksContext } from "./Contexts/TasksContext";
 import { TaskHistoryContext } from "./Contexts/TaskHistoryContext";
 import { SymptomsContext } from "./Contexts/SymptomsContext";
+import { SymptomHistoryContext } from "./Contexts/SymptomsHistoryContext";
 
 import { DisplayLists } from "./components/Lists/DisplayLists";
 import { SymptomsPg } from "./components/Symptoms/SymptomsPg";
@@ -39,6 +40,7 @@ export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [taskHistory, setTaskHistory] = useState([]);
   const [symptoms, setSymptoms] = useState([]);
+  const [symptomsHistory, setSymptomsHistory] = useState([]);
   const [pageTab, setPageTab] = useState(PAGE_KEYS.DISPLAY_LISTS);
   const dataInitialized = useRef(false);
 
@@ -62,18 +64,6 @@ export default function Home() {
     }
   }
 
-  async function fetchSymptoms() {
-    try {
-      const response = await fetch("/symptoms/bank/1");
-      if (response.ok) {
-        const result = await response.json();
-        setSymptoms(result);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   async function fetchTasks(lists) {
     const tasks = [];
 
@@ -91,50 +81,82 @@ export default function Home() {
     }
     return tasks;
   }
+  async function fetchSymptoms() {
+    try {
+      const response = await fetch("/symptoms/bank/1");
+      if (response.ok) {
+        const result = await response.json();
+        setSymptoms(result);
+        fetchSymptomHistory(result);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function fetchSymptomHistory(symptoms) {
+    const localSymptomInstances = [];
+    for (let i = 0; i < symptoms.length; i++) {
+      try {
+        const response = await fetch(`/symptoms/history/${symptoms[i].id}`);
+        if (response.ok) {
+          const result = await response.json();
+          localSymptomInstances.push(...result);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setSymptomsHistory(localSymptomInstances);
+  }
 
   return (
     <ListsContext.Provider value={{ lists, setLists }}>
       <TasksContext.Provider value={{ tasks, setTasks }}>
         <TaskHistoryContext.Provider value={{ taskHistory, setTaskHistory }}>
           <SymptomsContext.Provider value={{ symptoms, setSymptoms }}>
-            <main className="h-screen w-screen mainBg text-white">
-              <header className="flex justify-between">
-                <div>
-                  <button
-                    className="mainBtns"
-                    onClick={() => setPageTab(PAGE_KEYS.DISPLAY_LISTS)}
-                  >
-                    Lists
-                  </button>
-                  <button
-                    className="mainBtns"
-                    onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
-                  >
-                    Symptoms
-                  </button>
-                  <button
-                    className="mainBtns"
-                    onClick={() => setPageTab(PAGE_KEYS.STATS)}
-                  >
-                    Graphs
-                  </button>
+            <SymptomHistoryContext.Provider
+              value={{ symptomsHistory, setSymptomsHistory }}
+            >
+              <main className="h-screen w-screen text-white">
+                <header className="flex justify-between">
+                  <div>
+                    <button
+                      className="mainBtns"
+                      onClick={() => setPageTab(PAGE_KEYS.DISPLAY_LISTS)}
+                    >
+                      Lists
+                    </button>
+                    <button
+                      className="mainBtns"
+                      onClick={() => setPageTab(PAGE_KEYS.SYMPTOMS)}
+                    >
+                      Symptoms
+                    </button>
+                    <button
+                      className="mainBtns"
+                      onClick={() => setPageTab(PAGE_KEYS.STATS)}
+                    >
+                      Graphs
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className="mainBtns"
+                      onClick={() => setPageTab(PAGE_KEYS.SETTINGS)}
+                    >
+                      Settings
+                    </button>
+                  </div>
+                </header>
+                <div className="relative flex justify-around">
+                  {PAGES[pageTab]}
                 </div>
-                <div>
-                  <button
-                    className="mainBtns"
-                    onClick={() => setPageTab(PAGE_KEYS.SETTINGS)}
-                  >
-                    Settings
-                  </button>
-                </div>
-              </header>
-              <div className="relative flex justify-around">
-                {PAGES[pageTab]}
-              </div>
-              <footer className="flex place-content-center w-screen fixed inset-x-0 bottom-0 p-10">
-                <h1 className="text-4xl">Self Scribe</h1>
-              </footer>
-            </main>
+                <footer className="flex place-content-center w-screen p-10">
+                  <h1 className="text-4xl">Self Scribe</h1>
+                </footer>
+              </main>
+            </SymptomHistoryContext.Provider>
           </SymptomsContext.Provider>
         </TaskHistoryContext.Provider>
       </TasksContext.Provider>

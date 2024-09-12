@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
 import { CATEGORIES } from "../../App";
+import { SymptomsContext } from "../../Contexts/SymptomsContext";
 
 export function AddSymptom(props) {
+  const { symptoms, setSymptoms } = useContext(SymptomsContext);
   const { setAddingSymptom } = props;
   const [symptomName, setSymptomName] = useState("");
   const [symptomCategory, setSymptomCategory] = useState("");
@@ -12,27 +14,31 @@ export function AddSymptom(props) {
 
   const handleAddSymptom = async (event) => {
     event.preventDefault();
-    console.log({
-      symptomName,
-      symptomCategory,
-      symptomDescription,
-    });
     // create fetch
     try {
       const requestBody = {
-        // need to hardcode userId as 1
         // names on the backend have to be proper types and names
         userId: 1,
         name: symptomName,
         category: symptomCategory,
-        intensity: parseInt(event.target.value),
         description: symptomDescription,
       };
-      await fetch("/symptoms/bank/create", {
+      const response = await fetch("/symptoms/bank/create", {
         method: "POST",
         body: JSON.stringify(requestBody),
         headers: { "Content-Type": "application/json" },
       });
+      if (response.ok) {
+        const data = await response.json();
+        const newSymptom = {
+          id: data.id,
+          user_id: 1,
+          name: symptomName,
+          category: symptomCategory,
+          description: symptomDescription,
+        };
+        setSymptoms([...symptoms, newSymptom]);
+      }
     } catch (error) {
       console.error(error);
     }

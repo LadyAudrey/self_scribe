@@ -11,7 +11,6 @@ export function TaskHistory(props) {
   setTaskHistory(getTaskHistory(task.id));
   async function getTaskHistory() {
     const response = await fetch(`/task-history/read/${task.id}`);
-    console.log(response);
     const result = await response.json();
     return result;
   }

@@ -12,7 +12,7 @@ router.post("/add/:listID/:taskName", async (req, res) => {
     const response = await createTask(listID, taskName);
     res.json(response);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ serverMessage: error.message });
   }
 });
@@ -262,7 +262,7 @@ router.post("/saveChanges/:taskId", async (req, res) => {
     const query = await saveChanges(taskId, body);
     res.json(query);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res
       .json({
         status: "error",
@@ -291,7 +291,7 @@ router.post("/update-completed", async (req, res) => {
     const query = await updateCompleted(completed, taskHistoryId);
     res.json(query);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({
       status: "error",
       message: error.message,

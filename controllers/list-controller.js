@@ -29,11 +29,10 @@ router.get("/read/:user", async (req, res) => {
   // check if user is valid #
   try {
     const response = await getLists(req.params.user);
-    console.log(response);
     res.json(response);
   } catch (error) {
     // need to return a 500 response
-    console.log({ error }, "app.get, line 110");
+    console.error({ error }, "app.get, line 110");
   }
 });
 
@@ -49,7 +48,6 @@ router.post("/edit/:id/:name", async (req, res) => {
     await editList(newName, id);
     res.end();
   } catch (error) {
-    console.log("inside catch block", error);
     res.status(500).json(error.message);
   }
 });
@@ -59,7 +57,6 @@ export async function editList(newName, id) {
 }
 
 router.post("/delete/:id", async (req, res) => {
-  console.log("list-controller, entering delete()", req.params.id);
   try {
     const id = req.params.id;
     const response = deleteList(id);

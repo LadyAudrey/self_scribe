@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ListsContext } from "../../Contexts/ListsContext";
 import { TasksContext } from "../../Contexts/TasksContext";
+import { CATEGORIES } from "../../App";
 
 import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
 import { Kudo } from "../Tasks/Kudo";

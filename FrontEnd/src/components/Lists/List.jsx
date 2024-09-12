@@ -17,7 +17,7 @@ export function List(props) {
 
   return (
     <div className="card_data">
-      <div className="flex gap-5">
+      <div className="flex flex-wrap w-1/2 gap-5">
         <VisibleBtn setVisible={setVisible} visible={visible} />
         <h3 className="title">{list.name}</h3>
         {/* TODO: hook up Fxs */}

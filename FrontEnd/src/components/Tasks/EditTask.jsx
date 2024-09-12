@@ -102,7 +102,7 @@ export function EditTask(props) {
         setTasks(newTasks);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
