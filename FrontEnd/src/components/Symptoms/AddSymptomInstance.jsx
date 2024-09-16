@@ -45,7 +45,7 @@ export function AddSymptomInstance(props) {
           intensity: requestBody.intensity,
           notes,
           id,
-        },uy
+        },
       ]);
       props.setAddingInstance(false);
     } catch (error) {

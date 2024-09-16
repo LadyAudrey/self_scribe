@@ -42,11 +42,12 @@ export async function getSymptomHistory(req, res) {
   }
 }
 
-router.post("delete/:instanceId", removeInstance);
+router.post("/delete/:instanceId", removeInstance);
 
 export async function removeInstance(req, res) {
-  const instanceId = req.params.id;
+  const instanceId = req.params.instanceId;
   if (isNaN(parseInt(instanceId))) {
+    console.log(instanceId);
     return res.status(400).json({ error: "instance id needs to be a number" });
   }
   try {

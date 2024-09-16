@@ -1,7 +1,14 @@
+import { useContext } from "react";
+
+import { SymptomHistoryContext } from "../../Contexts/SymptomsHistoryContext";
+
 export function ViewInstance(props) {
   const { created_on, id, intensity, notes } = props.instance;
-  const { symptomsHistory } = props.symptomsHistory;
-  const { setSymptomsHistory } = props.setSymptomsHistory;
+  console.log(props.instance);
+  const { symptomsHistory, setSymptomsHistory } = useContext(
+    SymptomHistoryContext
+  );
+
   const createdOn = new Date(created_on);
 
   async function deleteInstance() {
@@ -11,7 +18,6 @@ export function ViewInstance(props) {
         method: "POST",
       });
       if (response.ok) {
-        console.log("response is ok");
         const newInstancesHistory = symptomsHistory.filter((element) => {
           return id !== element.id;
         });

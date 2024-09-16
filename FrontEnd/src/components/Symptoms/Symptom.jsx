@@ -75,8 +75,6 @@ export function Symptom(props) {
                   <ViewInstance
                     instance={instance}
                     symptomName={props.symptom.name}
-                    symptomsHistory={symptomsHistory}
-                    setSymptomsHistory={setSymptomsHistory}
                     key={uuidv4()}
                   />
                 );
