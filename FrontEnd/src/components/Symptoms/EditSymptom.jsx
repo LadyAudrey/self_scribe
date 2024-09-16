@@ -60,7 +60,6 @@ export function EditSymptom(props) {
       const response = await fetch(`/symptoms/bank/delete/${id}`, {
         method: "POST",
       });
-      console.log("I've fetched");
       if (response.ok) {
         console.log("entered ok");
         const newSymptoms = symptoms.filter((element) => {

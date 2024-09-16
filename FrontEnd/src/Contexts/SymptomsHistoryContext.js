@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 //  define shape of the context (keys matter, values change)
 const DefaultSymptomHistory = {
-  symptomHistory: [
+  symptomsHistory: [
     {
       id: 1,
       symptom_id: 1,
@@ -11,7 +11,7 @@ const DefaultSymptomHistory = {
       notes: "",
     },
   ],
-  setSymptomHistory: (new_value) => {},
+  setSymptomsHistory: (new_value) => {},
 };
 
 // create the context based on the shape you provide

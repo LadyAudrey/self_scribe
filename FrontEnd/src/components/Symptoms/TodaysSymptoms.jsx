@@ -2,11 +2,12 @@ import { useContext, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
+import { CATEGORIES } from "../../App";
 import { SymptomsContext } from "../../Contexts/SymptomsContext";
 import { SymptomHistoryContext } from "../../Contexts/SymptomsHistoryContext";
 
+import { ViewInstance } from "./ViewInstance";
 import { VisibleBtn } from "../UI_Pieces/VisibleBtn";
-import { CATEGORIES } from "../../App";
 
 export function TodaysSymptoms() {
   const { symptoms, setSymptoms } = useContext(SymptomsContext);
@@ -42,18 +43,27 @@ export function TodaysSymptoms() {
           if (todaysSymptomsSet.size == 0) {
             return <div key={uuidv4()}></div>;
           }
-          const filteredSymptoms = symptoms.filter((symptom) => {
-            return todaysSymptomsSet.includes(symptom.id);
-          });
-          <div className="card_data" key={uuidv4()}>
-            <div className="flex gap-5">
-              <VisibleBtn
-                setVisible={setSeeDaySymptoms}
-                visible={seeDaySymptoms}
-              />
-              <h3 className="title">{}</h3>
-            </div>
-          </div>;
+          return symptoms
+            .filter((symptom) => {
+              return (
+                todaysSymptomsSet.has(symptom.id) &&
+                category === symptom.category
+              );
+            })
+            .map((symptom) => {
+              return (
+                <div className="card_data">
+                  <h2>{category}</h2>
+                  <div className="flex gap-5">
+                    <h3 className="title">{symptom.name}</h3>
+                    <VisibleBtn
+                      setVisible={setSeeDaySymptoms}
+                      visible={seeDaySymptoms}
+                    />
+                  </div>
+                </div>
+              );
+            });
         })}
       </div>
     </div>

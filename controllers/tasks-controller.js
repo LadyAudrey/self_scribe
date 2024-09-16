@@ -329,6 +329,7 @@ router.post("/delete/:id", async (req, res) => {
     const sql = "DELETE from tasks WHERE id = ?";
     const params = [id];
     const query = await remove(sql, params);
+    console.log("in try block");
     res.json(query);
   } catch (error) {
     res.status(500).json(error.message);

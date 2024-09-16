@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { SymptomHistoryContext } from "../../Contexts/SymptomsHistoryContext";
 
 import { EditBtn } from "../UI_Pieces/EditBtn";
@@ -15,10 +17,6 @@ export function Symptom(props) {
   const [editingSymptom, setEditingSymptom] = useState(false);
   const [addingInstance, setAddingInstance] = useState(false);
   const [seeInstances, setSeeInstances] = useState(false);
-
-  const instanceList = symptomsHistory.filter((element) => {
-    return element.symptom_id === props.symptom.id;
-  });
 
   return (
     <div className="flex gap-2 w-max">
@@ -60,15 +58,30 @@ export function Symptom(props) {
               }}
             />
           </div>
-          {console.log(instanceList.length)}
-          {instanceList.map((instance) => {
-            return (
-              <ViewInstance
-                instance={instance}
-                symptomName={props.symptom.name}
-              />
-            );
-          })}
+          <table>
+            <thead>
+              <tr>
+                <th className="px-5">Date</th>
+                <th className="px-5">Intensity</th>
+                <th className="px-5">Delete</th>
+              </tr>
+            </thead>
+            {symptomsHistory
+              .filter((element) => {
+                return element.symptom_id === props.symptom.id;
+              })
+              .map((instance) => {
+                return (
+                  <ViewInstance
+                    instance={instance}
+                    symptomName={props.symptom.name}
+                    symptomsHistory={symptomsHistory}
+                    setSymptomsHistory={setSymptomsHistory}
+                    key={uuidv4()}
+                  />
+                );
+              })}
+          </table>
         </div>
       )}
       {!seeInstances && (

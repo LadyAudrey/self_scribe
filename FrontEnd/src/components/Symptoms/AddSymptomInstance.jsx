@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 
 import { SymptomsContext } from "../../Contexts/SymptomsContext";
+import { SymptomHistoryContext } from "../../Contexts/SymptomsHistoryContext";
 
 import { ExitBtn } from "../UI_Pieces/ExitBtn";
 
@@ -8,6 +9,10 @@ export function AddSymptomInstance(props) {
   const [notes, setNotes] = useState("");
   const [intensityValue, setIntensityValue] = useState(0);
   const [fetching, setFetching] = useState(false);
+
+  const { symptomsHistory, setSymptomsHistory } = useContext(
+    SymptomHistoryContext
+  );
 
   const onChangeIntensity = async (event) => {
     setIntensityValue(parseInt(event.target.value));
@@ -31,6 +36,17 @@ export function AddSymptomInstance(props) {
       if (!response.ok) {
         throw new Error("failed to set intensity value");
       }
+      const { id } = await response.json();
+      setSymptomsHistory([
+        ...symptomsHistory,
+        {
+          symptom_id: props.id,
+          created_on: new Date(),
+          intensity: requestBody.intensity,
+          notes,
+          id,
+        },uy
+      ]);
       props.setAddingInstance(false);
     } catch (error) {
       setFetching(false);
