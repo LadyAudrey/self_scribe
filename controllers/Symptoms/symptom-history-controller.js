@@ -42,6 +42,25 @@ export async function getSymptomHistory(req, res) {
   }
 }
 
+router.post("/editInstance/:id", editInstance);
+
+export async function editInstance(req, res) {
+  const instanceId = req.params.id;
+  console.log(instanceId);
+  if (isNaN(parseInt(instanceId))) {
+    return restart
+      .status(400)
+      .json({ error: "instance Id needs to be a number" });
+  }
+  try {
+    const sql = "UPDATE symptoms_history intensity=? notes=? WHERE id=?";
+    const params = [body.intensity, body.notes, instanceId];
+    return update(sql, params);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 router.post("/delete/:instanceId", removeInstance);
 
 export async function removeInstance(req, res) {

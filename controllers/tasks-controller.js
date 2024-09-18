@@ -273,10 +273,10 @@ router.post("/saveChanges/:taskId", async (req, res) => {
 });
 
 export async function saveChanges(id, body) {
-  const SQL =
+  const sql =
     "UPDATE tasks SET name=?, category=?, repeats=?, frequency=? WHERE id=?;";
   const params = [body.name, body.category, body.repeats, body.frequency, id];
-  return update(SQL, params);
+  return update(sql, params);
 }
 
 router.post("/update-completed", async (req, res) => {
