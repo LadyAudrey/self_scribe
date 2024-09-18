@@ -79,8 +79,29 @@ export default function Home() {
         console.error("I'm broke, fetchTasks in App.jsx");
       }
     }
+    fetchTaskHistory(tasks);
     return tasks;
   }
+
+  async function fetchTaskHistory(tasks) {
+    const localTaskHistory = [];
+    for (let i = 0; i < tasks.length; i++) {
+      const taskId = tasks[i].id;
+      try {
+        const response = await fetch(`/task/history/read/${taskId}`);
+        // response is ok, but not entering the result is not printing?
+        console.log("response", response);
+        if (response.ok) {
+          const result = await response.json();
+          console.log("result", result);
+          localTaskHistory.push(...result);
+        }
+      } catch (error) {}
+    }
+    setTaskHistory(localTaskHistory);
+    console.log(taskHistory);
+  }
+
   async function fetchSymptoms() {
     try {
       const response = await fetch("/symptoms/bank/1");
@@ -137,7 +158,7 @@ export default function Home() {
                       className="mainBtns"
                       onClick={() => setPageTab(PAGE_KEYS.STATS)}
                     >
-                      Graphs
+                      Stats
                     </button>
                   </div>
                   <div>

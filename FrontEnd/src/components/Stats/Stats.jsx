@@ -43,6 +43,8 @@ const mockTaskHistory = [
   },
 ];
 
+// upgrade mockStatDataforTaskHistory to useContext
+
 export function Stats() {
   const [graphingItems, setGraphingItems] = useState(mockTaskHistory);
   return (
