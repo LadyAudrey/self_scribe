@@ -18,6 +18,7 @@ export function Task({ taskId }) {
   async function handleTaskComplete() {
     setUpdatePending(true);
     try {
+      // TODO the completed is malfunctioning
       const response = await fetch("/tasks/update-completed", {
         method: "POST",
         body: JSON.stringify({

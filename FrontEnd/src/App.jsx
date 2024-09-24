@@ -88,18 +88,16 @@ export default function Home() {
     for (let i = 0; i < tasks.length; i++) {
       const taskId = tasks[i].id;
       try {
-        const response = await fetch(`/task/history/read/${taskId}`);
-        // response is ok, but not entering the result is not printing?
-        console.log("response", response);
+        const response = await fetch(`/tasks/history/read/${taskId}`);
         if (response.ok) {
           const result = await response.json();
-          console.log("result", result);
           localTaskHistory.push(...result);
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
     setTaskHistory(localTaskHistory);
-    console.log(taskHistory);
   }
 
   async function fetchSymptoms() {

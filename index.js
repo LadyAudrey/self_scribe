@@ -11,11 +11,13 @@ app.use(express.static("build/frontend"));
 import rootController from "./controllers/root-controller.js";
 import listController from "./controllers/list-controller.js";
 import tasksController from "./controllers/tasks-controller.js";
+import taskHistoryController from "./controllers/task-history-controller.js";
 import symptomsController from "./controllers/Symptoms/symptoms-controller.js";
 
 app.use("/", rootController);
 app.use("/lists", listController);
 app.use("/tasks", tasksController);
+app.use("/tasks/history", taskHistoryController);
 app.use("/symptoms", symptomsController);
 
 // should stay at the bottom of the file

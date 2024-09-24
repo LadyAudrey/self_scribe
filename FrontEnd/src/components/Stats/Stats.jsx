@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { GraphItemsContext } from "../../Contexts/GraphingItemsContext";
 
 import { Data } from "./Data";
-import { Graphs } from "./Graphs";
+import { Graphs } from "./GraphData/Graphs";
 
 const mockTaskHistory = [
   {
@@ -46,7 +46,7 @@ const mockTaskHistory = [
 // upgrade mockStatDataforTaskHistory to useContext
 
 export function Stats() {
-  const [graphingItems, setGraphingItems] = useState(mockTaskHistory);
+  const { graphingItems, setGraphingItems } = useContext(GraphItemsContext);
   return (
     <GraphItemsContext.Provider value={{ graphingItems, setGraphingItems }}>
       <div className="page">

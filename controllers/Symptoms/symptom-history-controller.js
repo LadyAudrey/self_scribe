@@ -42,20 +42,22 @@ export async function getSymptomHistory(req, res) {
   }
 }
 
-router.post("/editInstance/:id", editInstance);
+router.post("/instance/edit/:id", editInstance);
 
 export async function editInstance(req, res) {
   const instanceId = req.params.id;
-  console.log(instanceId);
   if (isNaN(parseInt(instanceId))) {
-    return restart
-      .status(400)
-      .json({ error: "instance Id needs to be a number" });
+    return res.status(400).json({ error: "instance Id needs to be a number" });
   }
+  if (isNaN(parseInt(req.body.intensity))) {
+    return res.status(400).json({ error: "intensity needs to be a number" });
+  }
+
   try {
-    const sql = "UPDATE symptoms_history intensity=? notes=? WHERE id=?";
-    const params = [body.intensity, body.notes, instanceId];
-    return update(sql, params);
+    const sql = "UPDATE symptoms_history SET intensity=?, notes=? WHERE id=?";
+    const params = [parseInt(req.body.intensity), req.body.notes, instanceId];
+    const result = await update(sql, params);
+    res.json({ result });
   } catch (error) {
     console.error(error);
   }

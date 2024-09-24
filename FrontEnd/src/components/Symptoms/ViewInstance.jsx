@@ -9,22 +9,18 @@ export function ViewInstance(props) {
   );
 
   const [editingIntensity, setEditingIntensity] = useState(false);
-  const [newIntensity, setNewIntensity] = useState(intensity);
   const [editingNotes, setEditingNotes] = useState(false);
 
   const createdOn = new Date(created_on);
 
   async function handleChangeIntensity(event) {
     event.preventDefault();
-    setNewIntensity(event.target.value);
     const body = {
-      created_on,
-      intensity: newIntensity,
+      intensity: event.target.value,
       notes,
     };
     try {
-      console.log("in the try");
-      const response = await fetch(`/symptoms/history/editInstance/${id}`, {
+      const response = await fetch(`/symptoms/history/instance/edit/${id}`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: { "Content-type": "application/json" },

@@ -6,7 +6,7 @@ const router = Router();
 
 // modified to get items with specific task id instead of all of them
 router.get("/read/:taskId", async (req, res) => {
-  taskId = req.params.taskId;
+  const taskId = req.params.taskId;
   if (!taskId || isNaN(parseInt(taskId))) {
     return res.status(400).json({ error: "taskId not valid" });
   }
@@ -23,11 +23,11 @@ export async function getTaskHistory(taskId) {
     const sql = "SELECT * FROM task_history WHERE task_id = ?";
     const params = [taskId];
     const taskHistory = await select(sql, params);
-    if (taskHistory.rows === 0) {
-      return [];
-    }
     return taskHistory;
   } catch (error) {
+    console.error(error);
     return [];
   }
 }
+
+export default router;

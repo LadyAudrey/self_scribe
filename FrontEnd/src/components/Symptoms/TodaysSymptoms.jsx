@@ -52,7 +52,7 @@ export function TodaysSymptoms() {
             })
             .map((symptom) => {
               return (
-                <div className="card_data">
+                <div className="card_data" key={uuidv4()}>
                   <h2>{category}</h2>
                   <div className="flex gap-5">
                     <h3 className="title">{symptom.name}</h3>
