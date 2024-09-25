@@ -1,6 +1,11 @@
 import { VisibleBtn } from "../../UI_Pieces/VisibleBtn";
 
-export function SypmptomItem(props) {
-  const { item } = props;
-  return <div>{item}</div>;
+export function SymptomItem(props) {
+  const { symptom } = props;
+  console.log(symptom);
+  return (
+    <div>
+      <h3>{symptom.name}</h3>
+    </div>
+  );
 }
